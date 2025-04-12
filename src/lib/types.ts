@@ -18,6 +18,16 @@ export interface InterviewGuide {
   content: string;
   resumeFileName?: string;
   jobDescriptionText?: string;
+  feedback?: InterviewFeedback;
+}
+
+export interface InterviewFeedback {
+  interviewerNames: string[];
+  questions: string;
+  answers: string;
+  impressions: string;
+  nextSteps: string;
+  interviewDate: string;
 }
 
 export interface UploadFormData {

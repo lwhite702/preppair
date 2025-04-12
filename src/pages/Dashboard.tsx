@@ -1,13 +1,16 @@
+
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UploadForm from "@/components/UploadForm";
 import GuideDisplay from "@/components/GuideDisplay";
+import InterviewFeedbackForm from "@/components/InterviewFeedbackForm";
+import FollowUpEmailGenerator from "@/components/FollowUpEmailGenerator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowRight, Loader2, CalendarCheck } from "lucide-react";
 import { toast } from "sonner";
-import { InterviewGuide } from "@/lib/types";
+import { InterviewGuide, InterviewFeedback } from "@/lib/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
@@ -22,6 +25,9 @@ const Dashboard = () => {
   const [subscriptionEnd, setSubscriptionEnd] = useState<Date | null>(null);
   const [isLoadingSubscription, setIsLoadingSubscription] = useState(false);
   const [selectedGuide, setSelectedGuide] = useState<InterviewGuide | null>(null);
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [showFollowUpGenerator, setShowFollowUpGenerator] = useState(false);
+  const [feedbackData, setFeedbackData] = useState<InterviewFeedback | null>(null);
 
   // Load user's guides
   useEffect(() => {
@@ -54,7 +60,8 @@ const Dashboard = () => {
           createdAt: new Date(guide.created_at),
           content: guide.content,
           resumeFileName: guide.resume_filename,
-          jobDescriptionText: guide.job_description_text
+          jobDescriptionText: guide.job_description_text,
+          feedback: guide.feedback
         })));
       }
     } catch (error) {
@@ -105,6 +112,8 @@ const Dashboard = () => {
   const handleViewGuide = (guide: InterviewGuide) => {
     setSelectedGuide(guide);
     setGeneratedGuide(guide.content);
+    setShowFeedbackForm(false);
+    setShowFollowUpGenerator(false);
     
     // Scroll to the guide display
     setTimeout(() => {
@@ -113,6 +122,35 @@ const Dashboard = () => {
         behavior: "smooth",
       });
     }, 100);
+  };
+  
+  const handleShowFeedbackForm = () => {
+    setShowFeedbackForm(true);
+    setShowFollowUpGenerator(false);
+  };
+  
+  const handleFeedbackSubmitted = (feedback: InterviewFeedback) => {
+    setFeedbackData(feedback);
+    setShowFeedbackForm(false);
+    setShowFollowUpGenerator(true);
+    
+    // In a real implementation, we would save this to the database
+    if (selectedGuide) {
+      const updatedGuide = { ...selectedGuide, feedback };
+      setSelectedGuide(updatedGuide);
+      
+      // Update in the guides list
+      setGuides(prev => 
+        prev.map(guide => 
+          guide.id === selectedGuide.id ? updatedGuide : guide
+        )
+      );
+    }
+  };
+  
+  const handleBackToFeedback = () => {
+    setShowFeedbackForm(true);
+    setShowFollowUpGenerator(false);
   };
   
   const handleCreateSubscription = async () => {
@@ -143,6 +181,14 @@ const Dashboard = () => {
       console.error("Error accessing customer portal:", error);
       toast.error("Failed to access subscription management");
     }
+  };
+
+  const handleReset = () => {
+    setGeneratedGuide(null);
+    setSelectedGuide(null);
+    setShowFeedbackForm(false);
+    setShowFollowUpGenerator(false);
+    setFeedbackData(null);
   };
 
   return (
@@ -240,6 +286,33 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold mb-4 text-center">Create New Guide</h2>
               <UploadForm onGuideGenerated={handleGuideGenerated} />
             </div>
+          ) : showFeedbackForm ? (
+            <div id="feedbackForm" className="w-full max-w-3xl mx-auto">
+              <InterviewFeedbackForm
+                guideId={selectedGuide?.id}
+                jobTitle={selectedGuide?.jobTitle || ""}
+                company={selectedGuide?.company || ""}
+                onFeedbackSubmitted={handleFeedbackSubmitted}
+              />
+              <div className="mt-8 text-center">
+                <button
+                  onClick={() => setShowFeedbackForm(false)}
+                  className="text-primary underline"
+                >
+                  Back to guide
+                </button>
+              </div>
+            </div>
+          ) : showFollowUpGenerator ? (
+            <div id="followUpGenerator" className="w-full max-w-3xl mx-auto">
+              <FollowUpEmailGenerator
+                feedback={feedbackData!}
+                candidateName={selectedGuide?.candidateName}
+                jobTitle={selectedGuide?.jobTitle || ""}
+                company={selectedGuide?.company || ""}
+                onBack={handleBackToFeedback}
+              />
+            </div>
           ) : (
             <div id="guideDisplay" className="w-full max-w-4xl mx-auto">
               <GuideDisplay 
@@ -249,16 +322,13 @@ const Dashboard = () => {
                 jobTitle={selectedGuide?.jobTitle}
                 candidateName={selectedGuide?.candidateName}
               />
-              <div className="mt-8 text-center">
-                <button
-                  onClick={() => {
-                    setGeneratedGuide(null);
-                    setSelectedGuide(null);
-                  }}
-                  className="text-primary underline"
-                >
-                  Create another guide
-                </button>
+              <div className="mt-8 flex justify-center space-x-4">
+                <Button onClick={handleShowFeedbackForm} variant="outline">
+                  Add Interview Feedback
+                </Button>
+                <Button onClick={handleReset} variant="ghost">
+                  Create Another Guide
+                </Button>
               </div>
             </div>
           )}
