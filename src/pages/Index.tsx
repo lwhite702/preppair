@@ -29,13 +29,13 @@ const Index = () => {
             </Link>
           }
           secondaryAction={
-            !user && (
+            !user ? (
               <Link to="/auth">
                 <Button variant="outline" size="lg">
                   Sign In
                 </Button>
               </Link>
-            )
+            ) : undefined
           }
         />
         <Features />
