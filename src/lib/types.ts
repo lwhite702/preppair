@@ -42,3 +42,12 @@ export interface OpenAIResponse {
   content: string;
   error?: string;
 }
+
+export interface Subscription {
+  id: string;
+  userId: string;
+  status: 'active' | 'canceled' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'trialing' | 'unpaid';
+  tier: string;
+  currentPeriodEnd: Date;
+  cancelAtPeriodEnd: boolean;
+}

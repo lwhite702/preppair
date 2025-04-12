@@ -1,6 +1,7 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -9,7 +10,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { FileUploader } from "./FileUploader";
 import { generateInterviewGuide } from "@/lib/openai";
 import { UploadFormData } from "@/lib/types";
-import { ArrowRight, FileText, Loader2 } from "lucide-react";
+import { ArrowRight, FileText, Loader2, AlertTriangle } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 interface UploadFormProps {
   onGuideGenerated: (markdownContent: string) => void;
@@ -17,6 +22,9 @@ interface UploadFormProps {
 
 const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
   const { toast } = useToast();
+  const { user, profile } = useAuth();
+  const navigate = useNavigate();
+
   const [isGenerating, setIsGenerating] = useState(false);
   const [formData, setFormData] = useState<UploadFormData>({
     jobDescription: "",
@@ -24,6 +32,40 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
     company: "",
   });
   const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [anonymousGuideCount, setAnonymousGuideCount] = useState<number>(0);
+  const [sessionId, setSessionId] = useState<string>("");
+
+  // Check for anonymous guide limit
+  useEffect(() => {
+    if (!user) {
+      // Create or retrieve session ID from local storage
+      const storedSessionId = localStorage.getItem("interviewAceSessionId");
+      const newSessionId = storedSessionId || uuidv4();
+      
+      if (!storedSessionId) {
+        localStorage.setItem("interviewAceSessionId", newSessionId);
+      }
+      
+      setSessionId(newSessionId);
+      
+      // Count anonymous guides for this session
+      const fetchAnonymousGuideCount = async () => {
+        const { data, error, count } = await supabase
+          .from("anonymous_guides")
+          .select("*", { count: "exact" })
+          .eq("session_id", newSessionId);
+        
+        if (error) {
+          console.error("Error fetching anonymous guides:", error);
+          return;
+        }
+        
+        setAnonymousGuideCount(count || 0);
+      };
+      
+      fetchAnonymousGuideCount();
+    }
+  }, [user]);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -48,6 +90,17 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         description: "Please fill out all required fields.",
         variant: "destructive",
       });
+      return;
+    }
+
+    // Check if we need to limit anonymous users
+    if (!user && anonymousGuideCount >= 1) {
+      toast({
+        title: "Account Required",
+        description: "Please create an account to generate more interview guides.",
+        variant: "destructive", 
+      });
+      navigate("/auth");
       return;
     }
 
@@ -76,7 +129,75 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         throw new Error(response.error);
       }
 
-      onGuideGenerated(response.content);
+      const guideContent = response.content;
+      
+      // Generate a title for the guide
+      const title = `${formData.jobTitle} at ${formData.company}`;
+      
+      // Save the generated guide to Supabase
+      let guideId;
+      
+      if (user) {
+        // For authenticated users, save to interview_guides
+        const { data, error } = await supabase
+          .from("interview_guides")
+          .insert({
+            user_id: user.id,
+            title,
+            candidate_name: formData.candidateName,
+            job_title: formData.jobTitle,
+            company: formData.company,
+            content: guideContent,
+            resume_filename: resumeFile?.name,
+            job_description_text: formData.jobDescription,
+          })
+          .select("id")
+          .single();
+        
+        if (error) throw error;
+        guideId = data.id;
+        
+        // Optional: Send confirmation email
+        if (user.email) {
+          try {
+            await supabase.functions.invoke("send-confirmation", {
+              body: {
+                guideId,
+                email: user.email,
+                name: profile?.name || user.email,
+                company: formData.company,
+                jobTitle: formData.jobTitle
+              }
+            });
+          } catch (emailError) {
+            console.error("Failed to send confirmation email:", emailError);
+          }
+        }
+      } else {
+        // For anonymous users, save to anonymous_guides
+        const { data, error } = await supabase
+          .from("anonymous_guides")
+          .insert({
+            session_id: sessionId,
+            title,
+            candidate_name: formData.candidateName,
+            job_title: formData.jobTitle,
+            company: formData.company,
+            content: guideContent,
+            resume_filename: resumeFile?.name,
+            job_description_text: formData.jobDescription,
+          })
+          .select("id")
+          .single();
+        
+        if (error) throw error;
+        guideId = data.id;
+        
+        // Update the anonymous guide count
+        setAnonymousGuideCount(prevCount => prevCount + 1);
+      }
+
+      onGuideGenerated(guideContent);
       
       toast({
         title: "Success!",
@@ -104,6 +225,22 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {!user && anonymousGuideCount >= 1 && (
+          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md flex items-start">
+            <AlertTriangle className="h-5 w-5 text-yellow-500 mt-0.5 mr-2 flex-shrink-0" />
+            <div>
+              <p className="font-medium text-yellow-800">Account required</p>
+              <p className="text-sm text-yellow-700">
+                You've used your free guide. Please{" "}
+                <a href="/auth" className="text-primary hover:underline">
+                  create an account
+                </a>{" "}
+                to generate more interview guides.
+              </p>
+            </div>
+          </div>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-4">
             <div>
@@ -194,10 +331,18 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
             </div>
           </div>
 
-          <Button type="submit" className="w-full" disabled={isGenerating}>
+          <Button 
+            type="submit" 
+            className="w-full" 
+            disabled={isGenerating || (!user && anonymousGuideCount >= 1)}
+          >
             {isGenerating ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Guide...
+              </>
+            ) : !user && anonymousGuideCount >= 1 ? (
+              <>
+                Create an Account to Continue
               </>
             ) : (
               <>

@@ -9,7 +9,147 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      anonymous_guides: {
+        Row: {
+          candidate_name: string | null
+          company: string
+          content: string
+          created_at: string
+          id: string
+          job_description_text: string | null
+          job_title: string
+          resume_filename: string | null
+          session_id: string
+          title: string
+        }
+        Insert: {
+          candidate_name?: string | null
+          company: string
+          content: string
+          created_at?: string
+          id?: string
+          job_description_text?: string | null
+          job_title: string
+          resume_filename?: string | null
+          session_id: string
+          title: string
+        }
+        Update: {
+          candidate_name?: string | null
+          company?: string
+          content?: string
+          created_at?: string
+          id?: string
+          job_description_text?: string | null
+          job_title?: string
+          resume_filename?: string | null
+          session_id?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      interview_guides: {
+        Row: {
+          candidate_name: string | null
+          company: string
+          content: string
+          created_at: string
+          id: string
+          job_description_text: string | null
+          job_title: string
+          resume_filename: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          candidate_name?: string | null
+          company: string
+          content: string
+          created_at?: string
+          id?: string
+          job_description_text?: string | null
+          job_title: string
+          resume_filename?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          candidate_name?: string | null
+          company?: string
+          content?: string
+          created_at?: string
+          id?: string
+          job_description_text?: string | null
+          job_title?: string
+          resume_filename?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          guides_created: number
+          id: string
+          name: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          guides_created?: number
+          id: string
+          name?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          guides_created?: number
+          id?: string
+          name?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      subscribers: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          stripe_customer_id: string | null
+          subscribed: boolean
+          subscription_end: string | null
+          subscription_tier: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          stripe_customer_id?: string | null
+          subscribed?: boolean
+          subscription_end?: string | null
+          subscription_tier?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

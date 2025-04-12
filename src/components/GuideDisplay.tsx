@@ -3,15 +3,28 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Download, Copy, Check, Printer } from "lucide-react";
+import { Download, Copy, Check, Printer, CalendarCheck } from "lucide-react";
 import { toast } from "sonner";
 
 interface GuideDisplayProps {
   markdownContent: string;
+  title?: string;
+  company?: string;
+  jobTitle?: string;
+  candidateName?: string;
 }
 
-const GuideDisplay = ({ markdownContent }: GuideDisplayProps) => {
+const GuideDisplay = ({ 
+  markdownContent, 
+  title,
+  company,
+  jobTitle,
+  candidateName
+}: GuideDisplayProps) => {
   const [copied, setCopied] = useState(false);
+  
+  // Generate a default title if none is provided
+  const displayTitle = title || (company && jobTitle ? `${jobTitle} at ${company}` : "Your Interview Guide");
 
   const handleCopy = () => {
     navigator.clipboard.writeText(markdownContent);
@@ -28,7 +41,7 @@ const GuideDisplay = ({ markdownContent }: GuideDisplayProps) => {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>Interview Guide</title>
+          <title>${displayTitle}</title>
           <style>
             body {
               font-family: Arial, sans-serif;
@@ -51,6 +64,9 @@ const GuideDisplay = ({ markdownContent }: GuideDisplayProps) => {
           </style>
         </head>
         <body>
+          <h1>${displayTitle}</h1>
+          ${candidateName ? `<p><strong>Candidate:</strong> ${candidateName}</p>` : ''}
+          <hr />
           ${markdownContent
             .replace(/^# (.*)/gm, '<h1>$1</h1>')
             .replace(/^## (.*)/gm, '<h2>$1</h2>')
@@ -77,7 +93,7 @@ const GuideDisplay = ({ markdownContent }: GuideDisplayProps) => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = "interview-guide.md";
+    link.download = `${displayTitle.replace(/[^a-zA-Z0-9]/g, "-").toLowerCase()}.md`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -88,7 +104,14 @@ const GuideDisplay = ({ markdownContent }: GuideDisplayProps) => {
   return (
     <Card className="w-full">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>Your Interview Guide</CardTitle>
+        <div>
+          <CardTitle>{displayTitle}</CardTitle>
+          {candidateName && (
+            <div className="text-sm text-muted-foreground mt-1">
+              Candidate: {candidateName}
+            </div>
+          )}
+        </div>
         <div className="flex space-x-2">
           <Button variant="outline" size="sm" onClick={handleCopy}>
             {copied ? (
