@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -46,8 +45,16 @@ const Dashboard = () => {
       
       if (data) {
         setGuides(data.map(guide => ({
-          ...guide,
-          createdAt: new Date(guide.created_at)
+          id: guide.id,
+          userId: guide.user_id,
+          title: guide.title,
+          candidateName: guide.candidate_name,
+          jobTitle: guide.job_title,
+          company: guide.company,
+          createdAt: new Date(guide.created_at),
+          content: guide.content,
+          resumeFileName: guide.resume_filename,
+          jobDescriptionText: guide.job_description_text
         })));
       }
     } catch (error) {

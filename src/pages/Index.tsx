@@ -18,7 +18,7 @@ const Index = () => {
         <Hero 
           title="Ace Your Next Interview with AI-Powered Guidance" 
           subtitle="Upload your resume and job description. Get a personalized interview guide with targeted questions, answers, and strategies."
-          actionButton={
+          action={
             <Link to={user ? "/dashboard" : "/auth"}>
               <Button size="lg">
                 {user 
@@ -28,7 +28,7 @@ const Index = () => {
               </Button>
             </Link>
           }
-          secondaryButton={
+          secondaryAction={
             !user && (
               <Link to="/auth">
                 <Button variant="outline" size="lg">
