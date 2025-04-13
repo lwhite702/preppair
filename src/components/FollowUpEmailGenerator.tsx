@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Loader2, Copy, Check, Send, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
-import { InterviewFeedback } from "./InterviewFeedbackForm";
+import { InterviewFeedback } from "@/lib/types";
 
 interface FollowUpEmailGeneratorProps {
   feedback: InterviewFeedback;

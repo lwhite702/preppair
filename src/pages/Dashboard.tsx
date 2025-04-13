@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -29,7 +28,6 @@ const Dashboard = () => {
   const [showFollowUpGenerator, setShowFollowUpGenerator] = useState(false);
   const [feedbackData, setFeedbackData] = useState<InterviewFeedback | null>(null);
 
-  // Load user's guides
   useEffect(() => {
     if (user) {
       fetchGuides();
@@ -61,7 +59,7 @@ const Dashboard = () => {
           content: guide.content,
           resumeFileName: guide.resume_filename,
           jobDescriptionText: guide.job_description_text,
-          feedback: guide.feedback
+          feedback: guide.feedback || undefined
         })));
       }
     } catch (error) {
@@ -95,12 +93,10 @@ const Dashboard = () => {
   const handleGuideGenerated = (markdownContent: string) => {
     setGeneratedGuide(markdownContent);
     
-    // Refresh guides list after generation
     if (user) {
       fetchGuides();
     }
     
-    // Scroll to the guide display
     setTimeout(() => {
       window.scrollTo({
         top: document.getElementById("guideDisplay")?.offsetTop || 0,
@@ -115,7 +111,6 @@ const Dashboard = () => {
     setShowFeedbackForm(false);
     setShowFollowUpGenerator(false);
     
-    // Scroll to the guide display
     setTimeout(() => {
       window.scrollTo({
         top: document.getElementById("guideDisplay")?.offsetTop || 0,
@@ -134,17 +129,36 @@ const Dashboard = () => {
     setShowFeedbackForm(false);
     setShowFollowUpGenerator(true);
     
-    // In a real implementation, we would save this to the database
     if (selectedGuide) {
       const updatedGuide = { ...selectedGuide, feedback };
       setSelectedGuide(updatedGuide);
       
-      // Update in the guides list
       setGuides(prev => 
         prev.map(guide => 
           guide.id === selectedGuide.id ? updatedGuide : guide
         )
       );
+      
+      saveFeedbackToDatabase(selectedGuide.id, feedback).catch(error => {
+        console.error("Error saving feedback:", error);
+        toast.error("Failed to save feedback, but you can still generate a follow-up email");
+      });
+    }
+  };
+  
+  const saveFeedbackToDatabase = async (guideId: string, feedback: InterviewFeedback) => {
+    try {
+      const { error } = await supabase
+        .from("interview_guides")
+        .update({ feedback })
+        .eq("id", guideId);
+        
+      if (error) throw error;
+      
+      toast.success("Feedback saved successfully");
+    } catch (error) {
+      console.error("Error saving feedback:", error);
+      throw error;
     }
   };
   
