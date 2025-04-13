@@ -10,11 +10,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { FileUploader } from "./FileUploader";
 import { generateInterviewGuide } from "@/lib/openai";
 import { UploadFormData } from "@/lib/types";
-import { ArrowRight, FileText, Loader2, AlertTriangle } from "lucide-react";
+import { ArrowRight, FileText, Loader2, AlertTriangle, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 interface UploadFormProps {
   onGuideGenerated: (markdownContent: string) => void;
@@ -34,6 +35,8 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [anonymousGuideCount, setAnonymousGuideCount] = useState<number>(0);
   const [sessionId, setSessionId] = useState<string>("");
+  const [tone, setTone] = useState<string>("professional");
+  const [currentStep, setCurrentStep] = useState<number>(1);
 
   // Check for anonymous guide limit
   useEffect(() => {
@@ -79,6 +82,16 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
 
   const handleResumeUpload = (file: File) => {
     setResumeFile(file);
+    // Move to next step after resume upload
+    setCurrentStep(2);
+  };
+
+  const nextStep = () => {
+    setCurrentStep(currentStep + 1);
+  };
+
+  const prevStep = () => {
+    setCurrentStep(currentStep - 1);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -123,6 +136,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         jobTitle: formData.jobTitle,
         company: formData.company,
         additionalInfo: formData.additionalInfo,
+        tone,
       });
 
       if (response.error) {
@@ -150,6 +164,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
             content: guideContent,
             resume_filename: resumeFile?.name,
             job_description_text: formData.jobDescription,
+            tone,
           })
           .select("id")
           .single();
@@ -186,6 +201,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
             content: guideContent,
             resume_filename: resumeFile?.name,
             job_description_text: formData.jobDescription,
+            tone,
           })
           .select("id")
           .single();
@@ -216,6 +232,229 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
     }
   };
 
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold mb-2">Upload Your Resume</h2>
+            <p className="text-muted-foreground mb-4">
+              We'll use this to highlight your strengths and tailor every part of the interview guide to your experience.
+            </p>
+            <FileUploader
+              id="resumeUpload"
+              onFileSelected={handleResumeUpload}
+              maxSizeMB={5}
+              acceptedFileTypes={[
+                "application/pdf",
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+              ]}
+            />
+            {resumeFile && (
+              <div className="mt-2 flex items-center text-sm text-muted-foreground">
+                <FileText className="h-4 w-4 mr-1" />
+                {resumeFile.name}
+              </div>
+            )}
+            <div className="flex justify-end mt-4">
+              <Button onClick={nextStep} disabled={!resumeFile}>
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      case 2:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold mb-2">Upload the Job Posting</h2>
+            <p className="text-muted-foreground mb-4">
+              Give us the job you're aiming for. We'll match key requirements and help you speak their language in the interview.
+            </p>
+            <div>
+              <Label htmlFor="jobTitle" className="required">
+                Job Title
+              </Label>
+              <Input
+                id="jobTitle"
+                name="jobTitle"
+                placeholder="e.g., Frontend Developer"
+                required
+                value={formData.jobTitle}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+            <div>
+              <Label htmlFor="company" className="required">
+                Company
+              </Label>
+              <Input
+                id="company"
+                name="company"
+                placeholder="e.g., Acme Inc."
+                required
+                value={formData.company}
+                onChange={handleInputChange}
+                className="mb-4"
+              />
+            </div>
+            <div>
+              <Label htmlFor="jobDescription" className="required">
+                Job Description
+              </Label>
+              <Textarea
+                id="jobDescription"
+                name="jobDescription"
+                placeholder="Paste the full job description here..."
+                required
+                rows={6}
+                value={formData.jobDescription}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="flex justify-between mt-4">
+              <Button variant="outline" onClick={prevStep}>
+                Back
+              </Button>
+              <Button
+                onClick={nextStep}
+                disabled={!formData.jobTitle || !formData.company || !formData.jobDescription}
+              >
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      case 3:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold mb-2">Pick a Tone</h2>
+            <p className="text-muted-foreground mb-4">
+              Everyone has their own style. Choose the voice that fits you best—we'll write your prep guide to match.
+            </p>
+            <RadioGroup
+              value={tone}
+              onValueChange={setTone}
+              className="space-y-4"
+            >
+              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                <RadioGroupItem value="friendly" id="friendly" />
+                <Label htmlFor="friendly" className="cursor-pointer w-full">
+                  <div className="font-medium">Friendly + Casual</div>
+                  <p className="text-sm text-muted-foreground">Conversational and approachable</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                <RadioGroupItem value="professional" id="professional" />
+                <Label htmlFor="professional" className="cursor-pointer w-full">
+                  <div className="font-medium">Professional + Polished</div>
+                  <p className="text-sm text-muted-foreground">Formal and business-oriented</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                <RadioGroupItem value="confident" id="confident" />
+                <Label htmlFor="confident" className="cursor-pointer w-full">
+                  <div className="font-medium">Confident + Direct</div>
+                  <p className="text-sm text-muted-foreground">Bold and straight to the point</p>
+                </Label>
+              </div>
+              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                <RadioGroupItem value="quick" id="quick" />
+                <Label htmlFor="quick" className="cursor-pointer w-full">
+                  <div className="font-medium">Quick Start — No Tone, Just Prep</div>
+                  <p className="text-sm text-muted-foreground">Get straight to the content</p>
+                </Label>
+              </div>
+            </RadioGroup>
+
+            <div className="flex justify-between mt-4">
+              <Button variant="outline" onClick={prevStep}>
+                Back
+              </Button>
+              <Button onClick={nextStep}>
+                Next <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        );
+      case 4:
+        return (
+          <div className="space-y-6">
+            <h2 className="text-xl font-semibold mb-2">Ready? Let's Prep</h2>
+            <p className="text-muted-foreground mb-4">
+              Click below to generate your personalized guide, complete with questions, sample answers, and insights.
+            </p>
+            
+            <div className="bg-muted/50 p-4 rounded-lg space-y-3">
+              <div className="flex justify-between">
+                <span className="font-medium">Resume:</span>
+                <span>{resumeFile?.name || "Not provided"}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">Job:</span>
+                <span>{formData.jobTitle} at {formData.company}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="font-medium">Tone:</span>
+                <span className="capitalize">{tone === 'quick' ? 'Quick Start' : tone}</span>
+              </div>
+            </div>
+
+            <div className="mt-2">
+              <Label htmlFor="candidateName">Your Name (Optional)</Label>
+              <Input
+                id="candidateName"
+                name="candidateName"
+                placeholder="Enter your name"
+                value={formData.candidateName || ""}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div>
+              <Label htmlFor="additionalInfo">
+                Additional Information (Optional)
+              </Label>
+              <Textarea
+                id="additionalInfo"
+                name="additionalInfo"
+                placeholder="Any other details you'd like to include..."
+                rows={3}
+                value={formData.additionalInfo || ""}
+                onChange={handleInputChange}
+              />
+            </div>
+
+            <div className="flex justify-between mt-4">
+              <Button variant="outline" onClick={prevStep}>
+                Back
+              </Button>
+              <Button 
+                onClick={handleSubmit}
+                disabled={isGenerating || (!user && anonymousGuideCount >= 1)}
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Guide...
+                  </>
+                ) : !user && anonymousGuideCount >= 1 ? (
+                  <>
+                    Create an Account to Continue
+                  </>
+                ) : (
+                  <>
+                    Generate Guide <ArrowRight className="ml-2 h-4 w-4" />
+                  </>
+                )}
+              </Button>
+            </div>
+          </div>
+        );
+      default:
+        return null;
+    }
+  };
+
   return (
     <Card className="w-full max-w-3xl mx-auto">
       <CardHeader>
@@ -241,115 +480,28 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
           </div>
         )}
         
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="resumeUpload">Resume (PDF or DOCX)</Label>
-              <FileUploader
-                id="resumeUpload"
-                onFileSelected={handleResumeUpload}
-                maxSizeMB={5}
-                acceptedFileTypes={[
-                  "application/pdf",
-                  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-                ]}
-              />
-              {resumeFile && (
-                <div className="mt-2 flex items-center text-sm text-muted-foreground">
-                  <FileText className="h-4 w-4 mr-1" />
-                  {resumeFile.name}
-                </div>
-              )}
-            </div>
-
-            <div>
-              <Label htmlFor="candidateName">Your Name (Optional)</Label>
-              <Input
-                id="candidateName"
-                name="candidateName"
-                placeholder="Enter your name"
-                value={formData.candidateName || ""}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="jobTitle" className="required">
-                Job Title
-              </Label>
-              <Input
-                id="jobTitle"
-                name="jobTitle"
-                placeholder="e.g., Frontend Developer"
-                required
-                value={formData.jobTitle}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="company" className="required">
-                Company
-              </Label>
-              <Input
-                id="company"
-                name="company"
-                placeholder="e.g., Acme Inc."
-                required
-                value={formData.company}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="jobDescription" className="required">
-                Job Description
-              </Label>
-              <Textarea
-                id="jobDescription"
-                name="jobDescription"
-                placeholder="Paste the full job description here..."
-                required
-                rows={6}
-                value={formData.jobDescription}
-                onChange={handleInputChange}
-              />
-            </div>
-
-            <div>
-              <Label htmlFor="additionalInfo">
-                Additional Information (Optional)
-              </Label>
-              <Textarea
-                id="additionalInfo"
-                name="additionalInfo"
-                placeholder="Any other details you'd like to include..."
-                rows={3}
-                value={formData.additionalInfo || ""}
-                onChange={handleInputChange}
-              />
+        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
+          <div className="space-y-2">
+            <div className="flex justify-between items-center">
+              <div className="flex space-x-1">
+                {[1, 2, 3, 4].map((step) => (
+                  <div
+                    key={step}
+                    className={`h-2 w-10 rounded-full ${
+                      step === currentStep
+                        ? "bg-primary"
+                        : step < currentStep
+                        ? "bg-primary/60"
+                        : "bg-muted"
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="text-sm text-muted-foreground">Step {currentStep} of 4</span>
             </div>
           </div>
-
-          <Button 
-            type="submit" 
-            className="w-full" 
-            disabled={isGenerating || (!user && anonymousGuideCount >= 1)}
-          >
-            {isGenerating ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Generating Guide...
-              </>
-            ) : !user && anonymousGuideCount >= 1 ? (
-              <>
-                Create an Account to Continue
-              </>
-            ) : (
-              <>
-                Create Interview Guide <ArrowRight className="ml-2 h-4 w-4" />
-              </>
-            )}
-          </Button>
+          
+          {renderStep()}
         </form>
       </CardContent>
     </Card>

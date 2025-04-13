@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   id: string;
   email: string;
@@ -31,14 +30,14 @@ export interface InterviewFeedback {
   ratings?: Record<string, number>;
 }
 
-export interface UploadFormData {
-  resume?: File;
-  jobDescription: string;
+export type UploadFormData = {
   candidateName?: string;
   jobTitle: string;
   company: string;
+  jobDescription: string;
   additionalInfo?: string;
-}
+  tone?: string;
+};
 
 export interface GenerateGuideRequest {
   resumeText?: string;

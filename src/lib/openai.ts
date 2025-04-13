@@ -1,119 +1,129 @@
+export type UploadFormData = {
+  candidateName?: string;
+  jobTitle: string;
+  company: string;
+  jobDescription: string;
+  additionalInfo?: string;
+  tone?: string;
+};
 
-import { GenerateGuideRequest, OpenAIResponse } from "./types";
-
-export async function generateInterviewGuide(data: GenerateGuideRequest): Promise<OpenAIResponse> {
+export const generateInterviewGuide = async (params: UploadFormData): Promise<{content: string; error?: string}> => {
   try {
-    // This is a temporary function - in a real-world scenario, we'd call our backend API
-    // which would securely use the OpenAI API key stored as a server-side secret
+    // Simulate API response delay for demo
+    await new Promise(resolve => setTimeout(resolve, 3000));
     
-    // For demo purposes, we'll simulate the API response with a mock guide
-    console.log("Generating guide with data:", data);
+    const { candidateName, jobDescription, jobTitle, company, additionalInfo, tone } = params;
+
+    let toneDescription = "";
+    switch (tone) {
+      case "friendly":
+        toneDescription = "friendly and casual";
+        break;
+      case "professional":
+        toneDescription = "professional and polished";
+        break;
+      case "confident":
+        toneDescription = "confident and direct";
+        break;
+      case "quick":
+        toneDescription = "";
+        break;
+      default:
+        toneDescription = "professional";
+    }
     
-    // Mock a loading delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // For demo purposes, let's create a mock interview guide with the selected tone
+    const candidateGreeting = candidateName ? `Hello ${candidateName}` : "Hello";
     
-    const resumeText = data.resumeText || "Resume not provided";
-    const jobDescriptionText = data.jobDescription;
-    const candidateName = data.candidateName || "Candidate";
-    const jobTitle = data.jobTitle;
-    const company = data.company;
+    let toneIntro = "";
+    if (toneDescription) {
+      toneIntro = `\nThis guide is written in a ${toneDescription} tone, as you requested.`;
+    }
     
-    // Generate a simple mock guide
-    const mockGuide = `# Interview Guide: ${jobTitle} at ${company}
+    const content = `# Your PrepPair Interview Guide for ${jobTitle} at ${company}
 
-## Candidate Information
-- **Name:** ${candidateName}
-- **Role:** ${jobTitle}
-- **Company:** ${company}
-- **Date:** ${new Date().toLocaleDateString()}
+${candidateGreeting},${toneIntro}
 
-## Overview and Expectations
-
-This personalized interview guide is designed to help you prepare for your upcoming interview for the ${jobTitle} position at ${company}. Based on your resume and the job description, we've identified key areas to focus on and prepared tailored responses to potential interview questions.
-
-## Company & Role Insights
-
-${company} is looking for a candidate who can demonstrate strong skills in problem-solving, communication, and technical expertise related to ${jobTitle}. The role requires someone who can collaborate effectively with cross-functional teams and drive results.
+## Job Insights
+For the ${jobTitle} position at ${company}, they're looking for someone who can bring strong technical skills and collaborative spirit to their team. This guide will help you showcase both.
 
 ## Behavioral Questions
 
-### Tell me about yourself and why you're interested in this role at ${company}.
+### 1. Tell me about a time you had to learn a new technology quickly.
+**Suggested approach:**
+* Briefly describe the situation that required quick learning
+* Explain your learning process and any resources you used
+* Share the outcome and what you accomplished
+* Reflect on what this experience taught you about adapting to new tools
 
-**Recommended Response Structure:**
-- Brief professional overview (2-3 sentences)
-- Highlight relevant experience and skills for ${jobTitle}
-- Express specific interest in ${company} (culture, products, innovation)
-- Connect your career goals with this opportunity
-
-### Describe a challenging project you worked on and how you overcame obstacles.
-
-**Recommended Response Structure:**
-- Briefly set the context of the project
-- Clearly identify the specific challenges you faced
-- Detail your approach to solving the problems
-- Share the outcomes and what you learned
-- Relate the experience to how it would help you in the ${jobTitle} role
+### 2. Describe a challenging project you worked on and how you overcame obstacles.
+**Suggested approach:**
+* Choose a relevant project that showcases your problem-solving abilities
+* Outline the specific challenges you faced
+* Detail your approach to finding solutions
+* Emphasize collaboration if applicable
+* Share the successful outcome and lessons learned
 
 ## Technical Questions
 
-Based on the ${jobTitle} job description, prepare for these potential technical questions:
+### 1. How would you approach ${jobTitle}-specific problem X?
+**Suggested approach:**
+* Consider breaking down the problem into components
+* Discuss multiple potential approaches
+* Explain trade-offs between different solutions
+* Demonstrate your thought process rather than just the solution
 
-1. **How would you approach [key responsibility from job description]?**
-2. **What experience do you have with [specific technology/skill mentioned]?**
-3. **How do you stay updated with the latest developments in your field?**
+### 2. What methodologies do you use for ${jobTitle}-related task Y?
+**Suggested approach:**
+* Share your experience with relevant methodologies
+* Explain why you prefer certain approaches
+* Give examples of how you've implemented these in the past
+* Acknowledge newer approaches you're exploring
 
-## Situational Questions
+## Your Strengths
 
-### How would you handle a disagreement with a team member about a project approach?
+Based on your background, here are key strengths to emphasize:
+* Your experience aligns well with their need for someone who can [relevant skills]
+* Your approach to problem-solving demonstrates the analytical thinking they value
+* Your communication style will help you integrate well with their team culture
 
-**Recommended Response Structure:**
-- Express your openness to different perspectives
-- Describe your approach to understanding their viewpoint
-- Explain how you would find common ground
-- Emphasize collaborative decision-making
+## Post-Interview Reflection
 
-## Your Strengths Based on Resume-Job Alignment
-
-Based on your resume, these are your strongest alignment points with the job requirements:
-
-1. **Relevant Experience**: Highlight specific experiences that directly relate to the ${jobTitle} position
-2. **Technical Skills**: Emphasize your proficiency in the required technical areas
-3. **Achievements**: Reference specific accomplishments that demonstrate your capability
-
-## Post-Interview Reflection Prompts
-
-After your interview, consider these reflection questions:
-- What aspects of the role did you learn more about?
-- Which of your answers resonated most with the interviewer?
-- What follow-up questions would further demonstrate your interest?
+After the interview, consider:
+* Which questions felt most challenging and why?
+* What points did you communicate effectively?
+* What would you emphasize more in a follow-up?
+* Did you learn anything new about the role or company?
 
 ## Follow-up Email Template
 
-**Subject:** Thank You for the ${jobTitle} Interview
+Subject: Thank you for the ${jobTitle} interview
 
-Dear [Interviewer's Name],
+Dear [Interviewer Name],
 
-Thank you for taking the time to discuss the ${jobTitle} position at ${company}. I enjoyed learning more about [specific topic discussed] and how my experience with [relevant skill/experience] aligns with your team's needs.
+Thank you for taking the time to discuss the ${jobTitle} position at ${company} today. I appreciated learning more about [specific aspect of the role or company mentioned during the interview].
 
-I'm particularly excited about the opportunity to [specific aspect of role discussed]. As mentioned during our conversation, my background in [relevant experience] has prepared me well for the challenges of this position.
+Our conversation about [specific topic from interview] reinforced my enthusiasm for this opportunity. My experience in [relevant skill/experience] would allow me to [specific value you would bring].
 
-Please don't hesitate to contact me if you need any additional information. I look forward to hearing from you about the next steps in the process.
+I look forward to potentially joining the team and contributing to [company goal or project mentioned].
 
 Best regards,
-${candidateName}
+[Your Name]
 
 ## Final Thoughts
 
-Remember to be authentic while showcasing your relevant skills and experiences. Prepare examples that demonstrate your capabilities and align with ${company}'s needs for the ${jobTitle} role. Good luck!`;
+Remember to be authentic while showcasing your relevant skills. You're not just answering questions – you're having a conversation to determine mutual fit.
 
-    return {
-      content: mockGuide
-    };
+Good luck! You've got this.
+`;
+
+    // In a real application, this would send the data to the OpenAI API
+    return { content };
   } catch (error) {
     console.error("Error generating interview guide:", error);
-    return {
-      content: "",
-      error: "Failed to generate interview guide. Please try again later."
+    return { 
+      content: "", 
+      error: error instanceof Error ? error.message : "An unknown error occurred" 
     };
   }
-}
+};
