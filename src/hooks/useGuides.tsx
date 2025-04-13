@@ -38,7 +38,6 @@ export const useGuides = (userId: string | undefined) => {
           content: guide.content,
           resumeFileName: guide.resume_filename,
           jobDescriptionText: guide.job_description_text,
-          // Handle feedback as a separate field, checking if it exists in the database
           feedback: guide.feedback as InterviewFeedback | undefined
         })));
       }

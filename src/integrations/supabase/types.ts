@@ -54,6 +54,7 @@ export type Database = {
           company: string
           content: string
           created_at: string
+          feedback: Json | null
           id: string
           job_description_text: string | null
           job_title: string
@@ -66,6 +67,7 @@ export type Database = {
           company: string
           content: string
           created_at?: string
+          feedback?: Json | null
           id?: string
           job_description_text?: string | null
           job_title: string
@@ -78,6 +80,7 @@ export type Database = {
           company?: string
           content?: string
           created_at?: string
+          feedback?: Json | null
           id?: string
           job_description_text?: string | null
           job_title?: string
