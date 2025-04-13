@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import UploadForm from "@/components/UploadForm";
 import GuideDisplay from "@/components/GuideDisplay";
-import InterviewFeedbackForm from "@/components/InterviewFeedbackForm";
+import StructuredFeedbackForm from "@/components/feedback/StructuredFeedbackForm";
 import FollowUpEmailGenerator from "@/components/FollowUpEmailGenerator";
 import { InterviewGuide, InterviewFeedback } from "@/lib/types";
 import { toast } from "sonner";
@@ -21,6 +21,7 @@ const DashboardContent = ({ guides, onGuideGenerated, refetchGuides }: Dashboard
   const [showFeedbackForm, setShowFeedbackForm] = useState(false);
   const [showFollowUpGenerator, setShowFollowUpGenerator] = useState(false);
   const [feedbackData, setFeedbackData] = useState<InterviewFeedback | null>(null);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   const handleGuideGenerated = (markdownContent: string) => {
     setGeneratedGuide(markdownContent);
@@ -53,19 +54,30 @@ const DashboardContent = ({ guides, onGuideGenerated, refetchGuides }: Dashboard
     setShowFollowUpGenerator(false);
   };
   
-  const handleFeedbackSubmitted = (feedback: InterviewFeedback) => {
+  const handleFeedbackSubmitted = async (feedback: InterviewFeedback) => {
+    setIsSubmittingFeedback(true);
     setFeedbackData(feedback);
-    setShowFeedbackForm(false);
-    setShowFollowUpGenerator(true);
     
-    if (selectedGuide) {
-      const updatedGuide = { ...selectedGuide, feedback };
-      setSelectedGuide(updatedGuide);
+    try {
+      if (selectedGuide) {
+        const updatedGuide = { ...selectedGuide, feedback };
+        setSelectedGuide(updatedGuide);
+        
+        await saveFeedbackToDatabase(selectedGuide.id, feedback);
+      }
       
-      saveFeedbackToDatabase(selectedGuide.id, feedback).catch(error => {
-        console.error("Error saving feedback:", error);
-        toast.error("Failed to save feedback, but you can still generate a follow-up email");
-      });
+      setShowFeedbackForm(false);
+      setShowFollowUpGenerator(true);
+      toast.success("Feedback saved successfully");
+    } catch (error) {
+      console.error("Error saving feedback:", error);
+      toast.error("Failed to save feedback, but you can still generate a follow-up email");
+      
+      // Still show the follow-up generator even if saving failed
+      setShowFeedbackForm(false);
+      setShowFollowUpGenerator(true);
+    } finally {
+      setIsSubmittingFeedback(false);
     }
   };
   
@@ -78,7 +90,6 @@ const DashboardContent = ({ guides, onGuideGenerated, refetchGuides }: Dashboard
         
       if (error) throw error;
       
-      toast.success("Feedback saved successfully");
       refetchGuides();
     } catch (error) {
       console.error("Error saving feedback:", error);
@@ -114,20 +125,14 @@ const DashboardContent = ({ guides, onGuideGenerated, refetchGuides }: Dashboard
         </div>
       ) : showFeedbackForm ? (
         <div id="feedbackForm" className="w-full max-w-3xl mx-auto">
-          <InterviewFeedbackForm
-            guideId={selectedGuide?.id}
+          <StructuredFeedbackForm
             jobTitle={selectedGuide?.jobTitle || ""}
             company={selectedGuide?.company || ""}
-            onFeedbackSubmitted={handleFeedbackSubmitted}
+            onSubmit={handleFeedbackSubmitted}
+            onCancel={() => setShowFeedbackForm(false)}
+            isLoading={isSubmittingFeedback}
+            initialFeedback={selectedGuide?.feedback}
           />
-          <div className="mt-8 text-center">
-            <button
-              onClick={() => setShowFeedbackForm(false)}
-              className="text-primary underline"
-            >
-              Back to guide
-            </button>
-          </div>
         </div>
       ) : showFollowUpGenerator ? (
         <div id="followUpGenerator" className="w-full max-w-3xl mx-auto">

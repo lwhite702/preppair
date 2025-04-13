@@ -28,6 +28,7 @@ export interface InterviewFeedback {
   impressions: string;
   nextSteps: string;
   interviewDate: string;
+  ratings?: Record<string, number>;
 }
 
 export interface UploadFormData {

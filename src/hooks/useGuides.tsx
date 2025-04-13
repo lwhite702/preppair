@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { InterviewGuide } from "@/lib/types";
+import { InterviewGuide, InterviewFeedback } from "@/lib/types";
 import { toast } from "sonner";
 
 export const useGuides = (userId: string | undefined) => {
@@ -38,7 +38,7 @@ export const useGuides = (userId: string | undefined) => {
           content: guide.content,
           resumeFileName: guide.resume_filename,
           jobDescriptionText: guide.job_description_text,
-          feedback: guide.feedback || undefined
+          feedback: guide.feedback as InterviewFeedback | undefined
         })));
       }
     } catch (error) {
