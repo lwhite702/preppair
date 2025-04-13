@@ -27,19 +27,26 @@ export const useGuides = (userId: string | undefined) => {
       if (error) throw error;
       
       if (data) {
-        setGuides(data.map(guide => ({
-          id: guide.id,
-          userId: guide.user_id,
-          title: guide.title,
-          candidateName: guide.candidate_name,
-          jobTitle: guide.job_title,
-          company: guide.company,
-          createdAt: new Date(guide.created_at),
-          content: guide.content,
-          resumeFileName: guide.resume_filename,
-          jobDescriptionText: guide.job_description_text,
-          feedback: guide.feedback as InterviewFeedback | undefined
-        })));
+        setGuides(data.map(guide => {
+          // First parse the feedback JSON if it exists
+          const parsedFeedback = guide.feedback 
+            ? guide.feedback as unknown as InterviewFeedback 
+            : undefined;
+          
+          return {
+            id: guide.id,
+            userId: guide.user_id,
+            title: guide.title,
+            candidateName: guide.candidate_name,
+            jobTitle: guide.job_title,
+            company: guide.company,
+            createdAt: new Date(guide.created_at),
+            content: guide.content,
+            resumeFileName: guide.resume_filename,
+            jobDescriptionText: guide.job_description_text,
+            feedback: parsedFeedback
+          };
+        }));
       }
     } catch (error) {
       console.error("Error fetching guides:", error);

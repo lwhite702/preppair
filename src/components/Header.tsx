@@ -33,7 +33,7 @@ const Header = () => {
     <header className="border-b bg-white">
       <div className="container py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <span className="text-xl font-bold text-primary">InterviewAce</span>
+          <span className="text-xl font-bold text-primary">PrepPair</span>
         </Link>
         
         {/* Desktop navigation */}

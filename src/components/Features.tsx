@@ -1,38 +1,38 @@
 
-import { BookOpen, FilePlus, Calendar, Mail, Users, Target } from 'lucide-react';
+import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Features = () => {
   const features = [
     {
-      icon: <BookOpen className="h-8 w-8 text-primary" />,
-      title: "Personalized Interview Guides",
-      description: "Get custom interview preparation based on your resume and the job description."
-    },
-    {
-      icon: <FilePlus className="h-8 w-8 text-primary" />,
-      title: "Tailored Questions & Answers",
-      description: "Practice with behavioral, situational, and technical questions specific to the role."
-    },
-    {
       icon: <Target className="h-8 w-8 text-primary" />,
-      title: "Highlight Your Strengths",
-      description: "Understand how to emphasize your experience and skills that best match the job requirements."
+      title: "Personalized Prep Guides",
+      description: "Your experience + the job description = a custom-tailored prep plan. We highlight your strengths and suggest real responses."
+    },
+    {
+      icon: <BrainCircuit className="h-8 w-8 text-primary" />,
+      title: "Behavioral, Technical & Situational Prompts",
+      description: "Based on industry-standard interview frameworks. Practice with purpose and stay sharp."
     },
     {
       icon: <Mail className="h-8 w-8 text-primary" />,
-      title: "Follow-up Templates",
-      description: "Get professional email templates to send after your interview."
+      title: "Smart Follow-Ups",
+      description: "Your interview, your voice. We'll help you write thank-you emails and reflection summaries that don't sound templated."
     },
     {
       icon: <Calendar className="h-8 w-8 text-primary" />,
-      title: "Interview Preparation",
-      description: "Structured guidance for before, during, and after your interview."
+      title: "Interview Tracker",
+      description: "Log dates, people, questions, results. Keep your prep organized and your career on track."
     },
     {
-      icon: <Users className="h-8 w-8 text-primary" />,
-      title: "Career Coaching Support",
-      description: "Feel confident with coach-inspired guidance and motivation."
+      icon: <Smile className="h-8 w-8 text-primary" />,
+      title: "Tone Personalization",
+      description: "Casual? Professional? Confident? We adjust every guide to match your natural voice and communication style."
+    },
+    {
+      icon: <Zap className="h-8 w-8 text-primary" />,
+      title: "Quick Start Mode",
+      description: "No fluff. No fuss. Drop your resume + job post, and we'll auto-generate everything in seconds."
     }
   ];
 

@@ -9,9 +9,9 @@ const Footer = () => {
       <div className="container">
         <div className="flex flex-col md:flex-row justify-between">
           <div className="mb-8 md:mb-0">
-            <h2 className="text-xl font-bold text-primary mb-4">InterviewAce</h2>
+            <h2 className="text-xl font-bold text-primary mb-4">PrepPair</h2>
             <p className="text-muted-foreground max-w-xs">
-              AI-powered interview preparation to help you land your dream job.
+              Your AI interview partner—turning resumes and job descriptions into tailored prep guides.
             </p>
           </div>
           
@@ -47,7 +47,7 @@ const Footer = () => {
         
         <div className="border-t border-border mt-8 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-muted-foreground">
-            © {currentYear} InterviewAce. All rights reserved.
+            © {currentYear} PrepPair. All rights reserved.
           </p>
           <div className="mt-4 md:mt-0 flex space-x-4">
             <Link href="/" className="text-muted-foreground hover:text-primary">
