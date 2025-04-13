@@ -28,10 +28,27 @@ export const useGuides = (userId: string | undefined) => {
       
       if (data) {
         setGuides(data.map(guide => {
-          // First parse the feedback JSON if it exists
-          const parsedFeedback = guide.feedback 
-            ? guide.feedback as unknown as InterviewFeedback 
-            : undefined;
+          // Parse the feedback data if it exists
+          let parsedFeedback: InterviewFeedback | undefined = undefined;
+          
+          if (guide.feedback) {
+            // Safely parse feedback data
+            try {
+              const feedbackData = guide.feedback as Record<string, any>;
+              
+              parsedFeedback = {
+                interviewerNames: feedbackData.interviewerNames || [],
+                questions: feedbackData.questions || "",
+                answers: feedbackData.answers || "",
+                impressions: feedbackData.impressions || "",
+                nextSteps: feedbackData.nextSteps || "",
+                interviewDate: feedbackData.interviewDate || new Date().toISOString().split('T')[0],
+                ratings: feedbackData.ratings
+              };
+            } catch (e) {
+              console.error("Error parsing feedback data:", e);
+            }
+          }
           
           return {
             id: guide.id,

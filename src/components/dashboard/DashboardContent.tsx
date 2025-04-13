@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import UploadForm from "@/components/UploadForm";
@@ -83,10 +82,19 @@ const DashboardContent = ({ guides, onGuideGenerated, refetchGuides }: Dashboard
   
   const saveFeedbackToDatabase = async (guideId: string, feedback: InterviewFeedback) => {
     try {
-      // Update the interview guide with JSONB feedback data
+      const feedbackJson = {
+        interviewerNames: feedback.interviewerNames,
+        questions: feedback.questions,
+        answers: feedback.answers,
+        impressions: feedback.impressions,
+        nextSteps: feedback.nextSteps,
+        interviewDate: feedback.interviewDate,
+        ratings: feedback.ratings
+      };
+      
       const { error } = await supabase
         .from("interview_guides")
-        .update({ feedback })
+        .update({ feedback: feedbackJson })
         .eq("id", guideId);
         
       if (error) throw error;
