@@ -83,6 +83,7 @@ const DashboardContent = ({ guides, onGuideGenerated, refetchGuides }: Dashboard
   
   const saveFeedbackToDatabase = async (guideId: string, feedback: InterviewFeedback) => {
     try {
+      // Update the interview guide with JSONB feedback data
       const { error } = await supabase
         .from("interview_guides")
         .update({ feedback })
