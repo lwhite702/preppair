@@ -12,6 +12,9 @@ export type UploadFormData = {
   tone?: string;
 };
 
+// Get API key from environment variable
+const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
+
 export const generateInterviewGuide = async (params: UploadFormData): Promise<AIResponse> => {
   try {
     const { candidateName, jobDescription, resumeText, jobTitle, company, additionalInfo, tone } = params;
@@ -36,17 +39,20 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
 
     // Get OpenAI provider instance
     const provider = AIProviderFactory.getProvider('openai', {
-      apiKey: 'your-api-key', // This should come from environment variables
-      modelName: 'gpt-4o-mini'
+      apiKey: OPENAI_API_KEY || '',
+      modelName: 'gpt-4o-mini',
+      temperature: 0.7
     });
 
     // Create the prompt template
     const promptTemplate = {
-      systemPrompt: `You are an expert interview preparation assistant. Generate content in a ${toneDescription} tone.`,
-      userPrompt: `Create an interview guide for a ${jobTitle} position at ${company}.
-      ${resumeText ? `Resume: ${resumeText}` : ''}
-      Job Description: ${jobDescription}
-      ${additionalInfo ? `Additional Context: ${additionalInfo}` : ''}`
+      systemPrompt: `You are an expert interview preparation assistant. Generate content in a ${toneDescription} tone. 
+                     Focus on providing actionable advice and specific examples tailored to the candidate's background.`,
+      userPrompt: `Create a comprehensive interview guide for a ${jobTitle} position at ${company}.
+                   ${resumeText ? `Resume Context: ${resumeText}` : ''}
+                   Job Description: ${jobDescription}
+                   ${additionalInfo ? `Additional Context: ${additionalInfo}` : ''}
+                   ${candidateName ? `Candidate Name: ${candidateName}` : ''}`
     };
 
     return await provider.generateGuide(promptTemplate);
@@ -58,3 +64,4 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
     };
   }
 };
+

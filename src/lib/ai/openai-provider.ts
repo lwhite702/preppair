@@ -14,11 +14,34 @@ export class OpenAIProvider implements AIProvider {
 
   async generateGuide(prompt: AIPromptTemplate): Promise<AIResponse> {
     try {
-      // Simulate API call for now (we'll replace this with real implementation)
-      await new Promise(resolve => setTimeout(resolve, 3000));
+      if (!this.config.apiKey) {
+        throw new Error("OpenAI API key is not configured");
+      }
 
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${this.config.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: this.config.modelName,
+          messages: [
+            { role: 'system', content: prompt.systemPrompt },
+            { role: 'user', content: prompt.userPrompt }
+          ],
+          temperature: this.config.temperature,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error?.message || 'OpenAI API request failed');
+      }
+
+      const data = await response.json();
       return {
-        content: "Simulated OpenAI response",
+        content: data.choices[0].message.content,
       };
     } catch (error) {
       console.error("Error generating with OpenAI:", error);
@@ -29,3 +52,4 @@ export class OpenAIProvider implements AIProvider {
     }
   }
 }
+
