@@ -37,9 +37,14 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
         toneDescription = "professional";
     }
 
+    // Validate API key
+    if (!OPENAI_API_KEY) {
+      throw new Error("OpenAI API key is not configured. Please set VITE_OPENAI_API_KEY.");
+    }
+
     // Get OpenAI provider instance
     const provider = AIProviderFactory.getProvider('openai', {
-      apiKey: OPENAI_API_KEY || '',
+      apiKey: OPENAI_API_KEY,
       modelName: 'gpt-4o-mini',
       temperature: 0.7
     });
@@ -55,13 +60,20 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
                    ${candidateName ? `Candidate Name: ${candidateName}` : ''}`
     };
 
+    // Log the prompt for debugging purposes (remove in production)
+    console.log('OpenAI Prompt:', promptTemplate);
+
     return await provider.generateGuide(promptTemplate);
   } catch (error) {
-    console.error("Error generating interview guide:", error);
+    // More detailed error logging
+    console.error("Error generating interview guide:", {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      params: JSON.stringify(params),
+    });
+
     return {
       content: "",
       error: error instanceof Error ? error.message : "An unknown error occurred"
     };
   }
 };
-
