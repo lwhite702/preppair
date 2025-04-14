@@ -1,8 +1,10 @@
+
 export type UploadFormData = {
   candidateName?: string;
   jobTitle: string;
   company: string;
   jobDescription: string;
+  resumeText?: string;
   additionalInfo?: string;
   tone?: string;
 };
@@ -12,7 +14,7 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<{c
     // Simulate API response delay for demo
     await new Promise(resolve => setTimeout(resolve, 3000));
     
-    const { candidateName, jobDescription, jobTitle, company, additionalInfo, tone } = params;
+    const { candidateName, jobDescription, resumeText, jobTitle, company, additionalInfo, tone } = params;
 
     let toneDescription = "";
     switch (tone) {

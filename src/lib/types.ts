@@ -1,3 +1,4 @@
+
 export interface UserProfile {
   id: string;
   email: string;
@@ -35,6 +36,7 @@ export type UploadFormData = {
   jobTitle: string;
   company: string;
   jobDescription: string;
+  resumeText?: string;
   additionalInfo?: string;
   tone?: string;
 };
