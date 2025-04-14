@@ -42,17 +42,24 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
       throw new Error("OpenAI API key is not configured. Please set VITE_OPENAI_API_KEY.");
     }
 
-    // Get OpenAI provider instance
+    // Get OpenAI provider instance with optimal parameters for interview guide generation
     const provider = AIProviderFactory.getProvider('openai', {
       apiKey: OPENAI_API_KEY,
-      modelName: 'gpt-4o-mini',
-      temperature: 0.7
+      modelName: 'gpt-4o-mini',  // Using the fast and efficient model
+      temperature: 0.8  // Slightly higher temperature for more creative responses
     });
 
-    // Create the prompt template
+    // Create a more structured prompt template
     const promptTemplate = {
       systemPrompt: `You are an expert interview preparation assistant. Generate content in a ${toneDescription} tone. 
-                     Focus on providing actionable advice and specific examples tailored to the candidate's background.`,
+                     Focus on providing actionable advice and specific examples tailored to the candidate's background.
+                     Structure the guide with these sections:
+                     1. Brief Job Analysis
+                     2. Key Technical Requirements
+                     3. Behavioral Interview Prep
+                     4. Technical Interview Questions
+                     5. Questions to Ask the Interviewer
+                     6. Interview Success Tips`,
       userPrompt: `Create a comprehensive interview guide for a ${jobTitle} position at ${company}.
                    ${resumeText ? `Resume Context: ${resumeText}` : ''}
                    Job Description: ${jobDescription}
@@ -60,10 +67,17 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
                    ${candidateName ? `Candidate Name: ${candidateName}` : ''}`
     };
 
-    // Log the prompt for debugging purposes (remove in production)
+    // Log the prompt for debugging purposes
     console.log('OpenAI Prompt:', promptTemplate);
 
-    return await provider.generateGuide(promptTemplate);
+    const response = await provider.generateGuide(promptTemplate);
+    
+    // Log successful generation
+    if (!response.error) {
+      console.log('Successfully generated interview guide');
+    }
+
+    return response;
   } catch (error) {
     // More detailed error logging
     console.error("Error generating interview guide:", {
@@ -77,3 +91,4 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
     };
   }
 };
+

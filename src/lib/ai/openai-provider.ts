@@ -31,20 +31,23 @@ export class OpenAIProvider implements AIProvider {
             { role: 'user', content: prompt.userPrompt }
           ],
           temperature: this.config.temperature,
+          max_tokens: 2000,  // Ensuring enough length for comprehensive guides
         }),
       });
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(error.error?.message || 'OpenAI API request failed');
+        throw new Error(error.error?.message || `OpenAI API request failed: ${response.status}`);
       }
 
       const data = await response.json();
+      console.log('OpenAI response received successfully');
+      
       return {
         content: data.choices[0].message.content,
       };
     } catch (error) {
-      console.error("Error generating with OpenAI:", error);
+      console.error("Error in OpenAI provider:", error);
       return {
         content: "",
         error: error instanceof Error ? error.message : "An unknown error occurred"
@@ -52,4 +55,3 @@ export class OpenAIProvider implements AIProvider {
     }
   }
 }
-
