@@ -1,7 +1,6 @@
 
-import { BookOpen, Target, BrainCircuit, Mail } from 'lucide-react';
-import FeatureCard from './features/FeatureCard';
-import FeatureHeader from './features/FeatureHeader';
+import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile, Sparkles } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Features = () => {
   const features = [
@@ -28,14 +27,36 @@ const Features = () => {
   return (
     <section className="py-20 bg-gradient-to-b from-white/5 to-background">
       <div className="container">
-        <FeatureHeader 
-          title="Tools for Interview Success"
-          description="Our AI-powered platform gives you everything you need to prepare for your next interview and land that dream job."
-        />
+        <div className="text-center mb-12">
+          <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">
+            Features
+          </span>
+          <h2 className="heading-lg mb-4 gradient-text">Tools for Interview Success</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Our AI-powered platform gives you everything you need to prepare for your next interview and land that dream job.
+          </p>
+        </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <FeatureCard key={index} {...feature} />
+            <Card key={index} className="border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden group">
+              <div className="aspect-video overflow-hidden mb-4">
+                <img 
+                  src={feature.image} 
+                  alt={feature.title}
+                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                />
+              </div>
+              <CardHeader className="pb-2 relative">
+                <div className="mb-4 bg-primary/10 p-4 rounded-xl inline-block transform group-hover:scale-110 transition-transform">
+                  {feature.icon}
+                </div>
+                <CardTitle className="text-xl">{feature.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="relative">
+                <p className="text-muted-foreground">{feature.description}</p>
+              </CardContent>
+            </Card>
           ))}
         </div>
       </div>
