@@ -1,5 +1,5 @@
 
-import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile, Sparkles, FileText, Clipboard, BookMarked } from 'lucide-react';
+import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile, Sparkles } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const Features = () => {
@@ -49,12 +49,14 @@ const Features = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <Card key={index} className="border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-md hover:shadow-primary/5 transition-all hover:-translate-y-1 overflow-hidden group">
+            <Card key={index} className="border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden group">
               <div className="absolute -right-10 -top-10 w-40 h-40 bg-primary/5 rounded-full group-hover:bg-primary/10 transition-all"></div>
               <CardHeader className="pb-2 relative">
-                <div className="mb-2 bg-primary/10 p-2 rounded-lg inline-block">{feature.icon}</div>
+                <div className="mb-4 bg-primary/10 p-4 rounded-xl inline-block transform group-hover:scale-110 transition-transform">
+                  {feature.icon}
+                </div>
                 <CardTitle className="text-xl">{feature.title}</CardTitle>
               </CardHeader>
               <CardContent className="relative">
