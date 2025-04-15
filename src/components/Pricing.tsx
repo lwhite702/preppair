@@ -26,17 +26,8 @@ const Pricing = () => {
         "Priority Support",
         "Smart Follow-ups",
         "Interview Tracking",
-        "Custom Templates"
-      ]
-    },
-    {
-      name: "Team",
-      price: "Custom",
-      description: "For career coaches & teams",
-      features: [
-        "Everything in Pro",
+        "Custom Templates",
         "Team Dashboard",
-        "Bulk Guide Generation",
         "Analytics & Reporting",
         "API Access",
         "Custom Branding"
@@ -45,7 +36,7 @@ const Pricing = () => {
   ];
 
   return (
-    <section id="pricing" className="py-20 bg-gradient-to-b from-background to-brand-navy/30">
+    <section id="pricing" className="py-20 bg-gradient-to-b from-background to-white/5">
       <div className="container">
         <div className="text-center mb-12">
           <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">
@@ -57,7 +48,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
             <Card key={index} className={`relative border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-xl transition-all ${
               index === 1 ? 'transform hover:-translate-y-2' : 'hover:-translate-y-1'
@@ -71,7 +62,7 @@ const Pricing = () => {
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription>
                   <span className="text-3xl font-bold">{plan.price}</span>
-                  {plan.price !== "Custom" && <span className="text-muted-foreground">/month</span>}
+                  <span className="text-muted-foreground">/month</span>
                 </CardDescription>
                 <p className="text-muted-foreground mt-2">{plan.description}</p>
               </CardHeader>

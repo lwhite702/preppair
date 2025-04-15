@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,10 +42,18 @@ const Index = () => {
             ) : undefined
           }
         />
-        <Features />
-        <Jobs />
-        <Pricing />
-        <Blog />
+        <div id="features">
+          <Features />
+        </div>
+        <div id="jobs">
+          <Jobs />
+        </div>
+        <div id="pricing">
+          <Pricing />
+        </div>
+        <div id="blog">
+          <Blog />
+        </div>
       </main>
       <Footer />
     </div>

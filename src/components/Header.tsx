@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, UserCircle, LogOut, MessageCircle } from 'lucide-react';
@@ -45,9 +44,10 @@ const Header = () => {
         
         {/* Desktop navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <Link to="/" className="font-medium text-foreground/80 hover:text-primary transition-colors">Home</Link>
-          <a href="#how-it-works" className="font-medium text-foreground/80 hover:text-primary transition-colors">How It Works</a>
           <a href="#features" className="font-medium text-foreground/80 hover:text-primary transition-colors">Features</a>
+          <a href="#jobs" className="font-medium text-foreground/80 hover:text-primary transition-colors">Jobs</a>
+          <a href="#pricing" className="font-medium text-foreground/80 hover:text-primary transition-colors">Pricing</a>
+          <a href="#blog" className="font-medium text-foreground/80 hover:text-primary transition-colors">Blog</a>
           
           {user ? (
             <DropdownMenu>
