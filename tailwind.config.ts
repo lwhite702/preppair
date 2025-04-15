@@ -73,7 +73,10 @@ export default {
 					600: '#0284c7',
 					700: '#0369a1',
 					800: '#075985',
-					900: '#0c4a6e'
+					900: '#0c4a6e',
+					// New: PrepPair.me color palette
+					navy: '#141B40', // Dark blue from logo
+					coral: '#E95F36', // Orange/coral from logo
 				},
 				accent2: {
 					50: '#f0fdfa',
@@ -117,16 +120,29 @@ export default {
 				'slide-up': {
 					'0%': { transform: 'translateY(10px)', opacity: '0' },
 					'100%': { transform: 'translateY(0)', opacity: '1' }
+				},
+				'float': {
+					'0%, 100%': { transform: 'translateY(0)' },
+					'50%': { transform: 'translateY(-10px)' }
+				},
+				'pulse-gentle': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'fade-in': 'fade-in 0.5s ease-out',
-				'slide-up': 'slide-up 0.5s ease-out'
+				'slide-up': 'slide-up 0.5s ease-out',
+				'float': 'float 6s ease-in-out infinite',
+				'pulse-gentle': 'pulse-gentle 4s ease-in-out infinite',
 			},
 			fontFamily: {
 				sans: ['Inter', 'sans-serif']
+			},
+			backgroundImage: {
+				'hero-pattern': "url('/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png')"
 			}
 		}
 	},
