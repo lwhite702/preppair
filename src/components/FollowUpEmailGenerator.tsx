@@ -13,6 +13,7 @@ interface FollowUpEmailGeneratorProps {
   jobTitle: string;
   company: string;
   onBack: () => void;
+  onEmailGenerated?: () => void;
 }
 
 const FollowUpEmailGenerator = ({
@@ -21,6 +22,7 @@ const FollowUpEmailGenerator = ({
   jobTitle,
   company,
   onBack,
+  onEmailGenerated
 }: FollowUpEmailGeneratorProps) => {
   const [emailContent, setEmailContent] = useState("");
   const [isGenerating, setIsGenerating] = useState(true);
@@ -38,6 +40,11 @@ const FollowUpEmailGenerator = ({
       const generatedEmail = createFollowUpEmail(feedback, candidateName, jobTitle, company);
       setEmailContent(generatedEmail);
       setIsGenerating(false);
+      
+      // Notify parent that email has been generated
+      if (onEmailGenerated) {
+        onEmailGenerated();
+      }
     }, 1000);
   };
 
@@ -109,9 +116,12 @@ const FollowUpEmailGenerator = ({
           </div>
         )}
       </CardContent>
-      <CardFooter>
-        <Button variant="ghost" onClick={onBack} className="w-full">
+      <CardFooter className="flex justify-between">
+        <Button variant="ghost" onClick={onBack}>
           Back to Feedback Form
+        </Button>
+        <Button variant="outline" onClick={() => window.history.back()}>
+          Return to Dashboard
         </Button>
       </CardFooter>
     </Card>
