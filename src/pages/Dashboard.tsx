@@ -14,7 +14,7 @@ import JobStatusManager from "@/components/jobs/JobStatusManager"; // Default im
 
 const Dashboard = () => {
   const { profile } = useAuth();
-  const { guides, isLoadingGuides, fetchGuides } = useGuides();
+  const { guides, isLoadingGuides, fetchGuides } = useGuides(profile?.id);
   const [selectedTab, setSelectedTab] = useState("overview");
   const [selectedGuide, setSelectedGuide] = useState<InterviewGuide | null>(null);
 

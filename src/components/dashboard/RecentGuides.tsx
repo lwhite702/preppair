@@ -5,7 +5,7 @@ import { Loader2, CalendarCheck } from "lucide-react";
 import { format } from "date-fns";
 import { InterviewGuide } from "@/lib/types";
 
-interface RecentGuidesProps {
+export interface RecentGuidesProps {
   guides: InterviewGuide[];
   isLoading: boolean;
   onViewGuide: (guide: InterviewGuide) => void;

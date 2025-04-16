@@ -28,19 +28,16 @@ const TabContent = ({
     case "guides":
       return (
         <GuideView 
-          guides={guides}
-          isLoading={isLoading}
           selectedGuide={selectedGuide}
+          isLoading={isLoading}
           onGuideSelect={onGuideSelect}
         />
       );
     case "feedback":
       return (
         <FeedbackManager 
-          userId={user?.id}
-          guides={guides}
-          isLoading={isLoading}
           selectedGuide={selectedGuide}
+          isLoading={isLoading}
           onGuideSelect={onGuideSelect}
           onRefresh={onRefresh}
         />

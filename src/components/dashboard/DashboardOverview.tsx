@@ -4,6 +4,7 @@ import { InterviewGuide } from "@/lib/types";
 import RecentGuides from "./RecentGuides";
 import SubscriptionStatus from "./SubscriptionStatus";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSubscription } from "@/hooks/useSubscription";
 
 export interface DashboardOverviewProps {
   guides: InterviewGuide[];
@@ -17,6 +18,14 @@ const DashboardOverview = ({
   onGuideSelect
 }: DashboardOverviewProps) => {
   const { profile } = useAuth();
+  const { 
+    isSubscribed,
+    subscriptionTier,
+    subscriptionEnd,
+    isLoadingSubscription,
+    handleCreateSubscription,
+    handleManageSubscription
+  } = useSubscription(profile?.id);
 
   const upcomingInterviews = guides.filter(guide => guide.status === "interview_scheduled");
   const pendingFeedback = guides.filter(guide => guide.status === "interview_completed" && !guide.feedback);
@@ -31,12 +40,19 @@ const DashboardOverview = ({
         <RecentGuides 
           guides={guides.slice(0, 5)} 
           isLoading={isLoading} 
-          onGuideSelect={onGuideSelect} 
+          onViewGuide={onGuideSelect} 
         />
       </Card>
       
       <div className="space-y-6">
-        <SubscriptionStatus />
+        <SubscriptionStatus 
+          isSubscribed={isSubscribed}
+          subscriptionTier={subscriptionTier}
+          subscriptionEnd={subscriptionEnd}
+          isLoadingSubscription={isLoadingSubscription}
+          onManageSubscription={handleManageSubscription}
+          onCreateSubscription={handleCreateSubscription}
+        />
         
         <Card>
           <CardHeader>
