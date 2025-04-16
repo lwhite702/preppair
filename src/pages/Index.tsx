@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
+import HowItWorks from "@/components/HowItWorks";
 import Footer from "@/components/Footer";
 import Jobs from "@/components/Jobs";
 import Pricing from "@/components/Pricing";
@@ -52,6 +53,7 @@ const Index = () => {
         <div id="features">
           <Features />
         </div>
+        <HowItWorks />
         <div id="jobs">
           <Jobs />
         </div>

@@ -18,7 +18,9 @@ const Pricing = () => {
     },
     {
       name: "Pro",
-      price: "$19",
+      price: "$19.99",
+      period: "3 months",
+      monthlyPrice: "$24.99",
       description: "For serious job seekers",
       features: [
         "Unlimited Interview Guides",
@@ -50,7 +52,7 @@ const Pricing = () => {
 
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {plans.map((plan, index) => (
-            <Card key={index} className={`relative border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-xl transition-all ${
+            <Card key={index} className={`relative border border-white/10 bg-white shadow-lg hover:shadow-xl transition-all ${
               index === 1 ? 'transform hover:-translate-y-2' : 'hover:-translate-y-1'
             }`}>
               {index === 1 && (
@@ -61,8 +63,15 @@ const Pricing = () => {
               <CardHeader>
                 <CardTitle className="text-2xl">{plan.name}</CardTitle>
                 <CardDescription>
-                  <span className="text-3xl font-bold">{plan.price}</span>
-                  <span className="text-muted-foreground">/month</span>
+                  <div className="flex flex-col">
+                    <span className="text-3xl font-bold text-primary">{plan.price}</span>
+                    {plan.period && (
+                      <span className="text-sm text-muted-foreground">per month when paid for {plan.period}</span>
+                    )}
+                    {plan.monthlyPrice && (
+                      <span className="text-sm text-muted-foreground">or {plan.monthlyPrice}/month paid monthly</span>
+                    )}
+                  </div>
                 </CardDescription>
                 <p className="text-muted-foreground mt-2">{plan.description}</p>
               </CardHeader>
@@ -75,7 +84,7 @@ const Pricing = () => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full mt-6">Get Started</Button>
+                <Button className="w-full mt-6 bg-primary hover:bg-primary/90">Get Started</Button>
               </CardContent>
             </Card>
           ))}

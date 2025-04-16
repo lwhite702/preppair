@@ -31,7 +31,7 @@ const Jobs = () => {
   ];
 
   return (
-    <section className="py-20 bg-brand-navy/90">
+    <section className="py-20 bg-white">
       <div className="container">
         <div className="text-center mb-12">
           <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">
@@ -45,14 +45,14 @@ const Jobs = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat, index) => (
-            <Card key={index} className="border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-md transition-all">
+            <Card key={index} className="border border-gray-100 bg-white shadow-md hover:shadow-lg transition-all">
               <CardHeader className="pb-2">
                 <div className="mb-2 bg-primary/10 p-2 rounded-lg inline-block">{stat.icon}</div>
-                <CardTitle className="text-3xl font-bold gradient-text">{stat.value}</CardTitle>
+                <CardTitle className="text-3xl font-bold text-primary">{stat.value}</CardTitle>
               </CardHeader>
               <CardContent>
-                <h3 className="font-semibold mb-1">{stat.title}</h3>
-                <p className="text-muted-foreground text-sm">{stat.description}</p>
+                <h3 className="font-semibold mb-1 text-gray-900">{stat.title}</h3>
+                <p className="text-gray-600 text-sm">{stat.description}</p>
               </CardContent>
             </Card>
           ))}
