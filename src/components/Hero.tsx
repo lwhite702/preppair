@@ -1,5 +1,5 @@
 
-import { ArrowRight, MessageSquare, LucideIcon, Star, Sparkles, CheckCircle } from 'lucide-react';
+import { ArrowRight, MessageSquare, LucideIcon, Star, Sparkles, CheckCircle, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link as RouterLink } from 'react-router-dom';
 import { Link } from '@/components/ui/link';
@@ -14,7 +14,7 @@ interface HeroProps {
 
 const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroProps) => {
   return (
-    <section className="py-16 md:py-24 bg-brand-navy relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-gradient-to-br from-white to-blue-50 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 rounded-full blur-3xl"></div>
@@ -37,22 +37,27 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
             <div className="w-full flex justify-center mb-4">
               <div className="animate-float delay-300 opacity-80 -translate-x-20">
                 <MessageBubble side="left" delay="300">
-                  How should I answer "Tell me about a time you failed"?
+                  How should I prepare for my interview at Google?
                 </MessageBubble>
               </div>
             </div>
             
             <div className="animate-float delay-500 opacity-90 translate-x-20 mb-8">
               <MessageBubble side="right" delay="500">
-                I'll help you craft a strong response based on your experience
+                I'll be your interview partner and help you prepare!
               </MessageBubble>
             </div>
             
-            <img 
-              src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
-              alt="PrepPair Logo"
-              className="h-16 md:h-24 mb-6 animate-pulse-gentle"
-            />
+            <div className="flex items-center gap-3 mb-8">
+              <img 
+                src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
+                alt="PrepPair Logo"
+                className="h-16 md:h-24 animate-pulse-gentle"
+              />
+              <div className="text-4xl md:text-5xl font-bold">
+                <span className="text-secondary">Prep</span><span className="text-primary">Pair</span>
+              </div>
+            </div>
             
             <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in tracking-tight">
               <span className="gradient-text">{title}</span>
@@ -72,7 +77,7 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
             <div className="flex flex-wrap justify-center gap-3 mb-8">
               <FeatureBadge icon={Star}>Personalized</FeatureBadge>
               <FeatureBadge icon={MessageSquare}>AI Feedback</FeatureBadge>
-              <FeatureBadge icon={Sparkles}>Expert Guidance</FeatureBadge>
+              <FeatureBadge icon={Users}>Interview Partner</FeatureBadge>
               <FeatureBadge icon={CheckCircle}>Results Focused</FeatureBadge>
             </div>
             
@@ -87,7 +92,7 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
       {/* Wave divider */}
       <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-0">
         <svg
-          className="relative block w-full h-12 md:h-16"
+          className="relative block w-full h-12 md:h-16 text-white"
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1200 120"
           preserveAspectRatio="none"
@@ -121,7 +126,7 @@ interface FeatureBadgeProps {
 
 const FeatureBadge = ({ children, icon: Icon }: FeatureBadgeProps) => {
   return (
-    <div className="bg-secondary/50 backdrop-blur-sm text-white px-3 py-1 rounded-full flex items-center gap-1.5 text-sm">
+    <div className="bg-white shadow-md border border-gray-100 text-secondary px-3 py-1 rounded-full flex items-center gap-1.5 text-sm">
       <Icon className="h-4 w-4 text-primary" />
       {children}
     </div>

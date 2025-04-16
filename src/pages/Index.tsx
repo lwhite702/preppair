@@ -13,6 +13,13 @@ import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
   const { user } = useAuth();
+  
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -21,7 +28,7 @@ const Index = () => {
         <Hero 
           title="Your AI Interview Partner" 
           subtitle="Land Your Dream Job with Confidence"
-          description="Custom prep guides, tailored feedback, and smart follow-up tools—built just for you. Prep better. Stress less. Get hired."
+          description="We pair you with a personal AI interview coach that provides custom prep guides, tailored feedback, and smart follow-up tools. Prep together. Succeed together."
           action={
             <Link to={user ? "/dashboard" : "/auth"}>
               <Button size="lg" className="px-8 py-6 text-lg font-medium transition-all hover:scale-105">
