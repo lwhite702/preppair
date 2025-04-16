@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
@@ -35,7 +36,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
   const [anonymousGuideCount, setAnonymousGuideCount] = useState<number>(0);
   const [sessionId, setSessionId] = useState<string>("");
   const [tone, setTone] = useState<string>("professional");
-  const [interviewFormat, setInterviewFormat] = useState<string>("virtual");
+  const [interviewFormat, setInterviewFormat] = useState<"virtual" | "phone" | "in-person">("virtual");
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   useEffect(() => {

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +12,7 @@ import { supabase } from "@/integrations/supabase/client";
 const Pricing = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { subscription, isLoading: isLoadingSubscription } = useSubscription(user?.id);
+  const { subscription, isSubscribed, subscriptionTier, isLoading: isLoadingSubscription } = useSubscription(user?.id);
 
   const handleSubscribe = async () => {
     try {
@@ -72,8 +71,8 @@ const Pricing = () => {
   };
 
   // Check if user has an active subscription
-  const isSubscribed = subscription?.status === "active";
-  const isPremium = isSubscribed && subscription?.tier === "premium";
+  const isPremium = (subscription?.status === "active" && subscription?.tier === "premium") || 
+                   (isSubscribed && subscriptionTier === "premium");
 
   const PricingFeature = ({ included, name }: { included: boolean; name: string }) => (
     <div className="flex items-center gap-3">

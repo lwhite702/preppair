@@ -1,4 +1,3 @@
-
 export interface UserProfile {
   id: string;
   email: string;
@@ -72,11 +71,8 @@ export interface GenerateGuideRequest {
   jobTitle: string;
   company: string;
   additionalInfo?: string;
-}
-
-export interface OpenAIResponse {
-  content: string;
-  error?: string;
+  tone?: string;
+  interviewFormat?: "virtual" | "phone" | "in-person";
 }
 
 export type SubscriptionTier = "free" | "premium";
