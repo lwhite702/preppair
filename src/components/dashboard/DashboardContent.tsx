@@ -144,7 +144,7 @@ const DashboardContent = ({
   if (showFeedbackForm || showFollowUpGenerator) {
     return (
       <FeedbackManager
-        guide={selectedGuide}
+        selectedGuide={selectedGuide}
         isSubmittingFeedback={isSubmittingFeedback}
         showFeedbackForm={showFeedbackForm}
         showFollowUpGenerator={showFollowUpGenerator}
@@ -160,7 +160,7 @@ const DashboardContent = ({
   if (generatedGuide || selectedGuide) {
     return (
       <GuideView
-        guide={selectedGuide}
+        selectedGuide={selectedGuide}
         markdownContent={generatedGuide || selectedGuide?.content || ""}
         onShowFeedbackForm={handleShowFeedbackForm}
         onReset={handleReset}
