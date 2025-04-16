@@ -48,10 +48,29 @@ const FeedbackManager = ({
         return;
       }
       
+      // Convert feedback to a plain JSON object compatible with Supabase
+      const feedbackJson = {
+        interviewerNames: feedback.interviewerNames,
+        questions: feedback.questions,
+        answers: feedback.answers,
+        impressions: feedback.impressions,
+        nextSteps: feedback.nextSteps,
+        interviewDate: feedback.interviewDate,
+        ratings: {
+          communicationSkills: feedback.ratings.communicationSkills,
+          technicalSkills: feedback.ratings.technicalSkills,
+          problemSolvingSkills: feedback.ratings.problemSolvingSkills,
+          culturalFit: feedback.ratings.culturalFit,
+          overall: feedback.ratings.overall || 0,
+          technical: feedback.ratings.technical || 0,
+          cultural: feedback.ratings.cultural || 0
+        }
+      };
+      
       // Update guide with feedback
       const { error } = await supabase
         .from('interview_guides')
-        .update({ feedback, status: 'feedback_provided' })
+        .update({ feedback: feedbackJson, status: 'feedback_provided' })
         .eq('id', selectedGuide.id);
       
       if (error) throw error;
