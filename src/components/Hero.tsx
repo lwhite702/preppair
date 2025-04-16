@@ -1,4 +1,4 @@
-
+import React from 'react';
 import { ArrowRight, MessageSquare, LucideIcon, Star, Sparkles, CheckCircle, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link as RouterLink } from 'react-router-dom';
@@ -27,12 +27,12 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
             {/* Logo and brand */}
             <div className="flex items-center gap-3 mb-8">
               <img 
-                src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
+                src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
                 alt="PrepPair Logo"
                 className="h-16 md:h-24 animate-pulse-gentle"
               />
               <div className="text-4xl md:text-5xl font-bold text-white">
-                <span>Prep</span><span className="text-primary">Pair</span>
+                <span>Prep</span><span className="text-primary">Pair</span><span className="text-sm ml-1">.me</span>
               </div>
             </div>
             

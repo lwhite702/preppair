@@ -12,11 +12,11 @@ const Footer = () => {
           <div className="mb-8 md:mb-0">
             <div className="flex items-center mb-4">
               <img 
-                src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
+                src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
                 alt="PrepPair Logo"
                 className="h-8 w-8 object-contain mr-2"
               />
-              <h2 className="text-xl font-bold text-white">PrepPair</h2>
+              <h2 className="text-xl font-bold text-white">PrepPair.me</h2>
             </div>
             <p className="text-muted-foreground max-w-xs">
               Your AI interview partner—turning resumes and job descriptions into tailored prep guides.

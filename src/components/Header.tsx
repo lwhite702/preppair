@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, X, UserCircle, LogOut, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -34,11 +34,11 @@ const Header = () => {
         <Link to="/" className="flex items-center space-x-2">
           <div className="flex items-center">
             <img 
-              src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
+              src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
               alt="PrepPair Logo"
               className="h-8 w-8 object-contain mr-2"
             />
-            <span className="text-xl font-bold gradient-text">PrepPair</span>
+            <span className="text-xl font-bold gradient-text">PrepPair.me</span>
           </div>
         </Link>
         
