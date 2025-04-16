@@ -1,3 +1,4 @@
+
 export interface InterviewGuide {
   id: string;
   userId: string;
@@ -36,7 +37,10 @@ export type JobStatus =
   | "feedback_provided"
   | "follow_up_sent"
   | "offer_received"
-  | "rejected";
+  | "rejected"
+  | "pending_decision"
+  | "accepted"
+  | "declined";
 
 export interface UploadFormData {
   candidateName: string;
@@ -44,14 +48,30 @@ export interface UploadFormData {
   company: string;
   jobDescription: string;
   additionalInfo?: string;
+  resumeText?: string;
+  tone?: string;
+  interviewFormat?: string;
 }
 
 export interface CalendarEvent {
   id: string;
+  userId: string;
   title: string;
   startTime: string;
   endTime?: string;
   guideId?: string;
   completed?: boolean;
   type: 'interview' | 'follow-up' | 'other';
+  description?: string;
 }
+
+export type SubscriptionTier = 'free' | 'basic' | 'premium';
+
+export interface UserProfile {
+  id: string;
+  email: string;
+  fullName: string;
+  createdAt: Date;
+}
+
+export type HiringDecision = 'pending_decision' | 'accepted' | 'declined';
