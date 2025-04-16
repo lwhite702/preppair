@@ -13,6 +13,9 @@ export interface InterviewGuide {
   feedback?: InterviewFeedback;
   status?: JobStatus;
   interviewDate?: string;
+  reminderSent?: boolean;
+  followUpSent?: boolean;
+  hiringDecision?: HiringDecision;
 }
 
 export interface InterviewFeedback {
@@ -27,6 +30,9 @@ export interface InterviewFeedback {
     technicalSkills: number;
     problemSolvingSkills: number;
     culturalFit: number;
+    overall?: number;
+    technical?: number;
+    cultural?: number;
   };
 }
 
@@ -61,7 +67,7 @@ export interface CalendarEvent {
   endTime?: string;
   guideId?: string;
   completed?: boolean;
-  type: 'interview' | 'follow-up' | 'other';
+  type: 'interview' | 'follow-up' | 'reminder' | 'other';
   description?: string;
 }
 
@@ -70,8 +76,9 @@ export type SubscriptionTier = 'free' | 'basic' | 'premium';
 export interface UserProfile {
   id: string;
   email: string;
-  fullName: string;
+  name: string;
   createdAt: Date;
+  guidesCreated?: number;
 }
 
-export type HiringDecision = 'pending_decision' | 'accepted' | 'declined';
+export type HiringDecision = 'pending' | 'offer_received' | 'rejected';

@@ -1,65 +1,74 @@
 
 import { useState } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import { useAuth } from "@/contexts/AuthContext";
-import { useSubscription } from "@/hooks/useSubscription";
 import { useGuides } from "@/hooks/useGuides";
-import { useCalendar } from "@/hooks/useCalendar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import DashboardOverview from "@/components/dashboard/DashboardOverview";
 import TabContent from "@/components/dashboard/TabContent";
-import { JobStatusManager } from "@/components/jobs/JobStatusManager";
+import ProtectedRoute from "@/components/ProtectedRoute";
+import { InterviewGuide } from "@/lib/types";
+import InterviewCalendar from "@/components/calendar/InterviewCalendar";
+import JobStatusManager from "@/components/jobs/JobStatusManager"; // Fixed import
 
 const Dashboard = () => {
-  const { user } = useAuth();
-  const [generatedGuide, setGeneratedGuide] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<string>("guides");
-  const [selectedGuideId, setSelectedGuideId] = useState<string | null>(null);
-  
-  const { guides, isLoadingGuides, fetchGuides } = useGuides(user?.id);
-  const { events, isLoading: isLoadingEvents } = useCalendar(user?.id);
-  
-  const handleGuideGenerated = (markdownContent: string) => {
-    setGeneratedGuide(markdownContent);
-    fetchGuides();
+  const { profile } = useAuth();
+  const { guides, isLoading: guidesLoading, refreshGuides } = useGuides();
+  const [selectedTab, setSelectedTab] = useState("overview");
+  const [selectedGuide, setSelectedGuide] = useState<InterviewGuide | null>(null);
+
+  const handleTabChange = (value: string) => {
+    setSelectedTab(value);
+    setSelectedGuide(null);
   };
-  
-  const handleViewGuide = (guideId: string) => {
-    const guide = guides.find(g => g.id === guideId);
-    if (guide) {
-      setGeneratedGuide(guide.content);
-      setSelectedGuideId(guideId);
-    }
+
+  const handleGuideSelect = (guide: InterviewGuide) => {
+    setSelectedGuide(guide);
   };
-  
+
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow py-8 md:py-12">
-        <div className="container">
-          <DashboardHeader />
+    <ProtectedRoute>
+      <div className="container py-6 max-w-7xl">
+        <DashboardHeader profile={profile} guidesCount={guides.length} />
+        
+        <Separator className="my-6" />
+        
+        <Tabs value={selectedTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="grid grid-cols-4 mb-8">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="guides">Your Guides</TabsTrigger>
+            <TabsTrigger value="calendar">Calendar</TabsTrigger>
+            <TabsTrigger value="feedback">Interview Feedback</TabsTrigger>
+          </TabsList>
           
-          <div className="mt-8">
-            <TabContent
-              activeTab={activeTab}
-              setActiveTab={setActiveTab}
-              guides={guides}
-              isLoadingGuides={isLoadingGuides}
-              events={events}
-              isLoadingEvents={isLoadingEvents}
-              selectedGuideId={selectedGuideId}
-              setSelectedGuideId={setSelectedGuideId}
-              generatedGuide={generatedGuide}
-              setGeneratedGuide={setGeneratedGuide}
-              fetchGuides={fetchGuides}
-              handleGuideGenerated={handleGuideGenerated}
-              handleViewGuide={handleViewGuide}
-            />
+          <div className="space-y-8">
+            {selectedTab === "overview" && (
+              <DashboardOverview 
+                guides={guides}
+                isLoading={guidesLoading}
+                onGuideSelect={handleGuideSelect}
+              />
+            )}
+            
+            {selectedTab !== "overview" && (
+              <TabContent
+                tab={selectedTab}
+                guides={guides}
+                isLoading={guidesLoading}
+                selectedGuide={selectedGuide}
+                onGuideSelect={handleGuideSelect}
+                onRefresh={refreshGuides}
+              />
+            )}
+            
+            {selectedTab === "calendar" && !selectedGuide && (
+              <InterviewCalendar />
+            )}
           </div>
-        </div>
-      </main>
-      <Footer />
-    </div>
+        </Tabs>
+      </div>
+    </ProtectedRoute>
   );
 };
 

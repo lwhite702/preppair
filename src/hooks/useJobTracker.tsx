@@ -11,7 +11,7 @@ interface CalendarEvent {
   startTime: string;
   endTime: string;
   guideId?: string;
-  type: "interview" | "follow_up" | "reminder";
+  type: "interview" | "follow-up" | "reminder" | "other";
 }
 
 export const useJobTracker = (userId: string | undefined, guideId?: string) => {
@@ -30,7 +30,15 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
       impressions: feedbackJson.impressions || '',
       nextSteps: feedbackJson.nextSteps || '',
       interviewDate: feedbackJson.interviewDate || '',
-      ratings: feedbackJson.ratings
+      ratings: {
+        communicationSkills: feedbackJson.ratings?.communicationSkills || 0,
+        technicalSkills: feedbackJson.ratings?.technicalSkills || 0,
+        problemSolvingSkills: feedbackJson.ratings?.problemSolvingSkills || 0,
+        culturalFit: feedbackJson.ratings?.culturalFit || 0,
+        overall: feedbackJson.ratings?.overall || 0,
+        technical: feedbackJson.ratings?.technical || 0,
+        cultural: feedbackJson.ratings?.cultural || 0
+      }
     };
   };
   
@@ -153,10 +161,10 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
       let newStatus: JobStatus;
       
       switch (hiringDecision) {
-        case "offer":
+        case "offer_received":
           newStatus = "offer_received";
           break;
-        case "rejection":
+        case "rejected":
           newStatus = "rejected";
           break;
         default:

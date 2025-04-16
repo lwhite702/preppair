@@ -21,6 +21,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
   const [currentStep, setCurrentStep] = useState<number>(1);
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [formData, setFormData] = useState<UploadFormData>({
+    candidateName: "",
     jobDescription: "",
     jobTitle: "",
     company: "",

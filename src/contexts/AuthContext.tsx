@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setProfile({
           id: data.id,
           email: data.email,
-          name: data.name,
+          name: data.name || 'User',
           createdAt: new Date(data.created_at),
           guidesCreated: data.guides_created
         });

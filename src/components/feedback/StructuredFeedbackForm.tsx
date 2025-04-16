@@ -14,10 +14,10 @@ import FeedbackCategory from "./FeedbackCategory";
 import RatingField from "./RatingField";
 
 interface StructuredFeedbackFormProps {
-  initialFeedback?: Partial<InterviewFeedback & { ratings?: Record<string, number> }>;
+  initialFeedback?: Partial<InterviewFeedback>;
   jobTitle: string;
   company: string;
-  onSubmit: (feedback: InterviewFeedback & { ratings?: Record<string, number> }) => void;
+  onSubmit: (feedback: InterviewFeedback) => void;
   onCancel?: () => void;
   isLoading?: boolean;
 }
@@ -30,7 +30,7 @@ const StructuredFeedbackForm = ({
   onCancel,
   isLoading = false,
 }: StructuredFeedbackFormProps) => {
-  const [feedback, setFeedback] = useState<InterviewFeedback & { ratings?: Record<string, number> }>({
+  const [feedback, setFeedback] = useState<InterviewFeedback>({
     interviewerNames: initialFeedback?.interviewerNames || [""],
     questions: initialFeedback?.questions || "",
     answers: initialFeedback?.answers || "",
@@ -38,6 +38,10 @@ const StructuredFeedbackForm = ({
     nextSteps: initialFeedback?.nextSteps || "",
     interviewDate: initialFeedback?.interviewDate || new Date().toISOString().split('T')[0],
     ratings: initialFeedback?.ratings || {
+      communicationSkills: 0,
+      technicalSkills: 0,
+      problemSolvingSkills: 0,
+      culturalFit: 0,
       overall: 0,
       technical: 0,
       cultural: 0
@@ -55,7 +59,7 @@ const StructuredFeedbackForm = ({
     setFeedback(prev => ({
       ...prev,
       ratings: {
-        ...(prev.ratings || {}),
+        ...prev.ratings,
         [ratingKey]: value
       }
     }));
@@ -97,7 +101,7 @@ const StructuredFeedbackForm = ({
             <InterviewerField
               interviewers={feedback.interviewerNames}
               onInterviewersChange={(interviewers) => 
-                handleInputChange("interviewerNames", interviewers as any)
+                handleInputChange("interviewerNames", interviewers as unknown as string)
               }
             />
           </div>
@@ -126,6 +130,34 @@ const StructuredFeedbackForm = ({
                 value={feedback.ratings?.cultural || 0}
                 onChange={(value) => handleRatingChange("cultural", value)}
                 description="How well did you connect with the interviewer(s)?"
+              />
+              
+              <RatingField
+                label="Communication Skills"
+                value={feedback.ratings?.communicationSkills || 0}
+                onChange={(value) => handleRatingChange("communicationSkills", value)}
+                description="How effectively did you communicate your ideas?"
+              />
+              
+              <RatingField
+                label="Technical Skills"
+                value={feedback.ratings?.technicalSkills || 0}
+                onChange={(value) => handleRatingChange("technicalSkills", value)}
+                description="How well did you demonstrate your technical knowledge?"
+              />
+              
+              <RatingField
+                label="Problem Solving Skills"
+                value={feedback.ratings?.problemSolvingSkills || 0}
+                onChange={(value) => handleRatingChange("problemSolvingSkills", value)}
+                description="How well did you approach and solve problems?"
+              />
+              
+              <RatingField
+                label="Cultural Fit Assessment"
+                value={feedback.ratings?.culturalFit || 0}
+                onChange={(value) => handleRatingChange("culturalFit", value)}
+                description="How well did you align with the company culture?"
               />
             </div>
           </FeedbackCategory>

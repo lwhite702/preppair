@@ -37,7 +37,7 @@ export const useCalendar = (userId: string | undefined) => {
           startTime: event.start_time,
           endTime: event.end_time,
           guideId: event.guide_id,
-          type: event.type as "interview" | "follow_up" | "reminder",
+          type: event.type === "follow_up" ? "follow-up" : event.type,
           completed: event.completed
         }));
         
@@ -57,6 +57,9 @@ export const useCalendar = (userId: string | undefined) => {
     try {
       setIsUpdating(true);
       
+      // Convert "follow-up" back to "follow_up" for database storage
+      const dbType = event.type === "follow-up" ? "follow_up" : event.type;
+      
       const { data, error } = await supabase
         .from("calendar_events")
         .insert({
@@ -66,7 +69,7 @@ export const useCalendar = (userId: string | undefined) => {
           start_time: event.startTime,
           end_time: event.endTime,
           guide_id: event.guideId,
-          type: event.type,
+          type: dbType,
           completed: false
         })
         .select("*")
@@ -83,7 +86,7 @@ export const useCalendar = (userId: string | undefined) => {
           startTime: data.start_time,
           endTime: data.end_time,
           guideId: data.guide_id,
-          type: data.type as "interview" | "follow_up" | "reminder",
+          type: data.type === "follow_up" ? "follow-up" : data.type,
           completed: data.completed
         };
         
@@ -206,7 +209,7 @@ export const useCalendar = (userId: string | undefined) => {
     switch (type) {
       case "interview":
         return "#3b82f6"; // blue
-      case "follow_up":
+      case "follow-up":
         return "#8b5cf6"; // violet
       case "reminder":
         return "#f59e0b"; // amber

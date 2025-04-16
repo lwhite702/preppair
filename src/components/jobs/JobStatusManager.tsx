@@ -1,11 +1,10 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CalendarIcon, Loader2, Check, AlertCircle, Clock, CalendarPlus } from "lucide-react";
 import { format, parseISO, isAfter, isBefore } from "date-fns";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useJobTracker } from "@/hooks/useJobTracker";
@@ -92,9 +91,9 @@ const JobStatusManager = ({ guide, onStatusUpdate }: JobStatusManagerProps) => {
     await updateHiringDecision(guide.id, decision);
     if (onStatusUpdate) onStatusUpdate();
     
-    if (decision === "offer") {
+    if (decision === "offer_received") {
       toast.success("Congratulations on receiving an offer!");
-    } else if (decision === "rejection") {
+    } else if (decision === "rejected") {
       toast.error("We're sorry about the rejection. Don't give up!");
     } else {
       toast.info("Hiring decision updated");
@@ -197,7 +196,7 @@ const JobStatusManager = ({ guide, onStatusUpdate }: JobStatusManagerProps) => {
               <Button 
                 variant="outline"
                 className="bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800"
-                onClick={() => handleUpdateHiringDecision("offer")}
+                onClick={() => handleUpdateHiringDecision("offer_received")}
                 disabled={isUpdating}
               >
                 <Check className="h-4 w-4 mr-2" />
@@ -205,7 +204,7 @@ const JobStatusManager = ({ guide, onStatusUpdate }: JobStatusManagerProps) => {
               </Button>
               <Button 
                 variant="destructive"
-                onClick={() => handleUpdateHiringDecision("rejection")}
+                onClick={() => handleUpdateHiringDecision("rejected")}
                 disabled={isUpdating}
               >
                 <AlertCircle className="h-4 w-4 mr-2" />
