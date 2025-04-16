@@ -9,119 +9,165 @@ import { supabase } from "@/integrations/supabase/client";
 
 export interface FeedbackManagerProps {
   selectedGuide: InterviewGuide | null;
-  isLoading: boolean;
-  onGuideSelect: (guide: InterviewGuide) => void;
-  onRefresh: () => void;
+  isLoading?: boolean;
+  isSubmittingFeedback?: boolean;
+  showFeedbackForm?: boolean;
+  showFollowUpGenerator?: boolean;
+  feedbackData?: InterviewFeedback | null;
+  onGuideSelect?: (guide: InterviewGuide) => void;
+  onRefresh?: () => void;
+  onFeedbackSubmitted?: (feedback: InterviewFeedback) => Promise<void>;
+  onFollowUpGenerated?: () => Promise<void>;
+  onCancel?: () => void;
+  onBackToFeedback?: () => void;
 }
 
 const FeedbackManager = ({
   selectedGuide,
-  isLoading,
-  onRefresh
+  isLoading = false,
+  isSubmittingFeedback = false,
+  showFeedbackForm = false,
+  showFollowUpGenerator = false,
+  feedbackData = null,
+  onGuideSelect,
+  onRefresh,
+  onFeedbackSubmitted,
+  onFollowUpGenerated,
+  onCancel,
+  onBackToFeedback
 }: FeedbackManagerProps) => {
-  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
-  const [showFollowUpGenerator, setShowFollowUpGenerator] = useState(false);
-  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
-  const [feedbackData, setFeedbackData] = useState<InterviewFeedback | null>(null);
+  const [internalShowFeedbackForm, setInternalShowFeedbackForm] = useState(showFeedbackForm);
+  const [internalShowFollowUpGenerator, setInternalShowFollowUpGenerator] = useState(showFollowUpGenerator);
+  const [internalFeedbackData, setInternalFeedbackData] = useState<InterviewFeedback | null>(feedbackData);
+  const [internalIsSubmittingFeedback, setInternalIsSubmittingFeedback] = useState(isSubmittingFeedback);
+  
+  // Sync internal state with props when they change
+  useEffect(() => {
+    setInternalShowFeedbackForm(showFeedbackForm);
+    setInternalShowFollowUpGenerator(showFollowUpGenerator);
+    setInternalFeedbackData(feedbackData);
+    setInternalIsSubmittingFeedback(isSubmittingFeedback);
+  }, [showFeedbackForm, showFollowUpGenerator, feedbackData, isSubmittingFeedback]);
   
   // Show feedback form when a guide is selected
   useEffect(() => {
-    if (selectedGuide && !selectedGuide.feedback) {
-      setShowFeedbackForm(true);
-      setShowFollowUpGenerator(false);
-    } else if (selectedGuide && selectedGuide.feedback) {
-      setFeedbackData(selectedGuide.feedback);
-      setShowFeedbackForm(false);
-      setShowFollowUpGenerator(true);
-    } else {
-      setShowFeedbackForm(false);
-      setShowFollowUpGenerator(false);
+    if (selectedGuide && onGuideSelect) {
+      onGuideSelect(selectedGuide);
+      
+      if (!selectedGuide.feedback) {
+        setInternalShowFeedbackForm(true);
+        setInternalShowFollowUpGenerator(false);
+      } else {
+        setInternalFeedbackData(selectedGuide.feedback);
+        setInternalShowFeedbackForm(false);
+        setInternalShowFollowUpGenerator(true);
+      }
     }
-  }, [selectedGuide]);
+  }, [selectedGuide, onGuideSelect]);
   
-  const onFeedbackSubmitted = async (feedback: InterviewFeedback) => {
+  const handleFeedbackSubmitted = async (feedback: InterviewFeedback) => {
     try {
-      setIsSubmittingFeedback(true);
+      setInternalIsSubmittingFeedback(true);
       
       if (!selectedGuide) {
         toast.error("No guide selected");
         return;
       }
       
-      // Convert feedback to a plain JSON object compatible with Supabase
-      const feedbackJson = {
-        interviewerNames: feedback.interviewerNames,
-        questions: feedback.questions,
-        answers: feedback.answers,
-        impressions: feedback.impressions,
-        nextSteps: feedback.nextSteps,
-        interviewDate: feedback.interviewDate,
-        ratings: {
-          communicationSkills: feedback.ratings.communicationSkills,
-          technicalSkills: feedback.ratings.technicalSkills,
-          problemSolvingSkills: feedback.ratings.problemSolvingSkills,
-          culturalFit: feedback.ratings.culturalFit,
-          overall: feedback.ratings.overall || 0,
-          technical: feedback.ratings.technical || 0,
-          cultural: feedback.ratings.cultural || 0
-        }
-      };
+      if (onFeedbackSubmitted) {
+        await onFeedbackSubmitted(feedback);
+      } else {
+        // Default implementation if prop not provided
+        // Convert feedback to a plain JSON object compatible with Supabase
+        const feedbackJson = {
+          interviewerNames: feedback.interviewerNames,
+          questions: feedback.questions,
+          answers: feedback.answers,
+          impressions: feedback.impressions,
+          nextSteps: feedback.nextSteps,
+          interviewDate: feedback.interviewDate,
+          ratings: {
+            communicationSkills: feedback.ratings.communicationSkills,
+            technicalSkills: feedback.ratings.technicalSkills,
+            problemSolvingSkills: feedback.ratings.problemSolvingSkills,
+            culturalFit: feedback.ratings.culturalFit,
+            overall: feedback.ratings.overall || 0,
+            technical: feedback.ratings.technical || 0,
+            cultural: feedback.ratings.cultural || 0
+          }
+        };
+        
+        // Update guide with feedback
+        const { error } = await supabase
+          .from('interview_guides')
+          .update({ feedback: feedbackJson, status: 'feedback_provided' })
+          .eq('id', selectedGuide.id);
+        
+        if (error) throw error;
+        
+        if (onRefresh) onRefresh();
+      }
       
-      // Update guide with feedback
-      const { error } = await supabase
-        .from('interview_guides')
-        .update({ feedback: feedbackJson, status: 'feedback_provided' })
-        .eq('id', selectedGuide.id);
-      
-      if (error) throw error;
-      
-      setFeedbackData(feedback);
-      setShowFeedbackForm(false);
-      setShowFollowUpGenerator(true);
-      onRefresh();
+      setInternalFeedbackData(feedback);
+      setInternalShowFeedbackForm(false);
+      setInternalShowFollowUpGenerator(true);
       toast.success("Feedback saved successfully");
     } catch (error) {
       console.error("Error saving feedback:", error);
       toast.error("Failed to save feedback");
     } finally {
-      setIsSubmittingFeedback(false);
+      setInternalIsSubmittingFeedback(false);
     }
   };
   
-  const onFollowUpGenerated = async () => {
+  const handleFollowUpGenerated = async () => {
     try {
       if (!selectedGuide) {
         toast.error("No guide selected");
         return;
       }
       
-      // Update guide status
-      const { error } = await supabase
-        .from('interview_guides')
-        .update({ status: 'follow_up_sent', followUpSent: true })
-        .eq('id', selectedGuide.id);
+      if (onFollowUpGenerated) {
+        await onFollowUpGenerated();
+      } else {
+        // Default implementation if prop not provided
+        // Update guide status
+        const { error } = await supabase
+          .from('interview_guides')
+          .update({ status: 'follow_up_sent', followUpSent: true })
+          .eq('id', selectedGuide.id);
+        
+        if (error) throw error;
+        
+        if (onRefresh) onRefresh();
+      }
       
-      if (error) throw error;
-      
-      onRefresh();
       toast.success("Follow-up email generated successfully");
       
       // Reset view
-      setShowFollowUpGenerator(false);
+      setInternalShowFollowUpGenerator(false);
     } catch (error) {
       console.error("Error updating guide status:", error);
       toast.error("Failed to update guide status");
     }
   };
   
-  const onCancel = () => {
-    setShowFeedbackForm(false);
-    setShowFollowUpGenerator(false);
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel();
+    } else {
+      setInternalShowFeedbackForm(false);
+      setInternalShowFollowUpGenerator(false);
+    }
   };
   
-  const onBackToFeedback = () => {
-    setShowFeedbackForm(true);
-    setShowFollowUpGenerator(false);
+  const handleBackToFeedback = () => {
+    if (onBackToFeedback) {
+      onBackToFeedback();
+    } else {
+      setInternalShowFeedbackForm(true);
+      setInternalShowFollowUpGenerator(false);
+    }
   };
   
   if (isLoading) {
@@ -132,31 +178,37 @@ const FeedbackManager = ({
     return <div className="text-center p-8">Select a guide to manage feedback</div>;
   }
   
-  if (showFeedbackForm) {
+  if (internalShowFeedbackForm || showFeedbackForm) {
     return (
       <div id="feedbackForm" className="w-full max-w-3xl mx-auto">
         <StructuredFeedbackForm
           jobTitle={selectedGuide?.jobTitle || ""}
           company={selectedGuide?.company || ""}
-          onSubmit={onFeedbackSubmitted}
-          onCancel={onCancel}
-          isLoading={isSubmittingFeedback}
+          onSubmit={handleFeedbackSubmitted}
+          onCancel={handleCancel}
+          isLoading={internalIsSubmittingFeedback}
           initialFeedback={selectedGuide?.feedback}
         />
       </div>
     );
   }
   
-  if (showFollowUpGenerator && feedbackData) {
+  if ((internalShowFollowUpGenerator || showFollowUpGenerator) && (internalFeedbackData || feedbackData)) {
+    const feedback = internalFeedbackData || feedbackData;
+    
+    if (!feedback) {
+      return <div className="text-center p-8">No feedback data available</div>;
+    }
+    
     return (
       <div id="followUpGenerator" className="w-full max-w-3xl mx-auto">
         <FollowUpEmailGenerator
-          feedback={feedbackData}
+          feedback={feedback}
           candidateName={selectedGuide?.candidateName}
           jobTitle={selectedGuide?.jobTitle || ""}
           company={selectedGuide?.company || ""}
-          onBack={onBackToFeedback}
-          onEmailGenerated={onFollowUpGenerated}
+          onBack={handleBackToFeedback}
+          onEmailGenerated={handleFollowUpGenerated}
         />
       </div>
     );
@@ -165,7 +217,7 @@ const FeedbackManager = ({
   return (
     <div className="text-center p-8">
       <p>Feedback options will appear here based on the guide status.</p>
-      <Button onClick={() => setShowFeedbackForm(true)} className="mt-4">
+      <Button onClick={() => setInternalShowFeedbackForm(true)} className="mt-4">
         Add or Edit Feedback
       </Button>
     </div>

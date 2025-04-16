@@ -6,30 +6,27 @@ import { InterviewGuide, JobStatus } from "@/lib/types";
 
 export interface GuideViewProps {
   selectedGuide: InterviewGuide | null;
-  isLoading: boolean;
-  onGuideSelect: (guide: InterviewGuide) => void;
+  markdownContent: string;
+  isLoading?: boolean;
+  onShowFeedbackForm: () => void;
+  onReset: () => void;
+  onGuideSelect?: (guide: InterviewGuide) => void;
 }
 
-const GuideView = ({ selectedGuide, isLoading }: GuideViewProps) => {
-  const [markdownContent, setMarkdownContent] = useState<string>("");
+const GuideView = ({ 
+  selectedGuide, 
+  markdownContent,
+  isLoading = false, 
+  onShowFeedbackForm,
+  onReset,
+  onGuideSelect
+}: GuideViewProps) => {
   
   useEffect(() => {
-    if (selectedGuide) {
-      setMarkdownContent(selectedGuide.content || "No content available");
-    } else {
-      setMarkdownContent("");
+    if (selectedGuide && onGuideSelect) {
+      onGuideSelect(selectedGuide);
     }
-  }, [selectedGuide]);
-  
-  const onShowFeedbackForm = () => {
-    // Implement feedback form display logic
-    console.log("Show feedback form");
-  };
-  
-  const onReset = () => {
-    // Implement reset logic
-    console.log("Reset view");
-  };
+  }, [selectedGuide, onGuideSelect]);
   
   // Get appropriate action based on job status
   const getActionForJobStatus = (status?: JobStatus) => {
@@ -57,7 +54,7 @@ const GuideView = ({ selectedGuide, isLoading }: GuideViewProps) => {
     return <div className="flex justify-center items-center h-64">Loading guide...</div>;
   }
   
-  if (!selectedGuide) {
+  if (!selectedGuide && !markdownContent) {
     return <div className="text-center p-8">Select a guide to view its details</div>;
   }
 
