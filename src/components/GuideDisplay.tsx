@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -25,7 +26,7 @@ const GuideDisplay = ({
 }: GuideDisplayProps) => {
   const [copied, setCopied] = useState(false);
   const { user } = useAuth();
-  const { subscription, isSubscribed } = useSubscription(user?.id);
+  const { subscription, isSubscribed, subscriptionTier } = useSubscription(user?.id);
   
   // Determine if user has premium access
   const isPremium = (subscription?.tier === "premium" && subscription?.status === "active") || 

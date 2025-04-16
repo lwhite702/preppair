@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
@@ -220,6 +219,12 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
     }
   };
 
+  const handleInterviewFormatChange = (value: string) => {
+    if (value === "virtual" || value === "phone" || value === "in-person") {
+      setInterviewFormat(value);
+    }
+  };
+
   const renderStep = () => {
     switch (currentStep) {
       case 1:
@@ -363,7 +368,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
               <h3 className="font-medium">Interview Format</h3>
               <RadioGroup
                 value={interviewFormat}
-                onValueChange={setInterviewFormat}
+                onValueChange={handleInterviewFormatChange}
                 className="space-y-4"
               >
                 <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
