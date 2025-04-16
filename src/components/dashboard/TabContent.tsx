@@ -23,13 +23,28 @@ const TabContent = ({
 }: TabContentProps) => {
   const { user } = useAuth();
 
+  // Helper functions to handle guide view actions
+  const handleShowFeedbackForm = () => {
+    // This would typically navigate to the feedback form or change state
+    // Since we're in a tab content component, we'll just refresh for now
+    if (onRefresh) onRefresh();
+  };
+
+  const handleReset = () => {
+    // Reset the guide selection or create a new guide
+    if (onRefresh) onRefresh();
+  };
+
   // Show appropriate content based on the selected tab
   switch (selectedTab) {
     case "guides":
       return (
         <GuideView 
           selectedGuide={selectedGuide}
+          markdownContent={selectedGuide?.content || ""}
           isLoading={isLoading}
+          onShowFeedbackForm={handleShowFeedbackForm}
+          onReset={handleReset}
           onGuideSelect={onGuideSelect}
         />
       );
