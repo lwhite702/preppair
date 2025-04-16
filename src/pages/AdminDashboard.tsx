@@ -30,29 +30,29 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-white">
       <Header />
       <main className="flex-grow py-8 md:py-12">
         <div className="container">
           <div className="max-w-7xl mx-auto">
-            <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+            <h1 className="text-3xl font-bold mb-6 text-gray-900">Admin Dashboard</h1>
             
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-              <TabsList className="mb-6">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                <TabsTrigger value="users">Users</TabsTrigger>
-                <TabsTrigger value="guides">Interview Guides</TabsTrigger>
+              <TabsList className="mb-6 bg-gray-100 p-1">
+                <TabsTrigger value="overview" className="data-[state=active]:bg-white data-[state=active]:text-primary">Overview</TabsTrigger>
+                <TabsTrigger value="users" className="data-[state=active]:bg-white data-[state=active]:text-primary">Users</TabsTrigger>
+                <TabsTrigger value="guides" className="data-[state=active]:bg-white data-[state=active]:text-primary">Interview Guides</TabsTrigger>
               </TabsList>
               
-              <TabsContent value="overview">
+              <TabsContent value="overview" className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <AdminStats />
               </TabsContent>
               
-              <TabsContent value="users">
+              <TabsContent value="users" className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <AdminUsers />
               </TabsContent>
               
-              <TabsContent value="guides">
+              <TabsContent value="guides" className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
                 <AdminGuides />
               </TabsContent>
             </Tabs>

@@ -39,7 +39,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-20 bg-gradient-to-br from-slate-50 to-blue-50">
       <div className="container">
         <div className="text-center mb-16">
           <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">
@@ -53,7 +53,7 @@ const HowItWorks = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {steps.map((step, index) => (
-            <div key={index} className="flex flex-col items-center text-center group">
+            <div key={index} className="glass-card p-8 flex flex-col items-center text-center group">
               <div className="mb-4 p-4 bg-primary/10 rounded-full transform group-hover:scale-110 transition-transform">
                 {step.icon}
               </div>
@@ -70,7 +70,7 @@ const HowItWorks = () => {
           <h3 className="text-2xl font-semibold text-center mb-8">Additional Features</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="p-6 bg-gray-50 rounded-lg hover:shadow-md transition-shadow">
+              <div key={index} className="glass-card p-6 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <div className="mb-4 p-2 bg-primary/10 rounded-lg inline-block">
                   {feature.icon}
                 </div>

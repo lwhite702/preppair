@@ -14,11 +14,11 @@ interface HeroProps {
 
 const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroProps) => {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-white to-blue-50 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-gradient-to-br from-blue-600 to-blue-700 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-primary/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-brand-coral/20 rounded-full blur-3xl"></div>
+        <div className="absolute top-20 left-10 w-72 h-72 bg-white/30 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-blue-300/20 rounded-full blur-3xl"></div>
       </div>
       
       {/* Logo in top right corner */}
