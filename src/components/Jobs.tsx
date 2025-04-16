@@ -29,8 +29,19 @@ const Jobs = () => {
     }
   ];
 
+  const testimonials = [
+    {
+      quote: "PrepPair helped me land my dream job at Google. The personalized questions were exactly what I was asked in the actual interview!",
+      author: "Sarah T., Software Engineer"
+    },
+    {
+      quote: "The follow-up email templates were perfect. I sent one after my interview and received an offer the next day.",
+      author: "Michael K., Marketing Director"
+    }
+  ];
+
   return (
-    <section className="py-20 bg-gradient-to-br from-primary to-secondary text-white">
+    <section className="py-20 bg-gradient-to-br from-gray-900 to-blue-900 text-white">
       <div className="container">
         <div className="text-center mb-12">
           <span className="inline-block px-3 py-1 rounded-full bg-white/20 text-white text-sm font-medium mb-3">
@@ -42,7 +53,7 @@ const Jobs = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
           {stats.map((stat, index) => (
             <div key={index} className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-6 hover:bg-white/20 transition-all duration-300">
               <div className="mb-4 bg-white/10 p-3 rounded-xl inline-block">
@@ -53,6 +64,19 @@ const Jobs = () => {
               <p className="text-white/70 text-sm">{stat.description}</p>
             </div>
           ))}
+        </div>
+
+        {/* Testimonials */}
+        <div className="mt-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8 relative">
+                <div className="absolute -top-4 -left-4 text-6xl text-primary/20 font-serif">"</div>
+                <p className="text-white/90 text-lg italic mb-6 relative z-10">{testimonial.quote}</p>
+                <p className="text-white/70 font-medium">— {testimonial.author}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

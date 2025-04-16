@@ -2,6 +2,7 @@
 import { Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Link } from 'react-router-dom';
 
 const Pricing = () => {
   const plans = [
@@ -19,7 +20,8 @@ const Pricing = () => {
     {
       name: "Pro",
       price: "$19.99",
-      period: "3 months",
+      period: "month",
+      commitment: "3 months",
       monthlyPrice: "$24.99",
       description: "For serious job seekers",
       features: [
@@ -28,11 +30,7 @@ const Pricing = () => {
         "Priority Support",
         "Smart Follow-ups",
         "Interview Tracking",
-        "Custom Templates",
-        "Team Dashboard",
-        "Analytics & Reporting",
-        "API Access",
-        "Custom Branding"
+        "Custom Templates"
       ]
     }
   ];
@@ -66,10 +64,14 @@ const Pricing = () => {
                   <div className="flex flex-col">
                     <span className="text-3xl font-bold text-primary">{plan.price}</span>
                     {plan.period && (
-                      <span className="text-sm text-muted-foreground">per month when paid for {plan.period}</span>
+                      <span className="text-sm text-muted-foreground">
+                        per {plan.period} for {plan.commitment}
+                      </span>
                     )}
                     {plan.monthlyPrice && (
-                      <span className="text-sm text-muted-foreground">or {plan.monthlyPrice}/month paid monthly</span>
+                      <span className="text-sm text-muted-foreground">
+                        or {plan.monthlyPrice}/month paid monthly
+                      </span>
                     )}
                   </div>
                 </CardDescription>
@@ -84,7 +86,11 @@ const Pricing = () => {
                     </li>
                   ))}
                 </ul>
-                <Button className="w-full mt-6 bg-primary hover:bg-primary/90">Get Started</Button>
+                <Link to="/auth">
+                  <Button className="w-full mt-6 bg-primary hover:bg-primary/90">
+                    {index === 0 ? "Get Started Free" : "Start Pro Plan"}
+                  </Button>
+                </Link>
               </CardContent>
             </Card>
           ))}

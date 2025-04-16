@@ -14,61 +14,47 @@ interface HeroProps {
 
 const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroProps) => {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-blue-600 to-blue-700 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-gradient-to-br from-blue-500 to-blue-700 relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-72 h-72 bg-white/30 rounded-full blur-3xl"></div>
         <div className="absolute bottom-10 right-10 w-80 h-80 bg-blue-300/20 rounded-full blur-3xl"></div>
       </div>
       
-      {/* Logo in top right corner */}
-      <div className="absolute top-5 right-5 opacity-20">
-        <img 
-          src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
-          alt="PrepPair Logo" 
-          className="w-40 h-40 object-contain"
-        />
-      </div>
-
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="flex flex-col items-center text-center">
-            {/* Floating chat bubbles */}
-            <div className="w-full flex justify-center mb-4">
-              <div className="animate-float delay-300 opacity-80 -translate-x-20">
-                <MessageBubble side="left" delay="300">
-                  How should I prepare for my interview at Google?
-                </MessageBubble>
-              </div>
-            </div>
-            
-            <div className="animate-float delay-500 opacity-90 translate-x-20 mb-8">
-              <MessageBubble side="right" delay="500">
-                I'll be your interview partner and help you prepare!
-              </MessageBubble>
-            </div>
-            
+            {/* Logo and brand */}
             <div className="flex items-center gap-3 mb-8">
               <img 
                 src="/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png" 
                 alt="PrepPair Logo"
                 className="h-16 md:h-24 animate-pulse-gentle"
               />
-              <div className="text-4xl md:text-5xl font-bold">
-                <span className="text-secondary">Prep</span><span className="text-primary">Pair</span>
+              <div className="text-4xl md:text-5xl font-bold text-white">
+                <span>Prep</span><span className="text-primary">Pair</span>
               </div>
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in tracking-tight">
-              <span className="gradient-text">{title}</span>
+            {/* Concept explanation */}
+            <div className="bg-white/20 backdrop-blur-md p-3 rounded-full text-white text-sm font-medium mb-6 flex items-center gap-2">
+              <span>Prep</span>
+              <span>+</span>
+              <span>Pair</span>
+              <span>=</span>
+              <span className="bg-primary px-2 py-0.5 rounded-full">Your Interview Partner</span>
+            </div>
+            
+            <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in text-white tracking-tight">
+              {title}
             </h1>
             
-            <h2 className="text-2xl font-semibold mb-6 text-primary animate-fade-in">
+            <h2 className="text-2xl font-semibold mb-6 text-white/80 animate-fade-in">
               {subtitle}
             </h2>
             
             {description && (
-              <p className="text-lg md:text-xl text-muted-foreground mb-8 animate-fade-in">
+              <p className="text-lg md:text-xl text-white/70 mb-8 animate-fade-in">
                 {description}
               </p>
             )}
@@ -105,20 +91,6 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
   );
 };
 
-interface MessageBubbleProps {
-  children: React.ReactNode;
-  side: 'left' | 'right';
-  delay?: string;
-}
-
-const MessageBubble = ({ children, side, delay }: MessageBubbleProps) => {
-  return (
-    <div className={`max-w-xs ${side === 'right' ? 'chat-bubble-right' : 'chat-bubble-left'}`}>
-      <p className="text-sm md:text-base">{children}</p>
-    </div>
-  );
-};
-
 interface FeatureBadgeProps {
   children: React.ReactNode;
   icon: LucideIcon;
@@ -126,7 +98,7 @@ interface FeatureBadgeProps {
 
 const FeatureBadge = ({ children, icon: Icon }: FeatureBadgeProps) => {
   return (
-    <div className="bg-white shadow-md border border-gray-100 text-secondary px-3 py-1 rounded-full flex items-center gap-1.5 text-sm">
+    <div className="bg-white/20 backdrop-blur-md shadow-md border border-white/30 text-white px-3 py-1 rounded-full flex items-center gap-1.5 text-sm">
       <Icon className="h-4 w-4 text-primary" />
       {children}
     </div>

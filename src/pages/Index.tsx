@@ -43,17 +43,17 @@ const Index = () => {
           secondaryAction={
             !user ? (
               <Link to="/auth">
-                <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-medium border-primary/30 hover:bg-primary/20 transition-all">
+                <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-medium border-white/30 text-white hover:bg-white/20 transition-all">
                   Sign In
                 </Button>
               </Link>
             ) : undefined
           }
         />
+        <HowItWorks />
         <div id="features">
           <Features />
         </div>
-        <HowItWorks />
         <div id="jobs">
           <Jobs />
         </div>

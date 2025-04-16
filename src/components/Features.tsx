@@ -1,9 +1,11 @@
 
-import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile, Sparkles } from 'lucide-react';
+import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile, Sparkles, Upload, Send, MessageSquare, CheckCircle } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const Features = () => {
-  const features = [
+  const mainFeatures = [
     {
       icon: <Target className="h-8 w-8 text-primary" />,
       title: "Personalized Prep Guides",
@@ -24,6 +26,39 @@ const Features = () => {
     }
   ];
 
+  const additionalFeatures = [
+    {
+      icon: <Send className="h-6 w-6 text-primary" />,
+      title: "Smart Follow-ups",
+      description: "AI-powered follow-up email suggestions based on your interview feedback and outcomes."
+    },
+    {
+      icon: <Calendar className="h-6 w-6 text-primary" />,
+      title: "Interview Tracker",
+      description: "Keep track of all your interviews, their status, and upcoming dates in one place."
+    },
+    {
+      icon: <MessageSquare className="h-6 w-6 text-primary" />,
+      title: "Practice Sessions",
+      description: "Interactive Q&A sessions to boost your confidence before the big day."
+    },
+    {
+      icon: <Upload className="h-6 w-6 text-primary" />,
+      title: "Quick Resume Upload",
+      description: "Seamlessly upload your resume and job description to get started in minutes."
+    },
+    {
+      icon: <Sparkles className="h-6 w-6 text-primary" />,
+      title: "Instant Guide Generation",
+      description: "Get your personalized interview prep guide instantly after uploading your information."
+    },
+    {
+      icon: <CheckCircle className="h-6 w-6 text-primary" />,
+      title: "Post-Interview Insights",
+      description: "Capture what worked, what didn't, and get recommendations for improvement."
+    }
+  ];
+
   return (
     <section className="py-20 bg-white" id="features">
       <div className="container">
@@ -37,8 +72,9 @@ const Features = () => {
           </p>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {features.map((feature, index) => (
+        {/* Main Features */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          {mainFeatures.map((feature, index) => (
             <Card key={index} className="border border-gray-100 bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden group">
               <div className="aspect-video overflow-hidden mb-4">
                 <img 
@@ -58,6 +94,30 @@ const Features = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Additional Features */}
+        <div className="mt-16">
+          <h3 className="text-2xl font-bold text-center mb-8">Additional Features</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {additionalFeatures.map((feature, index) => (
+              <div key={index} className="bg-gray-50 p-6 rounded-xl border border-gray-100 hover:shadow-md transition-all hover:-translate-y-1">
+                <div className="p-3 bg-primary/10 rounded-xl inline-block mb-4">
+                  {feature.icon}
+                </div>
+                <h4 className="text-lg font-semibold mb-2">{feature.title}</h4>
+                <p className="text-muted-foreground">{feature.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-16 text-center">
+          <Link to="/auth">
+            <Button size="lg" className="px-8 py-6 text-lg font-medium transition-all hover:scale-105">
+              Get Started Now
+            </Button>
+          </Link>
         </div>
       </div>
     </section>
