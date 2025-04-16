@@ -1,39 +1,33 @@
 
-import { useAuth } from "@/contexts/AuthContext";
-import { useSubscription } from "@/hooks/useSubscription";
-import SubscriptionStatus from "@/components/dashboard/SubscriptionStatus";
+import { Button } from "@/components/ui/button";
+import { UserProfile } from "@/lib/types";
+import { PlusCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
-const DashboardHeader = () => {
-  const { user } = useAuth();
-  const {
-    isSubscribed,
-    subscriptionTier,
-    subscriptionEnd,
-    isLoadingSubscription,
-    handleCreateSubscription,
-    handleManageSubscription
-  } = useSubscription(user?.id);
+interface DashboardHeaderProps {
+  profile: UserProfile | null;
+  guidesCount: number;
+}
 
+const DashboardHeader = ({ profile, guidesCount }: DashboardHeaderProps) => {
   return (
-    <>
-      <div className="max-w-3xl mx-auto mb-12">
-        <h1 className="text-3xl font-bold mb-4 text-center">Your Interview Dashboard</h1>
-        <p className="text-center text-muted-foreground">
-          Create, manage, and review your personalized interview guides
+    <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <h1 className="text-3xl font-bold tracking-tight">
+          Welcome, {profile?.name || "User"}
+        </h1>
+        <p className="text-muted-foreground">
+          You have created {guidesCount} interview {guidesCount === 1 ? "guide" : "guides"} so far.
         </p>
       </div>
-
-      {user && (
-        <SubscriptionStatus 
-          isSubscribed={isSubscribed}
-          subscriptionTier={subscriptionTier}
-          subscriptionEnd={subscriptionEnd}
-          isLoadingSubscription={isLoadingSubscription}
-          onManageSubscription={handleManageSubscription}
-          onCreateSubscription={handleCreateSubscription}
-        />
-      )}
-    </>
+      
+      <Link to="/create">
+        <Button className="flex items-center gap-1">
+          <PlusCircle className="h-4 w-4 mr-1" />
+          Create New Guide
+        </Button>
+      </Link>
+    </div>
   );
 };
 

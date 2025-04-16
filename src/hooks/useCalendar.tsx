@@ -37,7 +37,10 @@ export const useCalendar = (userId: string | undefined) => {
           startTime: event.start_time,
           endTime: event.end_time,
           guideId: event.guide_id,
-          type: event.type === "follow_up" ? "follow-up" : event.type,
+          // Convert database type to frontend type
+          type: event.type === "follow_up" ? "follow-up" : 
+                event.type === "reminder" ? "reminder" : 
+                event.type === "interview" ? "interview" : "other",
           completed: event.completed
         }));
         
@@ -86,7 +89,10 @@ export const useCalendar = (userId: string | undefined) => {
           startTime: data.start_time,
           endTime: data.end_time,
           guideId: data.guide_id,
-          type: data.type === "follow_up" ? "follow-up" : data.type,
+          // Ensure we're using the correct type from our defined types
+          type: data.type === "follow_up" ? "follow-up" :
+                data.type === "reminder" ? "reminder" :
+                data.type === "interview" ? "interview" : "other",
           completed: data.completed
         };
         
@@ -191,7 +197,7 @@ export const useCalendar = (userId: string | undefined) => {
       id: event.id,
       title: event.title,
       start: format(parseISO(event.startTime), "yyyy-MM-dd'T'HH:mm:ss"),
-      end: format(parseISO(event.endTime), "yyyy-MM-dd'T'HH:mm:ss"),
+      end: event.endTime ? format(parseISO(event.endTime), "yyyy-MM-dd'T'HH:mm:ss") : undefined,
       description: event.description || "",
       className: event.completed ? "opacity-50" : "",
       backgroundColor: getEventColor(event.type),

@@ -10,11 +10,11 @@ import TabContent from "@/components/dashboard/TabContent";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import { InterviewGuide } from "@/lib/types";
 import InterviewCalendar from "@/components/calendar/InterviewCalendar";
-import JobStatusManager from "@/components/jobs/JobStatusManager"; // Fixed import
+import JobStatusManager from "@/components/jobs/JobStatusManager"; // Default import
 
 const Dashboard = () => {
   const { profile } = useAuth();
-  const { guides, isLoading: guidesLoading, refreshGuides } = useGuides();
+  const { guides, isLoadingGuides, fetchGuides } = useGuides();
   const [selectedTab, setSelectedTab] = useState("overview");
   const [selectedGuide, setSelectedGuide] = useState<InterviewGuide | null>(null);
 
@@ -30,7 +30,10 @@ const Dashboard = () => {
   return (
     <ProtectedRoute>
       <div className="container py-6 max-w-7xl">
-        <DashboardHeader profile={profile} guidesCount={guides.length} />
+        {profile && <DashboardHeader 
+          profile={profile} 
+          guidesCount={guides.length} 
+        />}
         
         <Separator className="my-6" />
         
@@ -46,19 +49,19 @@ const Dashboard = () => {
             {selectedTab === "overview" && (
               <DashboardOverview 
                 guides={guides}
-                isLoading={guidesLoading}
+                isLoading={isLoadingGuides}
                 onGuideSelect={handleGuideSelect}
               />
             )}
             
             {selectedTab !== "overview" && (
               <TabContent
-                tab={selectedTab}
+                selectedTab={selectedTab}
                 guides={guides}
-                isLoading={guidesLoading}
+                isLoading={isLoadingGuides}
                 selectedGuide={selectedGuide}
                 onGuideSelect={handleGuideSelect}
-                onRefresh={refreshGuides}
+                onRefresh={fetchGuides}
               />
             )}
             

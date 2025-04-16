@@ -1,25 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { InterviewGuide, JobStatus, HiringDecision, InterviewFeedback } from "@/lib/types";
-
-interface CalendarEvent {
-  userId: string;
-  title: string;
-  description?: string;
-  startTime: string;
-  endTime: string;
-  guideId?: string;
-  type: "interview" | "follow-up" | "reminder" | "other";
-}
+import { InterviewGuide, JobStatus, HiringDecision, InterviewFeedback, CalendarEvent } from "@/lib/types";
 
 export const useJobTracker = (userId: string | undefined, guideId?: string) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [jobs, setJobs] = useState<InterviewGuide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   
-  // Parse feedback from JSON to InterviewFeedback object
   const parseFeedback = (feedbackJson: any): InterviewFeedback | undefined => {
     if (!feedbackJson) return undefined;
     
@@ -42,7 +30,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     };
   };
   
-  // Fetch all jobs for a user
   const fetchJobs = async () => {
     if (!userId) {
       setJobs([]);
@@ -91,7 +78,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // Update job status
   const updateJobStatus = async (id: string, status: JobStatus) => {
     if (!userId) return;
     
@@ -119,7 +105,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // Update interview date
   const updateInterviewDate = async (id: string, interviewDate: string) => {
     if (!userId) return;
     
@@ -141,7 +126,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
         job.id === id ? { ...job, interviewDate, status: "interview_scheduled" } : job
       ));
       
-      // No need to manually add calendar event - we have a database trigger for that
       toast.success("Interview date scheduled successfully");
     } catch (error) {
       console.error("Error updating interview date:", error);
@@ -151,7 +135,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // Update hiring decision
   const updateHiringDecision = async (id: string, hiringDecision: HiringDecision) => {
     if (!userId) return;
     
@@ -195,11 +178,12 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // Add a calendar event
-  const addCalendarEvent = async (event: CalendarEvent) => {
+  const addCalendarEvent = async (event: Omit<CalendarEvent, "id" | "completed">) => {
     if (!userId) return null;
     
     try {
+      const dbType = event.type === "follow-up" ? "follow_up" : event.type;
+      
       const { data, error } = await supabase
         .from("calendar_events")
         .insert({
@@ -209,7 +193,7 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
           start_time: event.startTime,
           end_time: event.endTime,
           guide_id: event.guideId,
-          type: event.type,
+          type: dbType,
           completed: false
         })
         .select("id")
@@ -225,7 +209,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // Send follow-up email
   const markFollowUpSent = async (id: string) => {
     if (!userId) return;
     
@@ -247,11 +230,10 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
         job.id === id ? { ...job, followUpSent: true, status: "follow_up_sent" } : job
       ));
       
-      // Add calendar event for follow-up check
       const guideData = jobs.find(job => job.id === id);
       if (guideData) {
         const followUpDate = new Date();
-        followUpDate.setDate(followUpDate.getDate() + 7); // Check back in a week
+        followUpDate.setDate(followUpDate.getDate() + 7);
         
         await addCalendarEvent({
           userId,
@@ -260,7 +242,7 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
           startTime: followUpDate.toISOString(),
           endTime: followUpDate.toISOString(),
           guideId: id,
-          type: "follow_up"
+          type: "follow-up"
         });
       }
       
@@ -273,14 +255,12 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // Initial fetch
   useEffect(() => {
     if (userId) {
       fetchJobs();
     }
   }, [userId]);
   
-  // Fetch specific guide
   const fetchSingleGuide = async (id: string) => {
     if (!userId || !id) return null;
     
@@ -323,7 +303,6 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     }
   };
   
-  // If guideId is provided, fetch single guide
   useEffect(() => {
     if (guideId && userId) {
       const loadGuide = async () => {

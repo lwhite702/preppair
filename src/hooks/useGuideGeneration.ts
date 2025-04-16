@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { UploadFormData } from "@/lib/types";
 import { supabase } from "@/integrations/supabase/client";
@@ -124,7 +125,8 @@ export const useGuideGeneration = ({
         title,
         userId: user?.id,
         sessionId,
-        resumeFileName: resumeFile?.name
+        resumeFileName: resumeFile?.name,
+        jobDescriptionText: formData.jobDescription
       });
 
       // If user is not logged in, increment guide count
@@ -161,7 +163,7 @@ export const useGuideGeneration = ({
           id: uuidv4(),
           user_id: userId,
           title,
-          candidate_name: candidateName || profile?.name || "User",
+          candidate_name: candidateName || (profile?.name ?? "User"),
           job_title: jobTitle,
           company,
           content,
