@@ -4,6 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { InterviewGuide, JobStatus, HiringDecision } from "@/lib/types";
 
+interface CalendarEvent {
+  userId: string;
+  title: string;
+  description?: string;
+  startTime: string;
+  endTime: string;
+  guideId?: string;
+  type: "interview" | "follow_up" | "reminder";
+}
+
 export const useJobTracker = (userId: string | undefined, guideId?: string) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [jobs, setJobs] = useState<InterviewGuide[]>([]);
@@ -106,20 +116,7 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
         job.id === id ? { ...job, interviewDate, status: "interview_scheduled" } : job
       ));
       
-      // Add calendar entry for this interview
-      const guideData = jobs.find(job => job.id === id);
-      if (guideData) {
-        await addCalendarEvent({
-          userId,
-          title: `Interview with ${guideData.company} for ${guideData.jobTitle}`,
-          description: `Prepare using your interview guide: ${guideData.title}`,
-          startTime: new Date(interviewDate).toISOString(),
-          endTime: new Date(new Date(interviewDate).getTime() + 3600000).toISOString(), // 1 hour interview
-          guideId: id,
-          type: "interview"
-        });
-      }
-      
+      // No need to manually add calendar event - we have a database trigger for that
       toast.success("Interview date scheduled successfully");
     } catch (error) {
       console.error("Error updating interview date:", error);
@@ -174,7 +171,7 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
   };
   
   // Add a calendar event
-  const addCalendarEvent = async (event: Omit<CalendarEvent, "id" | "completed">) => {
+  const addCalendarEvent = async (event: CalendarEvent) => {
     if (!userId) return null;
     
     try {
@@ -195,7 +192,7 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
       
       if (error) throw error;
       
-      return data.id;
+      return data?.id;
     } catch (error) {
       console.error("Error adding calendar event:", error);
       toast.error("Failed to add event to calendar");
@@ -327,15 +324,3 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
     refreshJobs: fetchJobs
   };
 };
-
-interface CalendarEvent {
-  id: string;
-  userId: string;
-  title: string;
-  description?: string;
-  startTime: string;
-  endTime: string;
-  guideId?: string;
-  type: "interview" | "follow_up" | "reminder";
-  completed: boolean;
-}

@@ -40,7 +40,7 @@ export const useCalendar = (userId: string | undefined) => {
       if (error) throw error;
       
       if (data) {
-        setEvents(data.map(event => ({
+        const mappedEvents: CalendarEvent[] = data.map((event: any) => ({
           id: event.id,
           userId: event.user_id,
           title: event.title,
@@ -50,7 +50,9 @@ export const useCalendar = (userId: string | undefined) => {
           guideId: event.guide_id,
           type: event.type,
           completed: event.completed
-        })));
+        }));
+        
+        setEvents(mappedEvents);
       }
     } catch (error) {
       console.error("Error fetching calendar events:", error);
@@ -78,27 +80,31 @@ export const useCalendar = (userId: string | undefined) => {
           type: event.type,
           completed: false
         })
-        .select()
+        .select("*")
         .single();
       
       if (error) throw error;
       
-      const newEvent: CalendarEvent = {
-        id: data.id,
-        userId: data.user_id,
-        title: data.title,
-        description: data.description,
-        startTime: data.start_time,
-        endTime: data.end_time,
-        guideId: data.guide_id,
-        type: data.type,
-        completed: data.completed
-      };
+      if (data) {
+        const newEvent: CalendarEvent = {
+          id: data.id,
+          userId: data.user_id,
+          title: data.title,
+          description: data.description,
+          startTime: data.start_time,
+          endTime: data.end_time,
+          guideId: data.guide_id,
+          type: data.type,
+          completed: data.completed
+        };
+        
+        setEvents(prev => [...prev, newEvent]);
+        toast.success("Event added to calendar");
+        
+        return newEvent.id;
+      }
       
-      setEvents(prev => [...prev, newEvent]);
-      toast.success("Event added to calendar");
-      
-      return newEvent.id;
+      return null;
     } catch (error) {
       console.error("Error adding event:", error);
       toast.error("Failed to create calendar event");
@@ -116,7 +122,7 @@ export const useCalendar = (userId: string | undefined) => {
       
       const updateObj: any = {};
       if (updates.title) updateObj.title = updates.title;
-      if (updates.description) updateObj.description = updates.description;
+      if (updates.description !== undefined) updateObj.description = updates.description;
       if (updates.startTime) updateObj.start_time = updates.startTime;
       if (updates.endTime) updateObj.end_time = updates.endTime;
       if (updates.type) updateObj.type = updates.type;

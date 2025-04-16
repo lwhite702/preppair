@@ -48,6 +48,53 @@ export type Database = {
         }
         Relationships: []
       }
+      calendar_events: {
+        Row: {
+          completed: boolean | null
+          created_at: string
+          description: string | null
+          end_time: string
+          guide_id: string | null
+          id: string
+          start_time: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          completed?: boolean | null
+          created_at?: string
+          description?: string | null
+          end_time: string
+          guide_id?: string | null
+          id?: string
+          start_time: string
+          title: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          completed?: boolean | null
+          created_at?: string
+          description?: string | null
+          end_time?: string
+          guide_id?: string | null
+          id?: string
+          start_time?: string
+          title?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_events_guide_id_fkey"
+            columns: ["guide_id"]
+            isOneToOne: false
+            referencedRelation: "interview_guides"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       interview_guides: {
         Row: {
           candidate_name: string | null
@@ -55,10 +102,15 @@ export type Database = {
           content: string
           created_at: string
           feedback: Json | null
+          follow_up_sent: boolean | null
+          hiring_decision: string | null
           id: string
+          interview_date: string | null
           job_description_text: string | null
           job_title: string
+          reminder_sent: boolean | null
           resume_filename: string | null
+          status: string | null
           title: string
           user_id: string | null
         }
@@ -68,10 +120,15 @@ export type Database = {
           content: string
           created_at?: string
           feedback?: Json | null
+          follow_up_sent?: boolean | null
+          hiring_decision?: string | null
           id?: string
+          interview_date?: string | null
           job_description_text?: string | null
           job_title: string
+          reminder_sent?: boolean | null
           resume_filename?: string | null
+          status?: string | null
           title: string
           user_id?: string | null
         }
@@ -81,10 +138,15 @@ export type Database = {
           content?: string
           created_at?: string
           feedback?: Json | null
+          follow_up_sent?: boolean | null
+          hiring_decision?: string | null
           id?: string
+          interview_date?: string | null
           job_description_text?: string | null
           job_title?: string
+          reminder_sent?: boolean | null
           resume_filename?: string | null
+          status?: string | null
           title?: string
           user_id?: string | null
         }

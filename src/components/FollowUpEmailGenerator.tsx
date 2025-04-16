@@ -66,6 +66,60 @@ const FollowUpEmailGenerator = ({
     
     window.open(mailtoLink, '_blank');
   };
+  
+  // Helper function to create the follow-up email
+  const createFollowUpEmail = (
+    feedback: InterviewFeedback,
+    candidateName: string,
+    jobTitle: string,
+    company: string
+  ) => {
+    const interviewerNames = feedback.interviewerNames.filter(name => name.trim() !== "");
+    const lastInterviewer = interviewerNames.pop();
+    
+    let greeting = "Hello";
+    if (interviewerNames.length > 0) {
+      greeting = `Hello ${interviewerNames.join(", ")} and ${lastInterviewer}`;
+    } else if (lastInterviewer) {
+      greeting = `Hello ${lastInterviewer}`;
+    }
+    
+    const hasPositiveFeedback = feedback.impressions.toLowerCase().includes("well") ||
+      feedback.impressions.toLowerCase().includes("good") || 
+      feedback.impressions.toLowerCase().includes("great");
+    
+    const positiveStatement = hasPositiveFeedback
+      ? "I felt our conversation went well, and I'm even more excited about the opportunity to join your team."
+      : "Thank you for taking the time to discuss the role with me.";
+    
+    let specificPoints = "";
+    if (feedback.questions) {
+      specificPoints += `\nI particularly enjoyed discussing ${feedback.questions.split('\n')[0].trim()}`;
+    }
+    
+    if (feedback.answers) {
+      specificPoints += ` and sharing my experience with ${feedback.answers.split('\n')[0].trim()}.`;
+    } else {
+      specificPoints += ".";
+    }
+    
+    let nextStepsText = "";
+    if (feedback.nextSteps) {
+      nextStepsText = `\n\nAs discussed, ${feedback.nextSteps.trim()} `;
+    } else {
+      nextStepsText = "\n\nI'm looking forward to hearing about the next steps in the process. ";
+    }
+    nextStepsText += "Please let me know if you need any additional information from me.";
+    
+    return `${greeting},
+
+Thank you for taking the time to meet with me ${feedback.interviewDate} regarding the ${jobTitle} position at ${company}. ${positiveStatement}${specificPoints}
+
+The conversation reinforced my interest in the role and confidence that my background in ${feedback.answers ? feedback.answers.split('\n')[0] : "this field"} aligns well with what you're looking for in an ideal candidate.${nextStepsText}
+
+Best regards,
+${candidateName}`;
+  };
 
   return (
     <Card className="w-full">
@@ -83,97 +137,64 @@ const FollowUpEmailGenerator = ({
           </div>
         ) : (
           <div className="space-y-4">
-            <Textarea
+            <Textarea 
               value={emailContent}
-              onChange={(e) => setEmailContent(e.target.value)}
-              className="min-h-[300px] font-mono text-sm"
+              onChange={e => setEmailContent(e.target.value)}
+              className="min-h-[300px] font-mono"
             />
+            
             <div className="flex flex-wrap gap-2">
               <Button 
-                variant="outline" 
-                className="flex items-center gap-2"
+                variant="outline"
+                size="sm"
+                className="gap-1"
                 onClick={handleCopyToClipboard}
               >
-                {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-                {copied ? "Copied" : "Copy to Clipboard"}
+                {copied ? (
+                  <>
+                    <Check className="h-4 w-4" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-4 w-4" />
+                    Copy
+                  </>
+                )}
               </Button>
-              <Button
+              
+              <Button 
                 variant="outline"
-                className="flex items-center gap-2"
+                size="sm"
+                className="gap-1"
                 onClick={generateEmail}
               >
                 <RefreshCw className="h-4 w-4" />
                 Regenerate
               </Button>
+              
               <Button
-                className="flex items-center gap-2"
+                size="sm"
+                className="gap-1 ml-auto"
                 onClick={handleSendEmail}
               >
                 <Send className="h-4 w-4" />
-                Open in Email Client
+                Send Email
               </Button>
             </div>
           </div>
         )}
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="ghost" onClick={onBack}>
-          Back to Feedback Form
+        <Button variant="outline" onClick={onBack}>
+          Back to Feedback
         </Button>
-        <Button variant="outline" onClick={() => window.history.back()}>
-          Return to Dashboard
+        <Button onClick={onBack}>
+          Done
         </Button>
       </CardFooter>
     </Card>
   );
 };
-
-// Helper function to generate a follow-up email
-function createFollowUpEmail(
-  feedback: InterviewFeedback, 
-  candidateName: string, 
-  jobTitle: string, 
-  company: string
-): string {
-  const interviewerNames = feedback.interviewerNames.filter(name => name.trim());
-  const interviewerGreeting = interviewerNames.length > 0 
-    ? `Dear ${interviewerNames.join(' and ')},`
-    : 'Dear Hiring Team,';
-
-  const nextStepsParagraph = feedback.nextSteps 
-    ? `\nI look forward to ${feedback.nextSteps.toLowerCase().includes('next') ? feedback.nextSteps : `the next steps in the process as discussed: ${feedback.nextSteps}`}.` 
-    : '\nI look forward to hearing about the next steps in the interview process.';
-
-  return `${interviewerGreeting}
-
-Thank you for taking the time to meet with me on ${formatDate(feedback.interviewDate)} regarding the ${jobTitle} position at ${company}. I enjoyed our conversation and learning more about the role and the company.
-
-${feedback.questions ? `I appreciated the opportunity to discuss ${feedback.questions.split('?')[0]}? ${feedback.answers ? `and share my experience with ${feedback.answers.split('.')[0]}.` : ''}` : ''}
-
-${feedback.impressions}
-
-${nextStepsParagraph}
-
-Please don't hesitate to contact me if you need any additional information about my background or qualifications.
-
-Best regards,
-${candidateName}`;
-}
-
-function formatDate(dateString: string): string {
-  if (!dateString) return '';
-  
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
-  } catch (error) {
-    return dateString;
-  }
-}
 
 export default FollowUpEmailGenerator;

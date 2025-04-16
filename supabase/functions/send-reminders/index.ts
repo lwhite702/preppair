@@ -71,12 +71,12 @@ serve(async (req) => {
       throw interviewsError;
     }
     
-    console.log(`Found ${interviews.length} interviews that need reminders`);
+    console.log(`Found ${interviews?.length || 0} interviews that need reminders`);
     
     // Process each interview
     const reminders = [];
     
-    for (const interview of interviews) {
+    for (const interview of interviews || []) {
       try {
         // Get user profile
         const { data: userProfile, error: userError } = await supabaseClient
@@ -118,7 +118,7 @@ serve(async (req) => {
         });
         
         console.log(`Sent reminder for interview ${interview.id} to ${userProfile.email}`);
-      } catch (error) {
+      } catch (error: any) {
         console.error(`Error processing interview ${interview.id}: ${error.message}`);
         reminders.push({
           id: interview.id,
@@ -137,7 +137,7 @@ serve(async (req) => {
         } 
       }
     );
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error in send-reminders: ${error.message}`);
     return new Response(
       JSON.stringify({ success: false, error: error.message }),
@@ -190,7 +190,7 @@ async function sendReminderEmail(
     // if (error) throw error;
     
     return { success: true };
-  } catch (error) {
+  } catch (error: any) {
     console.error(`Error sending reminder email: ${error.message}`);
     return { success: false, error: error.message };
   }

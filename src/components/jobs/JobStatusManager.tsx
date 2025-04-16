@@ -63,11 +63,11 @@ const JobStatusManager = ({ guide, onStatusUpdate }: JobStatusManagerProps) => {
       case "pending_decision":
         return "secondary";
       case "offer_received":
-        return "success";
+        return "outline";
       case "rejected":
         return "destructive";
       case "accepted":
-        return "success";
+        return "outline";
       case "declined":
         return "outline";
       default:
@@ -195,7 +195,8 @@ const JobStatusManager = ({ guide, onStatusUpdate }: JobStatusManagerProps) => {
             </p>
             <div className="grid grid-cols-2 gap-2">
               <Button 
-                variant="success"
+                variant="outline"
+                className="bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800"
                 onClick={() => handleUpdateHiringDecision("offer")}
                 disabled={isUpdating}
               >
@@ -226,7 +227,8 @@ const JobStatusManager = ({ guide, onStatusUpdate }: JobStatusManagerProps) => {
             </div>
             <div className="grid grid-cols-2 gap-2">
               <Button 
-                variant="success"
+                variant="outline"
+                className="bg-green-50 text-green-700 hover:bg-green-100 hover:text-green-800"
                 onClick={() => handleUpdateStatus("accepted")}
                 disabled={isUpdating}
               >
