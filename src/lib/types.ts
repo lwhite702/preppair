@@ -98,3 +98,6 @@ export interface CalendarEvent {
   type: "interview" | "follow_up" | "reminder";
   completed: boolean;
 }
+
+// Type for handling JSON data from the database
+export type DatabaseJson = string | number | boolean | null | { [key: string]: DatabaseJson } | DatabaseJson[];

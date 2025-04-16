@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { InterviewGuide, JobStatus, HiringDecision } from "@/lib/types";
+import { InterviewGuide, JobStatus, HiringDecision, InterviewFeedback } from "@/lib/types";
 
 interface CalendarEvent {
   userId: string;
@@ -18,6 +18,21 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [jobs, setJobs] = useState<InterviewGuide[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  
+  // Parse feedback from JSON to InterviewFeedback object
+  const parseFeedback = (feedbackJson: any): InterviewFeedback | undefined => {
+    if (!feedbackJson) return undefined;
+    
+    return {
+      interviewerNames: Array.isArray(feedbackJson.interviewerNames) ? feedbackJson.interviewerNames : [],
+      questions: feedbackJson.questions || '',
+      answers: feedbackJson.answers || '',
+      impressions: feedbackJson.impressions || '',
+      nextSteps: feedbackJson.nextSteps || '',
+      interviewDate: feedbackJson.interviewDate || '',
+      ratings: feedbackJson.ratings
+    };
+  };
   
   // Fetch all jobs for a user
   const fetchJobs = async () => {
@@ -39,7 +54,7 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
       if (error) throw error;
       
       if (data) {
-        setJobs(data.map(guide => ({
+        const mappedGuides: InterviewGuide[] = data.map(guide => ({
           id: guide.id,
           userId: guide.user_id,
           title: guide.title,
@@ -50,13 +65,15 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
           content: guide.content,
           resumeFileName: guide.resume_filename,
           jobDescriptionText: guide.job_description_text,
-          feedback: guide.feedback,
-          status: guide.status || "applied",
+          feedback: parseFeedback(guide.feedback),
+          status: guide.status as JobStatus || "applied",
           interviewDate: guide.interview_date,
           reminderSent: guide.reminder_sent,
           followUpSent: guide.follow_up_sent,
-          hiringDecision: guide.hiring_decision || "pending"
-        })));
+          hiringDecision: guide.hiring_decision as HiringDecision || "pending"
+        }));
+        
+        setJobs(mappedGuides);
       }
     } catch (error) {
       console.error("Error fetching jobs:", error);
@@ -281,12 +298,12 @@ export const useJobTracker = (userId: string | undefined, guideId?: string) => {
           content: data.content,
           resumeFileName: data.resume_filename,
           jobDescriptionText: data.job_description_text,
-          feedback: data.feedback,
-          status: data.status || "applied",
+          feedback: parseFeedback(data.feedback),
+          status: data.status as JobStatus || "applied",
           interviewDate: data.interview_date,
           reminderSent: data.reminder_sent,
           followUpSent: data.follow_up_sent,
-          hiringDecision: data.hiring_decision || "pending"
+          hiringDecision: data.hiring_decision as HiringDecision || "pending"
         };
       }
       

@@ -3,18 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { format, parseISO } from "date-fns";
-
-export interface CalendarEvent {
-  id: string;
-  userId: string;
-  title: string;
-  description?: string;
-  startTime: string;
-  endTime: string;
-  guideId?: string;
-  type: "interview" | "follow_up" | "reminder";
-  completed: boolean;
-}
+import { CalendarEvent } from "@/lib/types";
 
 export const useCalendar = (userId: string | undefined) => {
   const [events, setEvents] = useState<CalendarEvent[]>([]);
@@ -48,7 +37,7 @@ export const useCalendar = (userId: string | undefined) => {
           startTime: event.start_time,
           endTime: event.end_time,
           guideId: event.guide_id,
-          type: event.type,
+          type: event.type as "interview" | "follow_up" | "reminder",
           completed: event.completed
         }));
         
@@ -94,7 +83,7 @@ export const useCalendar = (userId: string | undefined) => {
           startTime: data.start_time,
           endTime: data.end_time,
           guideId: data.guide_id,
-          type: data.type,
+          type: data.type as "interview" | "follow_up" | "reminder",
           completed: data.completed
         };
         
