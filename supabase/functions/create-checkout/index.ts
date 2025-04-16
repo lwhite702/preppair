@@ -8,94 +8,118 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Helper logging function for enhanced debugging
+// Helper logging function
 const logStep = (step: string, details?: any) => {
   const detailsStr = details ? ` - ${JSON.stringify(details)}` : '';
   console.log(`[CREATE-CHECKOUT] ${step}${detailsStr}`);
 };
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Create Supabase client using the anon key for user authentication.
+  const supabaseClient = createClient(
+    Deno.env.get("SUPABASE_URL") ?? "",
+    Deno.env.get("SUPABASE_ANON_KEY") ?? ""
+  );
+
   try {
     logStep("Function started");
 
-    const stripeKey = Deno.env.get("STRIPE_SECRET_KEY");
-    if (!stripeKey) throw new Error("STRIPE_SECRET_KEY is not set");
-    logStep("Stripe key verified");
-
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
-    );
-
-    const authHeader = req.headers.get("Authorization");
-    if (!authHeader) throw new Error("No authorization header provided");
-    logStep("Authorization header found");
-
+    // Retrieve authenticated user
+    const authHeader = req.headers.get("Authorization")!;
     const token = authHeader.replace("Bearer ", "");
-    logStep("Authenticating user with token");
-    
-    const { data: userData, error: userError } = await supabaseClient.auth.getUser(token);
-    if (userError) throw new Error(`Authentication error: ${userError.message}`);
-    const user = userData.user;
+    const { data } = await supabaseClient.auth.getUser(token);
+    const user = data.user;
     if (!user?.email) throw new Error("User not authenticated or email not available");
     logStep("User authenticated", { userId: user.id, email: user.email });
 
-    // Get price ID from request body (optional)
-    const { priceId } = await req.json().catch(() => ({}));
-    
-    const stripe = new Stripe(stripeKey, { apiVersion: "2023-10-16" });
-    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
+    // Get request body
+    const { returnUrl, priceId } = await req.json();
+    logStep("Request parameters", { returnUrl, priceId });
 
+    // Initialize Stripe
+    const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
+      apiVersion: "2023-10-16",
+    });
+
+    // Check if a Stripe customer record exists for this user
+    const customers = await stripe.customers.list({ email: user.email, limit: 1 });
     let customerId;
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      logStep("Found existing Stripe customer", { customerId });
+      logStep("Found existing customer", { customerId });
     } else {
-      logStep("Creating new Stripe customer");
+      // Create a new customer
+      const customer = await stripe.customers.create({
+        email: user.email,
+        metadata: {
+          supabaseUserId: user.id,
+        }
+      });
+      customerId = customer.id;
+      logStep("Created new customer", { customerId });
     }
 
-    // Set up the line items for the checkout session
-    const lineItems = [{
-      price_data: {
+    // Define our subscription price
+    // In production, you should use a price ID from your Stripe dashboard
+    let priceInfo = {
+      price_data: undefined as any,
+      priceId: undefined as string | undefined
+    };
+    
+    if (priceId === "premium-monthly") {
+      priceInfo.price_data = {
         currency: "usd",
-        product_data: {
-          name: "InterviewAce Premium Subscription",
-          description: "Unlimited interview guides and features"
-        },
-        unit_amount: 1499, // $14.99 in cents
+        product_data: { name: "PrepPair Premium Monthly" },
+        unit_amount: 2499,  // $24.99
         recurring: {
-          interval: "month"
-        }
-      },
-      quantity: 1
-    }];
-
+          interval: "month",
+        },
+      };
+    } else {
+      // Use a lookup system for actual price IDs in your Stripe account
+      // This is just a placeholder
+      priceInfo.priceId = "price_1234567890";
+    }
+    
+    // Create Checkout Session
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      customer_email: customerId ? undefined : user.email,
+      line_items: [
+        {
+          ...(priceInfo.priceId ? { price: priceInfo.priceId } : { price_data: priceInfo.price_data }),
+          quantity: 1,
+        },
+      ],
       mode: "subscription",
-      payment_method_types: ["card"],
-      line_items: lineItems,
-      success_url: `${req.headers.get("origin")}/dashboard?payment=success`,
-      cancel_url: `${req.headers.get("origin")}/dashboard?payment=cancelled`,
+      success_url: returnUrl || `${req.headers.get("origin")}/dashboard?checkout=success`,
+      cancel_url: `${req.headers.get("origin")}/pricing?checkout=canceled`,
       metadata: {
-        userId: user.id
-      }
+        userId: user.id,
+        tier: "premium",
+      },
+      subscription_data: {
+        metadata: {
+          userId: user.id,
+          tier: "premium",
+        },
+      },
     });
 
     logStep("Checkout session created", { sessionId: session.id, url: session.url });
-    
+
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
-  } catch (error: any) {
-    const errorMessage = error.message || String(error);
-    console.error("ERROR in create-checkout:", errorMessage);
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "An unknown error occurred";
+    logStep("ERROR", { errorMessage });
+
     return new Response(JSON.stringify({ error: errorMessage }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 500,

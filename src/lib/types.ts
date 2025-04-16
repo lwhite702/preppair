@@ -62,6 +62,7 @@ export type UploadFormData = {
   resumeText?: string;
   additionalInfo?: string;
   tone?: string;
+  interviewFormat?: "virtual" | "phone" | "in-person";
 };
 
 export interface GenerateGuideRequest {
@@ -78,11 +79,13 @@ export interface OpenAIResponse {
   error?: string;
 }
 
+export type SubscriptionTier = "free" | "premium";
+
 export interface Subscription {
   id: string;
   userId: string;
   status: 'active' | 'canceled' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'trialing' | 'unpaid';
-  tier: string;
+  tier: SubscriptionTier;
   currentPeriodEnd: Date;
   cancelAtPeriodEnd: boolean;
 }

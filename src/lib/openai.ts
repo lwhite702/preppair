@@ -1,23 +1,14 @@
 
 import { AIProviderFactory } from './ai/provider-factory';
 import { AIResponse } from './ai/types';
-
-export type UploadFormData = {
-  candidateName?: string;
-  jobTitle: string;
-  company: string;
-  jobDescription: string;
-  resumeText?: string;
-  additionalInfo?: string;
-  tone?: string;
-};
+import { UploadFormData } from './types';
 
 // Get API key from environment variable
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 export const generateInterviewGuide = async (params: UploadFormData): Promise<AIResponse> => {
   try {
-    const { candidateName, jobDescription, resumeText, jobTitle, company, additionalInfo, tone } = params;
+    const { candidateName, jobDescription, resumeText, jobTitle, company, additionalInfo, tone, interviewFormat } = params;
 
     let toneDescription = "";
     switch (tone) {
@@ -51,28 +42,58 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
       temperature: 0.8  // Slightly higher temperature for more creative responses
     });
 
-    // Create a more structured prompt template
-    const promptTemplate = {
-      systemPrompt: `You are an expert interview preparation assistant and partner. Generate content in a ${toneDescription} tone. 
-                     Focus on providing actionable advice and specific examples tailored to the candidate's background.
-                     Structure the guide with these sections:
-                     1. Brief Job Analysis
-                     2. Key Technical Requirements
-                     3. Behavioral Interview Prep
-                     4. Technical Interview Questions
-                     5. Questions to Ask the Interviewer
-                     6. Interview Success Tips`,
-      userPrompt: `Create a comprehensive interview guide for a ${jobTitle} position at ${company}.
+    // Create a more structured prompt template based on the specification
+    const systemPrompt = `You are a career coach creating a personalized interview preparation guide.
+    
+Create a markdown-based, conversational interview prep guide using the candidate's resume and job description.
+
+Keep the tone ${toneDescription || "friendly and motivational"}. Your guide should follow this structure:
+
+# PrepPair Interview Guide
+
+## ✨ Quick Intro
+A friendly, personalized intro addressed directly to the candidate by name if provided, otherwise use "there". Mention the company name and build confidence.
+
+## 💡 Interview Mindset
+A section about aligning the candidate's experience with what the company is looking for.
+
+## 🔥 Most Likely Questions
+5-8 tailored interview questions based on the job description and resume.
+
+## 🧠 Tailored Talking Points
+Bullet points highlighting specific achievements that match job requirements.
+
+## 🗣️ Stories to Have Ready
+STAR format suggestions (Situation, Task, Action, Result) based on resume experience.
+
+## ✅ Prep Notes & Tasks
+A checklist of preparation tasks.
+
+## ❓Smart Questions to Ask the Interviewer
+3-5 thoughtful questions to ask.
+
+## 📅 Day-Of Interview Tips
+Practical tips for the ${interviewFormat || "interview"} format.
+
+## 📬 Follow-Up Email Generator
+A template for a thank-you email that can be personalized.
+
+Use emojis as shown above for section headers. Be motivational and specific where possible.`;
+
+    const userPrompt = `Create a comprehensive interview guide for a ${jobTitle} position at ${company}.
                    ${resumeText ? `Resume Context: ${resumeText}` : ''}
                    Job Description: ${jobDescription}
                    ${additionalInfo ? `Additional Context: ${additionalInfo}` : ''}
-                   ${candidateName ? `Candidate Name: ${candidateName}` : ''}`
-    };
+                   ${candidateName ? `Candidate Name: ${candidateName}` : ''}
+                   ${interviewFormat ? `Interview Format: ${interviewFormat}` : ''}`;
 
     // Log the prompt for debugging purposes
-    console.log('OpenAI Prompt:', promptTemplate);
+    console.log('OpenAI Prompt:', { systemPrompt, userPrompt });
 
-    const response = await provider.generateGuide(promptTemplate);
+    const response = await provider.generateGuide({ 
+      systemPrompt,
+      userPrompt
+    });
     
     // Log successful generation
     if (!response.error) {
@@ -98,55 +119,64 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
 const mockInterviewGuide = (params: UploadFormData): AIResponse => {
   const { jobTitle, company, candidateName } = params;
   
-  const content = `# Interview Guide: ${jobTitle} at ${company}
-  
-${candidateName ? `## Prepared for ${candidateName}` : '## Personalized Interview Guide'}
+  const content = `# PrepPair Interview Guide
 
-### 1. Brief Job Analysis
+${candidateName ? `## ✨ Quick Intro\nHey ${candidateName}` : '## ✨ Quick Intro\nHey there'}, this guide is your personal hype-doc. Let's get you confidently prepped for your upcoming interview at ${company}!
 
-This position at ${company} requires a mix of technical skills and soft skills. Based on the job description, the company is looking for someone who can contribute immediately while also growing with the organization.
+## 💡 Interview Mindset
+You've got the skills. Now let's align your stories and energy with what ${company} is looking for in a ${jobTitle}.
 
-### 2. Key Technical Requirements
+## 🔥 Most Likely Questions
+1. Based on your background, how would you approach the challenges of this role?
+2. Tell me about a time you had to solve a complex problem under pressure.
+3. How do you prioritize tasks when everything seems urgent?
+4. What interests you most about working at ${company}?
+5. How do your skills align with our needs for this ${jobTitle} position?
 
-- Technical requirement 1
-- Technical requirement 2
-- Technical requirement 3
+## 🧠 Tailored Talking Points
+- Highlight your success with relevant projects
+- Connect your skills to the company's needs
+- Emphasize your experience with similar responsibilities
+- Show your enthusiasm for the industry
 
-### 3. Behavioral Interview Prep
+## 🗣️ Stories to Have Ready
+Use STAR format:
+- Situation: Define a relevant challenge
+- Task: What needed to happen
+- Action: Specific steps you took
+- Result: Measurable impact of your work
 
-**Question 1: Tell me about a time when you faced a difficult challenge at work.**
+## ✅ Prep Notes & Tasks
+Checklist:
+- [ ] Research ${company}'s recent news and achievements
+- [ ] Prepare portfolio/examples of your work
+- [ ] Review the job description again
+- [ ] Practice answering questions out loud
+- [ ] Prepare questions for the interviewer
 
-*Suggested answer structure:*
-- Situation: Briefly describe the context
-- Task: Explain your responsibility in that situation
-- Action: Detail the steps you took to address the challenge
-- Result: Share the positive outcome and what you learned
+## ❓Smart Questions to Ask the Interviewer
+- How does your team measure success in this role?
+- What are current priorities for this department?
+- Can you describe the team I'd be working with?
+- What opportunities for growth exist in this role?
 
-### 4. Technical Interview Questions
+## 📅 Day-Of Interview Tips
+- Eat light and hydrate 🥤
+- Log in early if virtual, test audio 🎧
+- Bring extra copies of your resume if in-person 📄
+- Remind yourself: they want to like you 🤝
 
-1. **Technical question related to ${jobTitle}**
-   - Approach: Start by clarifying the problem
-   - Key points to include in your answer
-   - Potential follow-up questions
+## 📬 Follow-Up Email Generator
+Hi [Interviewer's Name],
 
-2. **Another relevant technical question**
-   - How to demonstrate your knowledge effectively
-   - Code example or process explanation
+Thank you for taking the time to speak with me today about the ${jobTitle} position at ${company}. I enjoyed learning more about [specific topic discussed] and how the role contributes to ${company}'s goals.
 
-### 5. Questions to Ask the Interviewer
+Our conversation reinforced my enthusiasm for joining your team, and I'm confident that my background in [relevant skill] would allow me to make meaningful contributions.
 
-1. "What would success look like in this role after 3 months?"
-2. "Can you tell me about the team I'd be working with?"
-3. "What are the biggest challenges the team is currently facing?"
+I look forward to hearing from you about the next steps in the process. Please don't hesitate to contact me if you need any additional information.
 
-### 6. Interview Success Tips
-
-- Research ${company}'s recent projects and news before the interview
-- Prepare specific examples that highlight your relevant experience
-- Follow up with a thank-you note within 24 hours
-- Practice explaining complex concepts simply
-
-Good luck with your interview! Remember to be authentic, prepared, and curious.`;
+Best regards,
+${candidateName || "[Your Name]"}`;
 
   return { content };
 };

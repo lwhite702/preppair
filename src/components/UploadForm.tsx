@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { toast } from "sonner";
@@ -36,12 +35,11 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
   const [anonymousGuideCount, setAnonymousGuideCount] = useState<number>(0);
   const [sessionId, setSessionId] = useState<string>("");
   const [tone, setTone] = useState<string>("professional");
+  const [interviewFormat, setInterviewFormat] = useState<string>("virtual");
   const [currentStep, setCurrentStep] = useState<number>(1);
 
-  // Check for anonymous guide limit
   useEffect(() => {
     if (!user) {
-      // Create or retrieve session ID from local storage
       const storedSessionId = localStorage.getItem("interviewAceSessionId");
       const newSessionId = storedSessionId || uuidv4();
       
@@ -51,7 +49,6 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
       
       setSessionId(newSessionId);
       
-      // Count anonymous guides for this session
       const fetchAnonymousGuideCount = async () => {
         const { data, error, count } = await supabase
           .from("anonymous_guides")
@@ -82,7 +79,6 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
 
   const handleResumeUpload = (file: File) => {
     setResumeFile(file);
-    // Move to next step after resume upload
     setCurrentStep(2);
   };
 
@@ -106,7 +102,6 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
       return;
     }
 
-    // Check if we need to limit anonymous users
     if (!user && anonymousGuideCount >= 1) {
       toast({
         title: "Account Required",
@@ -120,12 +115,9 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
     setIsGenerating(true);
 
     try {
-      // In a real application, we would extract text from the resume file
-      // For this demo, we'll simulate that part
       let resumeText = "";
       
       if (resumeFile) {
-        // Simulate text extraction from resume
         resumeText = `Simulated resume content for ${resumeFile.name}`;
       }
 
@@ -137,6 +129,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         company: formData.company,
         additionalInfo: formData.additionalInfo,
         tone,
+        interviewFormat,
       });
 
       if (response.error) {
@@ -145,14 +138,11 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
 
       const guideContent = response.content;
       
-      // Generate a title for the guide
       const title = `${formData.jobTitle} at ${formData.company}`;
       
-      // Save the generated guide to Supabase
       let guideId;
       
       if (user) {
-        // For authenticated users, save to interview_guides
         const { data, error } = await supabase
           .from("interview_guides")
           .insert({
@@ -172,7 +162,6 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         if (error) throw error;
         guideId = data.id;
         
-        // Optional: Send confirmation email
         if (user.email) {
           try {
             await supabase.functions.invoke("send-confirmation", {
@@ -189,7 +178,6 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
           }
         }
       } else {
-        // For anonymous users, save to anonymous_guides
         const { data, error } = await supabase
           .from("anonymous_guides")
           .insert({
@@ -209,7 +197,6 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
         if (error) throw error;
         guideId = data.id;
         
-        // Update the anonymous guide count
         setAnonymousGuideCount(prevCount => prevCount + 1);
       }
 
@@ -328,44 +315,79 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
       case 3:
         return (
           <div className="space-y-6">
-            <h2 className="text-xl font-semibold mb-2">Pick a Tone</h2>
+            <h2 className="text-xl font-semibold mb-2">Customize Your Guide</h2>
             <p className="text-muted-foreground mb-4">
               Everyone has their own style. Choose the voice that fits you best—we'll write your prep guide to match.
             </p>
-            <RadioGroup
-              value={tone}
-              onValueChange={setTone}
-              className="space-y-4"
-            >
-              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
-                <RadioGroupItem value="friendly" id="friendly" />
-                <Label htmlFor="friendly" className="cursor-pointer w-full">
-                  <div className="font-medium">Friendly + Casual</div>
-                  <p className="text-sm text-muted-foreground">Conversational and approachable</p>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
-                <RadioGroupItem value="professional" id="professional" />
-                <Label htmlFor="professional" className="cursor-pointer w-full">
-                  <div className="font-medium">Professional + Polished</div>
-                  <p className="text-sm text-muted-foreground">Formal and business-oriented</p>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
-                <RadioGroupItem value="confident" id="confident" />
-                <Label htmlFor="confident" className="cursor-pointer w-full">
-                  <div className="font-medium">Confident + Direct</div>
-                  <p className="text-sm text-muted-foreground">Bold and straight to the point</p>
-                </Label>
-              </div>
-              <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
-                <RadioGroupItem value="quick" id="quick" />
-                <Label htmlFor="quick" className="cursor-pointer w-full">
-                  <div className="font-medium">Quick Start — No Tone, Just Prep</div>
-                  <p className="text-sm text-muted-foreground">Get straight to the content</p>
-                </Label>
-              </div>
-            </RadioGroup>
+            
+            <div className="space-y-4">
+              <h3 className="font-medium">Guide Tone</h3>
+              <RadioGroup
+                value={tone}
+                onValueChange={setTone}
+                className="space-y-4"
+              >
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="friendly" id="friendly" />
+                  <Label htmlFor="friendly" className="cursor-pointer w-full">
+                    <div className="font-medium">Friendly + Casual</div>
+                    <p className="text-sm text-muted-foreground">Conversational and approachable</p>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="professional" id="professional" />
+                  <Label htmlFor="professional" className="cursor-pointer w-full">
+                    <div className="font-medium">Professional + Polished</div>
+                    <p className="text-sm text-muted-foreground">Formal and business-oriented</p>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="confident" id="confident" />
+                  <Label htmlFor="confident" className="cursor-pointer w-full">
+                    <div className="font-medium">Confident + Direct</div>
+                    <p className="text-sm text-muted-foreground">Bold and straight to the point</p>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="quick" id="quick" />
+                  <Label htmlFor="quick" className="cursor-pointer w-full">
+                    <div className="font-medium">Quick Start — No Tone, Just Prep</div>
+                    <p className="text-sm text-muted-foreground">Get straight to the content</p>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
+            
+            <div className="space-y-4 mt-6">
+              <h3 className="font-medium">Interview Format</h3>
+              <RadioGroup
+                value={interviewFormat}
+                onValueChange={setInterviewFormat}
+                className="space-y-4"
+              >
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="virtual" id="virtual" />
+                  <Label htmlFor="virtual" className="cursor-pointer w-full">
+                    <div className="font-medium">Virtual Interview</div>
+                    <p className="text-sm text-muted-foreground">Video call or online meeting</p>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="phone" id="phone" />
+                  <Label htmlFor="phone" className="cursor-pointer w-full">
+                    <div className="font-medium">Phone Interview</div>
+                    <p className="text-sm text-muted-foreground">Voice-only conversation</p>
+                  </Label>
+                </div>
+                <div className="flex items-center space-x-2 p-3 border rounded-md hover:bg-muted/50 cursor-pointer">
+                  <RadioGroupItem value="in-person" id="in-person" />
+                  <Label htmlFor="in-person" className="cursor-pointer w-full">
+                    <div className="font-medium">In-Person Interview</div>
+                    <p className="text-sm text-muted-foreground">Face-to-face at their location</p>
+                  </Label>
+                </div>
+              </RadioGroup>
+            </div>
 
             <div className="flex justify-between mt-4">
               <Button variant="outline" onClick={prevStep}>
@@ -398,6 +420,10 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
                 <span className="font-medium">Tone:</span>
                 <span className="capitalize">{tone === 'quick' ? 'Quick Start' : tone}</span>
               </div>
+              <div className="flex justify-between">
+                <span className="font-medium">Format:</span>
+                <span className="capitalize">{interviewFormat} Interview</span>
+              </div>
             </div>
 
             <div className="mt-2">
@@ -418,7 +444,7 @@ const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
               <Textarea
                 id="additionalInfo"
                 name="additionalInfo"
-                placeholder="Any other details you'd like to include..."
+                placeholder="Any specific concerns or context about this interview..."
                 rows={3}
                 value={formData.additionalInfo || ""}
                 onChange={handleInputChange}
