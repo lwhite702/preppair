@@ -1,5 +1,7 @@
 
 import { ArrowRight, Upload, Sparkles, CheckCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 const HowItWorks = () => {
   const steps = [
@@ -61,6 +63,12 @@ const HowItWorks = () => {
           <p className="text-muted-foreground mb-8">
             Join thousands of job seekers who have successfully prepared for their interviews with PrepPair.
           </p>
+          <Link to="/auth">
+            <Button size="lg" variant="default" className="bg-[#F97316] hover:bg-[#F97316]/90 text-white">
+              Sign Up Now
+              <ArrowRight className="ml-2 h-5 w-5" />
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

@@ -29,25 +29,21 @@ const Header = () => {
   };
 
   return (
-    <header className="border-b border-white/10 bg-background/95 backdrop-blur-md sticky top-0 z-50">
+    <header className="border-b border-white/10 bg-brand-navy/95 backdrop-blur-md sticky top-0 z-50">
       <div className="container py-4 flex items-center justify-between">
         <Link to="/" className="flex items-center space-x-2">
-          <div className="flex items-center">
-            <img 
-              src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
-              alt="PrepPair Logo"
-              className="h-8 w-8 object-contain mr-2"
-            />
-            <span className="text-xl font-bold gradient-text">PrepPair.me</span>
-          </div>
+          <img 
+            src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
+            alt="PrepPair Logo"
+            className="h-8 w-8 object-contain"
+          />
         </Link>
         
         {/* Desktop navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          <a href="#features" className="font-medium text-foreground/80 hover:text-primary transition-colors">Features</a>
-          <a href="#jobs" className="font-medium text-foreground/80 hover:text-primary transition-colors">Jobs</a>
-          <a href="#pricing" className="font-medium text-foreground/80 hover:text-primary transition-colors">Pricing</a>
-          <a href="#blog" className="font-medium text-foreground/80 hover:text-primary transition-colors">Blog</a>
+          <Link to="/about" className="font-medium text-white/80 hover:text-primary transition-colors">About</Link>
+          <Link to="/faq" className="font-medium text-white/80 hover:text-primary transition-colors">FAQ</Link>
+          <Link to="/contact" className="font-medium text-white/80 hover:text-primary transition-colors">Contact</Link>
           
           {user ? (
             <DropdownMenu>
@@ -78,7 +74,7 @@ const Header = () => {
           ) : (
             <Button 
               variant="outline" 
-              className="flex items-center border-[#0EA5E9]/30 text-[#0EA5E9] hover:bg-[#0EA5E9]/10" 
+              className="flex items-center border-[#F97316]/30 text-[#F97316] hover:bg-[#F97316]/10" 
               onClick={() => navigate('/auth')}
             >
               <UserCircle className="mr-2 h-4 w-4" />
