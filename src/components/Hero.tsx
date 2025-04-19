@@ -1,87 +1,59 @@
+
 import React from 'react';
-import { ArrowRight, MessageSquare, LucideIcon, Star, Users, CheckCircle } from 'lucide-react';
+import { ArrowRight, Star, MessageSquare, Users, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link as RouterLink } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface HeroProps {
-  title: string;
-  subtitle: string;
-  description?: string;
-  action: React.ReactNode;
-  secondaryAction?: React.ReactNode;
-}
+const Hero = () => {
+  const { user } = useAuth();
 
-const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroProps) => {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-brand-navy to-brand-purple relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-white/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-brand-purple/20 rounded-full blur-3xl"></div>
-      </div>
+    <section className="pt-32 pb-20 bg-gradient-to-br from-brand-navy via-brand-purple/20 to-brand-navy relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png')] opacity-5 bg-cover bg-center" />
       
       <div className="container relative z-10">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex flex-col items-center text-center">
-            {/* Logo */}
-            <div className="flex items-center gap-3 mb-8">
-              <img 
-                src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
-                alt="PrepPair Logo"
-                className="h-16 md:h-24 animate-pulse-gentle rounded-full shadow-lg"
-              />
-            </div>
-            
-            {/* Concept explanation */}
-            <div className="bg-white/20 backdrop-blur-md p-3 rounded-full text-white text-sm font-medium mb-6 flex items-center gap-2">
-              <span>AI</span>
-              <span>+</span>
-              <span>Interview Prep</span>
-              <span>=</span>
-              <span className="bg-primary px-2 py-0.5 rounded-full">Your Success Partner</span>
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in text-white tracking-tight">
-              {title}
-            </h1>
-            
-            <h2 className="text-2xl font-semibold mb-6 text-white/80 animate-fade-in">
-              {subtitle}
-            </h2>
-            
-            {description && (
-              <p className="text-lg md:text-xl text-white/70 mb-8 animate-fade-in">
-                {description}
-              </p>
+        <div className="max-w-3xl mx-auto text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/90 text-sm mb-8">
+            <span className="text-[#F97316]">✨</span>
+            A Product by Wrelik Brands LLC
+          </div>
+          
+          {/* Main Title */}
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-gradient-to-r from-white to-white/80 leading-tight">
+            Your AI Interview Partner
+          </h1>
+          
+          <p className="text-xl md:text-2xl text-white/80 mb-8 max-w-2xl mx-auto">
+            Get personalized interview guides, smart feedback, and coaching from your AI mentor. Land your dream job with confidence.
+          </p>
+          
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+            <RouterLink to={user ? "/dashboard" : "/auth"}>
+              <Button size="lg" className="bg-[#F97316] hover:bg-[#F97316]/90 text-white px-8 py-6 text-lg">
+                {user ? "Go to Dashboard" : "Get Started Free"}
+                <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+            </RouterLink>
+            {!user && (
+              <RouterLink to="/auth">
+                <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10 px-8 py-6 text-lg">
+                  Sign In
+                </Button>
+              </RouterLink>
             )}
-            
-            {/* Feature badges */}
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
-              <FeatureBadge icon={Star}>Personalized</FeatureBadge>
-              <FeatureBadge icon={MessageSquare}>AI Feedback</FeatureBadge>
-              <FeatureBadge icon={Users}>Interview Partner</FeatureBadge>
-              <FeatureBadge icon={CheckCircle}>Results Focused</FeatureBadge>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
-              {action}
-              {secondaryAction}
-            </div>
+          </div>
+          
+          {/* Feature Badges */}
+          <div className="flex flex-wrap justify-center gap-4">
+            <FeatureBadge icon={Star}>AI-Powered</FeatureBadge>
+            <FeatureBadge icon={MessageSquare}>Smart Feedback</FeatureBadge>
+            <FeatureBadge icon={Users}>Personal Coach</FeatureBadge>
+            <FeatureBadge icon={CheckCircle}>Proven Results</FeatureBadge>
           </div>
         </div>
-      </div>
-      
-      {/* Wave divider */}
-      <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-0">
-        <svg
-          className="relative block w-full h-12 md:h-16 text-white"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1200 120"
-          preserveAspectRatio="none"
-          fill="currentColor"
-        >
-          <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
-        </svg>
       </div>
     </section>
   );
@@ -89,14 +61,14 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
 
 interface FeatureBadgeProps {
   children: React.ReactNode;
-  icon: LucideIcon;
+  icon: React.ElementType;
 }
 
 const FeatureBadge = ({ children, icon: Icon }: FeatureBadgeProps) => {
   return (
-    <div className="bg-white/20 backdrop-blur-md shadow-md border border-white/30 text-white px-3 py-1 rounded-full flex items-center gap-1.5 text-sm">
-      <Icon className="h-4 w-4 text-primary" />
-      {children}
+    <div className="flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/90">
+      <Icon className="h-4 w-4 text-[#F97316]" />
+      <span className="text-sm font-medium">{children}</span>
     </div>
   );
 };
