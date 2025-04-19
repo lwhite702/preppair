@@ -26,30 +26,7 @@ const Index = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow">
-        <Hero 
-          title="Your AI Interview Partner" 
-          subtitle="Land Your Dream Job with Confidence"
-          description="We pair you with a personal AI interview coach that provides custom prep guides, tailored feedback, and smart follow-up tools. Prep together. Succeed together."
-          action={
-            <Link to={user ? "/dashboard" : "/auth"}>
-              <Button size="lg" className="px-8 py-6 text-lg font-medium transition-all hover:scale-105">
-                {user 
-                  ? "Go to Dashboard" 
-                  : "Get Started For Free"} 
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          }
-          secondaryAction={
-            !user ? (
-              <Link to="/auth">
-                <Button variant="outline" size="lg" className="px-8 py-6 text-lg font-medium border-white/30 text-white hover:bg-white/20 transition-all">
-                  Sign In
-                </Button>
-              </Link>
-            ) : undefined
-          }
-        />
+        <Hero />
         <HowItWorks />
         <div id="features">
           <Features />

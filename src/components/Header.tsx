@@ -22,7 +22,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full z-50 bg-gradient-to-r from-brand-navy/95 to-brand-purple/95 backdrop-blur-md border-b border-white/10">
+    <header className="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
       <div className="container py-4">
         <nav className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
@@ -35,13 +35,13 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/about" className="text-white/80 hover:text-white transition-colors">
+            <Link to="/about" className="text-[#403E43] hover:text-[#F97316] transition-colors">
               About
             </Link>
-            <Link to="/faq" className="text-white/80 hover:text-white transition-colors">
+            <Link to="/faq" className="text-[#403E43] hover:text-[#F97316] transition-colors">
               FAQ
             </Link>
-            <Link to="/contact" className="text-white/80 hover:text-white transition-colors">
+            <Link to="/contact" className="text-[#403E43] hover:text-[#F97316] transition-colors">
               Contact
             </Link>
             
@@ -76,7 +76,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 text-white hover:text-primary"
+            className="md:hidden p-2 text-[#403E43] hover:text-[#F97316]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
             {isMenuOpen ? <X /> : <Menu />}
@@ -85,25 +85,25 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-white/10">
+          <div className="md:hidden py-4 border-t border-gray-100">
             <nav className="flex flex-col space-y-4">
               <Link 
                 to="/about" 
-                className="text-white/80 hover:text-white transition-colors"
+                className="text-[#403E43] hover:text-[#F97316] transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link 
                 to="/faq"
-                className="text-white/80 hover:text-white transition-colors"
+                className="text-[#403E43] hover:text-[#F97316] transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 FAQ
               </Link>
               <Link 
                 to="/contact"
-                className="text-white/80 hover:text-white transition-colors"
+                className="text-[#403E43] hover:text-[#F97316] transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -122,7 +122,7 @@ const Header = () => {
                   </Button>
                   <Button 
                     variant="ghost"
-                    className="w-full text-white"
+                    className="w-full text-[#403E43]"
                     onClick={() => {
                       handleSignOut();
                       setIsMenuOpen(false);
