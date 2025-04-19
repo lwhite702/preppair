@@ -1,9 +1,8 @@
 
 import React from 'react';
-import { ArrowRight, MessageSquare, LucideIcon, Star, Sparkles, CheckCircle, Users } from 'lucide-react';
+import { ArrowRight, MessageSquare, LucideIcon, Star, Users, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link as RouterLink } from 'react-router-dom';
-import { Link } from '@/components/ui/link';
 
 interface HeroProps {
   title: string;
@@ -15,11 +14,11 @@ interface HeroProps {
 
 const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroProps) => {
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-br from-blue-500 to-blue-700 relative overflow-hidden">
+    <section className="py-16 md:py-24 bg-gradient-to-br from-brand-navy to-brand-purple relative overflow-hidden">
       {/* Background elements */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-20 left-10 w-72 h-72 bg-white/30 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-10 right-10 w-80 h-80 bg-blue-300/20 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-10 right-10 w-80 h-80 bg-brand-purple/20 rounded-full blur-3xl"></div>
       </div>
       
       <div className="container relative z-10">
@@ -30,20 +29,20 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
               <img 
                 src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
                 alt="PrepPair Logo"
-                className="h-16 md:h-24 animate-pulse-gentle"
+                className="h-16 md:h-24 animate-pulse-gentle rounded-full shadow-lg"
               />
               <div className="text-4xl md:text-5xl font-bold text-white">
-                <span>Prep</span><span className="text-primary">Pair</span><span className="text-sm ml-1">.me</span>
+                <span className="gradient-text">PrepPair</span>
               </div>
             </div>
             
             {/* Concept explanation */}
             <div className="bg-white/20 backdrop-blur-md p-3 rounded-full text-white text-sm font-medium mb-6 flex items-center gap-2">
-              <span>Prep</span>
+              <span>AI</span>
               <span>+</span>
-              <span>Pair</span>
+              <span>Interview Prep</span>
               <span>=</span>
-              <span className="bg-primary px-2 py-0.5 rounded-full">Your Interview Partner</span>
+              <span className="bg-primary px-2 py-0.5 rounded-full">Your Success Partner</span>
             </div>
             
             <h1 className="text-4xl md:text-6xl font-bold mb-4 animate-fade-in text-white tracking-tight">
@@ -69,11 +68,7 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
             </div>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white" asChild>
-                <RouterLink to="/#upload-form">
-                  Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
-                </RouterLink>
-              </Button>
+              {action}
               {secondaryAction}
             </div>
           </div>
