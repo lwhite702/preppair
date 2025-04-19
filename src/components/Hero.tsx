@@ -10,15 +10,11 @@ const Hero = () => {
 
   return (
     <section className="pt-32 pb-20 bg-gradient-to-br from-white via-[#FEF7CD] to-[#FDE1D3] relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/lovable-uploads/d6e0d578-e565-4328-9674-dc490a7d6dec.png')] opacity-5 bg-cover bg-center" />
+      {/* Removed the background logo watermark */}
       
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full text-[#403E43] text-sm mb-8">
-            <span className="text-[#F97316]">✨</span>
-            A Product by Wrelik Brands LLC
-          </div>
+          {/* Removed the "A Product by Wrelik Brands LLC" badge */}
           
           {/* Main Title */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-[#221F26] leading-tight">
@@ -74,3 +70,4 @@ const FeatureBadge = ({ children, icon: Icon }: FeatureBadgeProps) => {
 };
 
 export default Hero;
+
