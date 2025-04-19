@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ArrowRight, MessageSquare, LucideIcon, Star, Users, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,16 +23,13 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto">
           <div className="flex flex-col items-center text-center">
-            {/* Logo and brand */}
+            {/* Logo */}
             <div className="flex items-center gap-3 mb-8">
               <img 
                 src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
                 alt="PrepPair Logo"
                 className="h-16 md:h-24 animate-pulse-gentle rounded-full shadow-lg"
               />
-              <div className="text-4xl md:text-5xl font-bold text-white">
-                <span className="gradient-text">PrepPair</span>
-              </div>
             </div>
             
             {/* Concept explanation */}
