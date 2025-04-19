@@ -10,6 +10,7 @@ interface GuideActionsProps {
   displayTitle: string;
   candidateName?: string;
   isPremium: boolean;
+  isRegistered: boolean;
   transformForPrint: (content: string, isPrintVersion: boolean) => string;
 }
 
@@ -18,18 +19,24 @@ export const GuideActions = ({
   displayTitle,
   candidateName,
   isPremium, 
+  isRegistered,
   transformForPrint 
 }: GuideActionsProps) => {
   const [copied, setCopied] = useState(false);
   
   const handleCopy = () => {
-    navigator.clipboard.writeText(markdownContent);
+    navigator.clipboard.writeText(isRegistered ? markdownContent : getFreeTierContent(markdownContent));
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
     toast.success("Guide copied to clipboard");
   };
 
   const handlePrint = () => {
+    if (!isRegistered) {
+      toast.info("Create a free account to print your guide");
+      return;
+    }
+    
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
     
@@ -80,6 +87,11 @@ export const GuideActions = ({
   };
 
   const handleDownload = () => {
+    if (!isRegistered) {
+      toast.info("Create a free account to download your guide");
+      return;
+    }
+    
     const contentToDownload = isPremium ? markdownContent : getFreeTierContent(markdownContent);
     const blob = new Blob([contentToDownload], { type: "text/markdown" });
     const url = URL.createObjectURL(blob);
@@ -103,11 +115,11 @@ export const GuideActions = ({
         )}
         Copy
       </Button>
-      <Button variant="outline" size="sm" onClick={handlePrint}>
+      <Button variant="outline" size="sm" onClick={handlePrint} disabled={!isRegistered}>
         <Printer className="h-4 w-4 mr-1" />
         Print
       </Button>
-      <Button variant="outline" size="sm" onClick={handleDownload}>
+      <Button variant="outline" size="sm" onClick={handleDownload} disabled={!isRegistered}>
         <Download className="h-4 w-4 mr-1" />
         Download
       </Button>

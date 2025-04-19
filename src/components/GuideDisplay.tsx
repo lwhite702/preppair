@@ -15,6 +15,7 @@ interface GuideDisplayProps {
   company?: string;
   jobTitle?: string;
   candidateName?: string;
+  requireAuth?: boolean;
 }
 
 const GuideDisplay = ({ 
@@ -22,7 +23,8 @@ const GuideDisplay = ({
   title,
   company,
   jobTitle,
-  candidateName
+  candidateName,
+  requireAuth = true
 }: GuideDisplayProps) => {
   const { user } = useAuth();
   const { 
@@ -34,6 +36,9 @@ const GuideDisplay = ({
   // Determine if user has premium access - support both old and new return formats
   const isPremium = (subscription?.tier === "premium" && subscription?.status === "active") || 
                     (isSubscribed && subscriptionTier === "premium");
+  
+  // Determine if user is registered
+  const isRegistered = !!user;
   
   // Generate a default title if none is provided
   const displayTitle = title || (company && jobTitle ? `${jobTitle} at ${company}` : "Your Interview Guide");
@@ -58,22 +63,26 @@ const GuideDisplay = ({
           )}
         </div>
         <div className="flex space-x-2">
-          {!isPremium && <UpgradeButton onClick={handleUpgrade} />}
-          <GuideActions 
-            markdownContent={markdownContent}
-            displayTitle={displayTitle}
-            candidateName={candidateName}
-            isPremium={isPremium}
-            transformForPrint={(content, isPrintVersion) => 
-              transformContentWithPremiumLimits(content, isPremium, isPrintVersion)
-            }
-          />
+          {isRegistered && !isPremium && <UpgradeButton onClick={handleUpgrade} />}
+          {isRegistered && (
+            <GuideActions 
+              markdownContent={markdownContent}
+              displayTitle={displayTitle}
+              candidateName={candidateName}
+              isPremium={isPremium}
+              isRegistered={isRegistered}
+              transformForPrint={(content, isPrintVersion) => 
+                transformContentWithPremiumLimits(content, isPremium, isPrintVersion)
+              }
+            />
+          )}
         </div>
       </CardHeader>
       <CardContent>
         <GuideContent 
           markdownContent={markdownContent} 
           isPremium={isPremium}
+          isRegistered={isRegistered}
           onUpgrade={handleUpgrade}
         />
       </CardContent>

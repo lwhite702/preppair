@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,16 +8,20 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Check } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Get redirect path from location state or default to dashboard
+  const redirectTo = location.state?.redirectTo || "/dashboard";
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,8 +40,8 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Sign up successful! Redirecting to dashboard...");
-      navigate("/dashboard");
+      toast.success("Sign up successful! Redirecting...");
+      navigate(redirectTo);
     } catch (error: any) {
       toast.error(error.message || "Error signing up");
       console.error("Sign up error:", error);
@@ -58,8 +62,8 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Sign in successful! Redirecting to dashboard...");
-      navigate("/dashboard");
+      toast.success("Sign in successful! Redirecting...");
+      navigate(redirectTo);
     } catch (error: any) {
       toast.error(error.message || "Error signing in");
       console.error("Sign in error:", error);
@@ -97,12 +101,58 @@ const Auth = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-grow py-8 md:py-16">
-        <div className="container max-w-md">
+        <div className="container grid md:grid-cols-2 gap-8 max-w-5xl">
+          <div className="flex flex-col justify-center">
+            <h2 className="text-3xl font-bold mb-6">Unlock the Full Power of PrepPair.me</h2>
+            
+            <div className="space-y-4 mb-8">
+              <div className="flex items-start gap-3">
+                <div className="bg-primary/10 p-1.5 rounded-full mt-0.5">
+                  <Check className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Save & Access Your Guides</h3>
+                  <p className="text-sm text-muted-foreground">Create a library of interview guides for all your job applications</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="bg-primary/10 p-1.5 rounded-full mt-0.5">
+                  <Check className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Download & Print</h3>
+                  <p className="text-sm text-muted-foreground">Take your guides offline or share them with a mentor</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="bg-primary/10 p-1.5 rounded-full mt-0.5">
+                  <Check className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Post-Interview Feedback</h3>
+                  <p className="text-sm text-muted-foreground">Track your progress and generate follow-up emails</p>
+                </div>
+              </div>
+              
+              <div className="flex items-start gap-3">
+                <div className="bg-primary/10 p-1.5 rounded-full mt-0.5">
+                  <Check className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <h3 className="font-medium">Unlimited Guide Creation</h3>
+                  <p className="text-sm text-muted-foreground">Create as many guides as you need for all your job applications</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
           <Card className="w-full">
             <CardHeader>
-              <CardTitle className="text-2xl text-center">InterviewAce</CardTitle>
+              <CardTitle className="text-2xl text-center">PrepPair.me</CardTitle>
               <CardDescription className="text-center">
-                Sign in or create an account to access your interview guides
+                Continue where you left off by signing in or creating an account
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -199,10 +249,10 @@ const Auth = () => {
                     <Button type="submit" className="w-full" disabled={isLoading}>
                       {isLoading ? (
                         <>
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Signing Up...
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Creating Account...
                         </>
                       ) : (
-                        "Sign Up"
+                        "Create Free Account"
                       )}
                     </Button>
                   </form>
@@ -210,7 +260,7 @@ const Auth = () => {
               </Tabs>
             </CardContent>
             <CardFooter className="flex justify-center text-sm text-muted-foreground">
-              Powered by InterviewAce
+              Powered by PrepPair.me
             </CardFooter>
           </Card>
         </div>

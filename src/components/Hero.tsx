@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { ArrowRight, MessageSquare, LucideIcon, Star, Sparkles, CheckCircle, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -68,7 +69,11 @@ const Hero = ({ title, subtitle, description, action, secondaryAction }: HeroPro
             </div>
             
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up">
-              {action}
+              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white" asChild>
+                <RouterLink to="/#upload-form">
+                  Get Started Now <ArrowRight className="ml-2 h-4 w-4" />
+                </RouterLink>
+              </Button>
               {secondaryAction}
             </div>
           </div>
