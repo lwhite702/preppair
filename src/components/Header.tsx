@@ -76,7 +76,11 @@ const Header = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           ) : (
-            <Button variant="outline" className="flex items-center border-primary/30 hover:bg-primary/20" onClick={() => navigate('/auth')}>
+            <Button 
+              variant="outline" 
+              className="flex items-center border-[#0EA5E9]/30 text-[#0EA5E9] hover:bg-[#0EA5E9]/10" 
+              onClick={() => navigate('/auth')}
+            >
               <UserCircle className="mr-2 h-4 w-4" />
               Sign In
             </Button>
@@ -125,7 +129,7 @@ const Header = () => {
                 </div>
                 <Button 
                   variant="outline" 
-                  className="flex items-center justify-center w-full bg-transparent border-primary/30"
+                  className="flex items-center justify-center w-full bg-transparent border-[#0EA5E9]/30 text-[#0EA5E9] hover:bg-[#0EA5E9]/10"
                   onClick={() => {
                     setIsMenuOpen(false);
                     navigate('/dashboard');
@@ -146,7 +150,7 @@ const Header = () => {
             ) : (
               <Button 
                 variant="outline" 
-                className="flex items-center justify-center w-full bg-transparent border-primary/30 hover:bg-primary/20" 
+                className="flex items-center justify-center w-full bg-transparent border-[#0EA5E9]/30 text-[#0EA5E9] hover:bg-[#0EA5E9]/10" 
                 onClick={() => {
                   setIsMenuOpen(false);
                   navigate('/auth');
