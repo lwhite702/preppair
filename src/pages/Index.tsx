@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import Jobs from "@/components/Jobs";
 import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
+import { PremiumComparison } from "@/components/dashboard/PremiumComparison";
 import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
@@ -36,6 +37,7 @@ const Index = () => {
         </div>
         <div id="pricing">
           <Pricing />
+          <PremiumComparison />
         </div>
         <div id="blog">
           <Blog />
