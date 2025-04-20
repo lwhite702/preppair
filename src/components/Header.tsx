@@ -22,7 +22,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full z-50 bg-white/10 backdrop-blur-lg border border-white/20 shadow-sm">
+    <header className="fixed w-full z-50 bg-gradient-to-r from-[#141B40]/80 to-[#1A237E]/80 backdrop-blur-md border-b border-white/10 shadow-md">
       <div className="container py-4">
         <nav className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
@@ -31,24 +31,25 @@ const Header = () => {
               alt="PrepPair Logo" 
               className="h-10 w-10"
             />
+            <span className="text-white font-bold text-xl">PrepPair</span>
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            <Link to="/about" className="text-[#403E43] hover:text-[#F97316] transition-colors">
+            <Link to="/about" className="text-white/80 hover:text-white transition-colors">
               About
             </Link>
-            <Link to="/faq" className="text-[#403E43] hover:text-[#F97316] transition-colors">
+            <Link to="/faq" className="text-white/80 hover:text-white transition-colors">
               FAQ
             </Link>
-            <Link to="/contact" className="text-[#403E43] hover:text-[#F97316] transition-colors">
+            <Link to="/contact" className="text-white/80 hover:text-white transition-colors">
               Contact
             </Link>
             
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="border-[#F97316] text-[#F97316] hover:bg-[#F97316]/10">
+                  <Button variant="outline" className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20">
                     <UserCircle className="mr-2 h-4 w-4" />
                     Dashboard
                   </Button>
@@ -65,7 +66,7 @@ const Header = () => {
             ) : (
               <Button 
                 variant="outline" 
-                className="border-[#F97316] text-[#F97316] hover:bg-[#F97316]/10"
+                className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20"
                 onClick={() => navigate('/auth')}
               >
                 <UserCircle className="mr-2 h-4 w-4" />
@@ -76,7 +77,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 text-[#403E43] hover:text-[#F97316]"
+            className="md:hidden p-2 text-white hover:text-[#F97316]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -86,25 +87,25 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-100">
+          <div className="md:hidden py-4 border-t border-white/10">
             <nav className="flex flex-col space-y-4">
               <Link 
                 to="/about" 
-                className="text-[#403E43] hover:text-[#F97316] transition-colors"
+                className="text-white/80 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link 
                 to="/faq"
-                className="text-[#403E43] hover:text-[#F97316] transition-colors"
+                className="text-white/80 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 FAQ
               </Link>
               <Link 
                 to="/contact"
-                className="text-[#403E43] hover:text-[#F97316] transition-colors"
+                className="text-white/80 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -113,7 +114,7 @@ const Header = () => {
                 <>
                   <Button 
                     variant="outline"
-                    className="border-[#F97316] text-[#F97316] hover:bg-[#F97316]/10 w-full"
+                    className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20 w-full"
                     onClick={() => {
                       navigate('/dashboard');
                       setIsMenuOpen(false);
@@ -123,7 +124,7 @@ const Header = () => {
                   </Button>
                   <Button 
                     variant="ghost"
-                    className="w-full text-[#403E43]"
+                    className="w-full text-white/80 hover:text-white"
                     onClick={() => {
                       handleSignOut();
                       setIsMenuOpen(false);
@@ -135,7 +136,7 @@ const Header = () => {
               ) : (
                 <Button 
                   variant="outline"
-                  className="border-[#F97316] text-[#F97316] hover:bg-[#F97316]/10 w-full"
+                  className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20 w-full"
                   onClick={() => {
                     navigate('/auth');
                     setIsMenuOpen(false);
@@ -153,4 +154,3 @@ const Header = () => {
 };
 
 export default Header;
-
