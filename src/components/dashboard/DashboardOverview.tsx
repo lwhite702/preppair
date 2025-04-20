@@ -1,8 +1,8 @@
-
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { InterviewGuide } from "@/lib/types";
 import RecentGuides from "./RecentGuides";
 import SubscriptionStatus from "./SubscriptionStatus";
+import PremiumComparison from "./PremiumComparison";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
 
@@ -12,11 +12,7 @@ export interface DashboardOverviewProps {
   onGuideSelect: (guide: InterviewGuide) => void;
 }
 
-const DashboardOverview = ({
-  guides,
-  isLoading,
-  onGuideSelect
-}: DashboardOverviewProps) => {
+const DashboardOverview = ({ guides, isLoading, onGuideSelect }: DashboardOverviewProps) => {
   const { profile } = useAuth();
   const { 
     isSubscribed,
@@ -31,7 +27,7 @@ const DashboardOverview = ({
   const pendingFeedback = guides.filter(guide => guide.status === "interview_completed" && !guide.feedback);
   
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="space-y-8">
       <Card>
         <CardHeader>
           <CardTitle>Recent Guides</CardTitle>
@@ -83,6 +79,10 @@ const DashboardOverview = ({
           </div>
         </Card>
       </div>
+      
+      {!isSubscribed && (
+        <PremiumComparison onUpgradeClick={handleCreateSubscription} />
+      )}
     </div>
   );
 };

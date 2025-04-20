@@ -1,9 +1,7 @@
-
 import { AIProviderFactory } from './ai/provider-factory';
 import { AIResponse } from './ai/types';
 import { UploadFormData } from './types';
 
-// Get API key from environment variable
 const OPENAI_API_KEY = import.meta.env.VITE_OPENAI_API_KEY;
 
 export const generateInterviewGuide = async (params: UploadFormData): Promise<AIResponse> => {
@@ -28,66 +26,56 @@ export const generateInterviewGuide = async (params: UploadFormData): Promise<AI
         toneDescription = "professional";
     }
 
-    // Validate API key
     if (!OPENAI_API_KEY) {
-      // For development, provide a mock response if API key is missing
       console.warn("OpenAI API key is missing. Using mock response for development.");
       return mockInterviewGuide(params);
     }
 
-    // Get OpenAI provider instance with optimal parameters for interview guide generation
     const provider = AIProviderFactory.getProvider('openai', {
       apiKey: OPENAI_API_KEY,
-      modelName: 'gpt-4o-mini',  // Using the fast and efficient model
-      temperature: 0.8  // Slightly higher temperature for more creative responses
+      modelName: 'gpt-4o-mini',
+      temperature: 0.8
     });
 
-    // Create a more structured prompt template based on the specification
-    const systemPrompt = `You are a career coach creating a personalized interview preparation guide.
-    
-Create a markdown-based, conversational interview prep guide using the candidate's resume and job description.
+    const systemPrompt = `You are creating a tailored interview preparation guide. Format the response in markdown with these sections:
 
-Keep the tone ${toneDescription || "friendly and motivational"}. Your guide should follow this structure:
+## 👋 Quick Intro
+A personalized greeting using the candidate's name, mentioning the company and role. Keep it encouraging and mentor-like.
 
-# PrepPair Interview Guide
+## 🧠 Interview Mindset
+What this company values and how the candidate's experience aligns.
 
-## ✨ Quick Intro
-A friendly, personalized intro addressed directly to the candidate by name if provided, otherwise use "there". Mention the company name and build confidence.
+## 📝 Top 6 Questions (and How to Nail Them)
+List 6 likely questions with:
+- Why they ask it
+- How to answer
+- Example framework or approach
 
-## 💡 Interview Mindset
-A section about aligning the candidate's experience with what the company is looking for.
+## 🎯 Bonus: Tailored Talking Points
+5-6 bullet points highlighting candidate strengths that match the role.
 
-## 🔥 Most Likely Questions
-5-8 tailored interview questions based on the job description and resume.
+## 🤩 Stories To Have Ready
+A list of 3-5 specific examples from their experience to prepare.
 
-## 🧠 Tailored Talking Points
-Bullet points highlighting specific achievements that match job requirements.
-
-## 🗣️ Stories to Have Ready
-STAR format suggestions (Situation, Task, Action, Result) based on resume experience.
-
-## ✅ Prep Notes & Tasks
+## 🧠 Prep Notes
 A checklist of preparation tasks.
 
-## ❓Smart Questions to Ask the Interviewer
-3-5 thoughtful questions to ask.
+## 🙋‍♀️ Smart Questions to Ask
+5-7 thoughtful questions they can ask the interviewer.
 
-## 📅 Day-Of Interview Tips
-Practical tips for the ${interviewFormat || "interview"} format.
+## 💬 Interview Day Tips
+Practical advice for the ${interviewFormat} format.
 
-## 📬 Follow-Up Email Generator
-A template for a thank-you email that can be personalized.
-
-Use emojis as shown above for section headers. Be motivational and specific where possible.`;
+Use emojis as shown above for section headers. Be encouraging and specific.`;
 
     const userPrompt = `Create a comprehensive interview guide for a ${jobTitle} position at ${company}.
                    ${resumeText ? `Resume Context: ${resumeText}` : ''}
                    Job Description: ${jobDescription}
                    ${additionalInfo ? `Additional Context: ${additionalInfo}` : ''}
                    ${candidateName ? `Candidate Name: ${candidateName}` : ''}
-                   ${interviewFormat ? `Interview Format: ${interviewFormat}` : ''}`;
+                   Interview Format: ${interviewFormat}
+                   Tone: ${toneDescription}`;
 
-    // Log the prompt for debugging purposes
     console.log('OpenAI Prompt:', { systemPrompt, userPrompt });
 
     const response = await provider.generateGuide({ 
@@ -95,14 +83,12 @@ Use emojis as shown above for section headers. Be motivational and specific wher
       userPrompt
     });
     
-    // Log successful generation
     if (!response.error) {
       console.log('Successfully generated interview guide');
     }
 
     return response;
   } catch (error) {
-    // More detailed error logging
     console.error("Error generating interview guide:", {
       message: error instanceof Error ? error.message : 'Unknown error',
       params: JSON.stringify(params),
@@ -115,7 +101,6 @@ Use emojis as shown above for section headers. Be motivational and specific wher
   }
 };
 
-// Mock response for development when API key is not available
 const mockInterviewGuide = (params: UploadFormData): AIResponse => {
   const { jobTitle, company, candidateName } = params;
   
