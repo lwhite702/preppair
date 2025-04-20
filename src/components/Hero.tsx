@@ -22,15 +22,6 @@ const Hero = () => {
 
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
-          {/* Logo above title */}
-          <div className="mb-8 flex justify-center">
-            <img
-              src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png"
-              alt="PrepPair Logo"
-              className="h-24 w-24 animate-fade-in"
-            />
-          </div>
-          
           {/* Main Title with glow effect */}
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight [text-shadow:_0_0_40px_rgba(33,150,243,0.3)] animate-fade-in">
             Your AI Interview Partner

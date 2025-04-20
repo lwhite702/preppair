@@ -22,23 +22,24 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full z-50 bg-gradient-to-r from-[#141B40]/80 to-[#1A237E]/80 backdrop-blur-md border-b border-white/10 shadow-md">
+    <header className="fixed w-full z-50 bg-gradient-to-r from-[#141B40]/90 to-[#1A237E]/90 backdrop-blur-md border-b border-white/10 shadow-md">
       <div className="container py-4">
-        <nav className="flex items-center justify-center relative">
-          
-          {/* Centered Logo */}
-          <Link to="/" className="flex items-center justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <img 
-              src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
-              alt="PrepPair Logo" 
-              className="h-12 w-auto"
-              style={{ filter: 'invert(88%) sepia(40%) saturate(700%) hue-rotate(10deg) brightness(105%) contrast(90%)' }}
-            />
-            <span className="ml-2 text-white font-bold text-xl select-none">PrepPair</span>
-          </Link>
+        <nav className="flex items-center justify-between">
+          {/* Logo - Left aligned but visually balanced */}
+          <div className="flex-1">
+            <Link to="/" className="flex items-center">
+              <img 
+                src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
+                alt="PrepPair Logo" 
+                className="h-8 w-auto"
+                style={{ filter: 'brightness(0) invert(1)' }}
+              />
+              <span className="ml-2 text-white font-bold text-xl">PrepPair</span>
+            </Link>
+          </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          {/* Desktop Navigation - Centered */}
+          <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
             <Link to="/about" className="text-white/80 hover:text-white transition-colors">
               About
             </Link>
@@ -48,7 +49,10 @@ const Header = () => {
             <Link to="/contact" className="text-white/80 hover:text-white transition-colors">
               Contact
             </Link>
-            
+          </div>
+          
+          {/* User Menu - Right aligned */}
+          <div className="flex-1 flex justify-end">
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -76,16 +80,16 @@ const Header = () => {
                 Sign In
               </Button>
             )}
-          </div>
 
-          {/* Mobile Menu Button */}
-          <button 
-            className="md:hidden p-2 text-white hover:text-[#F97316] absolute right-0"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            aria-label="Toggle menu"
-          >
-            {isMenuOpen ? <X /> : <Menu />}
-          </button>
+            {/* Mobile Menu Button */}
+            <button 
+              className="md:hidden ml-4 p-2 text-white hover:text-[#F97316]"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {isMenuOpen ? <X /> : <Menu />}
+            </button>
+          </div>
         </nav>
 
         {/* Mobile Navigation */}
@@ -157,4 +161,3 @@ const Header = () => {
 };
 
 export default Header;
-
