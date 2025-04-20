@@ -12,48 +12,61 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
   const features = [
     {
       name: "Interview Guides",
-      free: "1 basic guide",
+      free: "1 basic guide per month",
       premium: "Unlimited personalized guides"
     },
     {
-      name: "Question Bank",
-      free: "5 general questions",
-      premium: "Full access to role-specific questions"
+      name: "Guide Sections",
+      free: "Quick intro and basic questions",
+      premium: "Full guide with all sections"
     },
     {
       name: "AI Personalization",
-      free: "Basic",
-      premium: "Advanced with company research"
+      free: "Basic job matching",
+      premium: "Deep resume analysis & custom advice"
     },
     {
-      name: "Follow-up Generator",
+      name: "Company Research",
       free: false,
-      premium: true
+      premium: "Company-specific insights & culture fit tips"
     },
     {
-      name: "Calendar Integration",
+      name: "STAR Story Builder",
       free: false,
-      premium: true
+      premium: "Create compelling interview stories"
     },
     {
-      name: "Interview Feedback Tracking",
+      name: "Smart Follow-ups",
       free: false,
-      premium: true
+      premium: "AI email generator + templates"
     },
     {
-      name: "Custom Tones & Formats",
+      name: "Interview Calendar",
       free: false,
-      premium: true
+      premium: "Track interviews & set reminders"
+    },
+    {
+      name: "Progress Tracking",
+      free: false,
+      premium: "Detailed feedback & improvement analytics"
     }
   ];
 
   return (
-    <div className="rounded-lg border bg-card p-6 shadow-sm">
-      <h2 className="text-2xl font-semibold mb-6">Upgrade to Premium</h2>
+    <div className="rounded-lg border bg-gradient-to-b from-card to-card/95 p-6 shadow-md">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+          Unlock Your Full Interview Potential
+        </h2>
+        <p className="text-muted-foreground mt-2">
+          Get comprehensive interview preparation with Premium
+        </p>
+      </div>
+
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Feature</TableHead>
+            <TableHead className="w-[40%]">Feature</TableHead>
             <TableHead>Free</TableHead>
             <TableHead>Premium</TableHead>
           </TableRow>
@@ -61,30 +74,43 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
         <TableBody>
           {features.map((feature) => (
             <TableRow key={feature.name}>
-              <TableCell>{feature.name}</TableCell>
+              <TableCell className="font-medium">{feature.name}</TableCell>
               <TableCell>
                 {typeof feature.free === 'string' ? (
-                  feature.free
+                  <span className="text-sm text-muted-foreground">{feature.free}</span>
                 ) : (
                   feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-red-500 h-5 w-5" />
                 )}
               </TableCell>
               <TableCell>
                 {typeof feature.premium === 'string' ? (
-                  feature.premium
+                  <span className="text-sm font-medium text-primary">{feature.premium}</span>
                 ) : (
-                  <Check className="text-green-500 h-5 w-5" />
+                  <Check className="text-primary h-5 w-5" />
                 )}
               </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
-      <div className="mt-6 text-center">
-        <p className="text-xl font-semibold mb-2">$24.99/month</p>
-        <Button onClick={onUpgradeClick} className="w-full sm:w-auto">
-          Upgrade Now
-        </Button>
+
+      <div className="mt-8 text-center space-y-4">
+        <div className="inline-flex items-center justify-center gap-2 bg-primary/10 px-4 py-2 rounded-full">
+          <span className="text-xl font-semibold text-primary">$24.99</span>
+          <span className="text-sm text-muted-foreground">/month</span>
+        </div>
+        <div>
+          <Button 
+            onClick={onUpgradeClick} 
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white"
+            size="lg"
+          >
+            Upgrade to Premium
+          </Button>
+        </div>
+        <p className="text-sm text-muted-foreground">
+          Cancel anytime • Instant access • No hidden fees
+        </p>
       </div>
     </div>
   );
