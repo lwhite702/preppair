@@ -24,14 +24,17 @@ const Header = () => {
   return (
     <header className="fixed w-full z-50 bg-gradient-to-r from-[#141B40]/80 to-[#1A237E]/80 backdrop-blur-md border-b border-white/10 shadow-md">
       <div className="container py-4">
-        <nav className="flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-2">
+        <nav className="flex items-center justify-center relative">
+          
+          {/* Centered Logo */}
+          <Link to="/" className="flex items-center justify-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <img 
               src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
               alt="PrepPair Logo" 
-              className="h-10 w-10"
+              className="h-12 w-auto"
+              style={{ filter: 'invert(88%) sepia(40%) saturate(700%) hue-rotate(10deg) brightness(105%) contrast(90%)' }}
             />
-            <span className="text-white font-bold text-xl">PrepPair</span>
+            <span className="ml-2 text-white font-bold text-xl select-none">PrepPair</span>
           </Link>
 
           {/* Desktop Navigation */}
@@ -77,7 +80,7 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           <button 
-            className="md:hidden p-2 text-white hover:text-[#F97316]"
+            className="md:hidden p-2 text-white hover:text-[#F97316] absolute right-0"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -154,3 +157,4 @@ const Header = () => {
 };
 
 export default Header;
+
