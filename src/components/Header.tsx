@@ -22,7 +22,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full z-50 bg-white/90 backdrop-blur-md shadow-sm">
+    <header className="fixed w-full z-50 bg-white/10 backdrop-blur-lg border border-white/20 shadow-sm">
       <div className="container py-4">
         <nav className="flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
@@ -78,6 +78,7 @@ const Header = () => {
           <button 
             className="md:hidden p-2 text-[#403E43] hover:text-[#F97316]"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label="Toggle menu"
           >
             {isMenuOpen ? <X /> : <Menu />}
           </button>
@@ -152,3 +153,4 @@ const Header = () => {
 };
 
 export default Header;
+

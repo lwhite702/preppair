@@ -25,9 +25,17 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#1A1F2C]">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow relative">
+        {/* Logo above Hero */}
+        <div className="flex justify-center mt-12 mb-6">
+          <img
+            src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png"
+            alt="PrepPair Logo"
+            className="h-20 w-20"
+          />
+        </div>
         <Hero />
         <HowItWorks />
         <div id="features">
@@ -50,3 +58,4 @@ const Index = () => {
 };
 
 export default Index;
+
