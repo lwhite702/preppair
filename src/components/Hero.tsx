@@ -44,8 +44,8 @@ const Hero = () => {
                 <Button size="lg" className="bg-white text-[#141B40] hover:bg-blue-50 px-8 py-6 text-lg">
                   Sign In
                 </Button>
-              )}
-            </RouterLink>
+              </RouterLink>
+            )}
           </div>
           
           {/* Feature Badges with glass effect */}
