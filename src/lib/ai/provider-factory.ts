@@ -26,6 +26,6 @@ export class AIProviderFactory {
 
 // Export a function to get the default AI provider
 export const getAIProvider = (type: ProviderType = 'openai'): AIProvider => {
-  const apiKey = process.env.OPENAI_API_KEY || '';
+  const apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
   return AIProviderFactory.getProvider(type, { apiKey });
 };
