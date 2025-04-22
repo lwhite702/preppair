@@ -33,9 +33,9 @@ const Hero = () => {
           
           {/* CTA Buttons with improved styling */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in [animation-delay:400ms]">
-            <RouterLink to={user ? "/dashboard" : "/auth"}>
+            <RouterLink to="/create-guide">
               <Button size="lg" className="bg-gradient-to-r from-[#F97316] to-[#FF8C42] hover:opacity-90 text-white px-8 py-6 text-lg shadow-[0_0_30px_rgba(249,115,22,0.4)]">
-                {user ? "Go to Dashboard" : "Get Started Free"}
+                Create Free Guide
                 <Sparkle className="ml-2 h-5 w-5" />
               </Button>
             </RouterLink>
@@ -43,6 +43,13 @@ const Hero = () => {
               <RouterLink to="/auth">
                 <Button size="lg" className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 px-8 py-6 text-lg">
                   Sign In
+                </Button>
+              </RouterLink>
+            )}
+            {user && (
+              <RouterLink to="/dashboard">
+                <Button size="lg" className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 px-8 py-6 text-lg">
+                  Dashboard
                 </Button>
               </RouterLink>
             )}
