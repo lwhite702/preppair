@@ -41,6 +41,8 @@ const generateAIResponse = async (
   formData: UploadFormData,
   aiProvider: AIProvider
 ) => {
+  console.log("Starting AI response generation...");
+  
   const systemPrompt = `
     You are an expert interview coach. You help people prepare for job interviews by providing them with a list of questions to practice.
     You are provided with the job description, the candidate's resume, and the desired tone of the interview guide.
@@ -65,7 +67,17 @@ const generateAIResponse = async (
     userPrompt,
   };
 
-  return await aiProvider.generateGuide(prompt);
+  console.log("AI provider:", aiProvider);
+  console.log("Sending prompt to AI provider:", { systemPrompt, userPrompt });
+
+  try {
+    const response = await aiProvider.generateGuide(prompt);
+    console.log("AI response received:", response);
+    return response;
+  } catch (error) {
+    console.error("Error in generateAIResponse:", error);
+    throw error;
+  }
 };
 
 interface UseGuideGenerationProps {
@@ -81,7 +93,11 @@ export const useGuideGeneration = ({
 }: UseGuideGenerationProps) => {
   const { user, profile } = useAuth();
   const [isGenerating, setIsGenerating] = useState(false);
+  
+  // Getting AI provider with added logging
+  console.log("Initializing AI provider...");
   const aiProvider = getAIProvider();
+  console.log("AI provider initialized:", aiProvider);
 
   const generateGuide = async (
     formData: UploadFormData,
@@ -90,6 +106,7 @@ export const useGuideGeneration = ({
     interviewFormat: string
   ) => {
     try {
+      console.log("Generate guide started with params:", { formData, tone, interviewFormat });
       setIsGenerating(true);
       
       // Extract resume text from uploaded file (if available)
@@ -108,9 +125,11 @@ export const useGuideGeneration = ({
 
       // Generate title
       const title = `${formData.jobTitle} at ${formData.company}`;
-
+      
+      console.log("Calling generateAIResponse with:", { completeFormData });
       // Get AI response based on inputs
       const response = await generateAIResponse(completeFormData, aiProvider);
+      console.log("AI response received in generateGuide:", response);
 
       if (response.error) {
         throw new Error(response.error);
@@ -138,8 +157,8 @@ export const useGuideGeneration = ({
       onGuideGenerated(response.content);
 
     } catch (error: any) {
-      toast.error(`Failed to generate guide: ${error.message}`);
       console.error("Guide generation error:", error);
+      toast.error(`Failed to generate guide: ${error.message}`);
     } finally {
       setIsGenerating(false);
     }
