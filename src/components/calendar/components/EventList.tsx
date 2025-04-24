@@ -6,7 +6,7 @@ import { CalendarEvent } from "@/lib/types";
 
 interface EventListProps {
   events: CalendarEvent[];
-  onMarkCompleted: (id: string) => Promise<void>;
+  onMarkCompleted: (id: string) => Promise<boolean>;  // Updated return type to boolean
   isUpdating: boolean;
   getEventTypeBadgeClass: (type: string) => string;
   getEventTypeLabel: (type: string) => string;
@@ -60,4 +60,3 @@ const EventList = ({
 };
 
 export default EventList;
-

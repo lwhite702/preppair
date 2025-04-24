@@ -138,14 +138,16 @@ const InterviewCalendar = () => {
                       </span>
                     </div>
                     <div className="mt-3 flex justify-end gap-2">
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => markEventCompleted(event.id)}
-                        disabled={isUpdating}
-                      >
-                        Mark as Completed
-                      </Button>
+                      {!event.completed && (
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={() => markEventCompleted(event.id)}
+                          disabled={isUpdating}
+                        >
+                          Mark as Completed
+                        </Button>
+                      )}
                     </div>
                   </div>
                 ))
@@ -171,4 +173,3 @@ const InterviewCalendar = () => {
 };
 
 export default InterviewCalendar;
-
