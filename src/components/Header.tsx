@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, X, UserCircle } from 'lucide-react';
+import { Menu, X, UserCircle, Sparkle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { 
@@ -22,19 +22,19 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed w-full z-50 bg-gradient-to-r from-[#141B40]/90 to-[#1A237E]/90 backdrop-blur-md border-b border-white/10 shadow-md">
+    <header className="fixed w-full z-50 bg-gradient-to-r from-brand-navy/95 to-brand-navy/85 backdrop-blur-md border-b border-white/10 shadow-md">
       <div className="container py-4">
         <nav className="flex items-center justify-between">
           {/* Logo - Left aligned but visually balanced */}
           <div className="flex-1">
             <Link to="/" className="flex items-center">
-              <img 
-                src="/lovable-uploads/39c7204a-3071-4ad6-a1da-957a62a4903f.png" 
-                alt="PrepPair Logo" 
-                className="h-8 w-auto"
-                style={{ filter: 'brightness(0) invert(1)' }}
-              />
-              <span className="ml-2 text-white font-bold text-xl">PrepPair</span>
+              <div className="bg-gradient-to-br from-primary to-yellow-500 p-2 rounded-lg shadow-md">
+                <Sparkle className="h-6 w-6 text-white" />
+              </div>
+              <div className="ml-2 flex flex-col">
+                <span className="text-white font-display font-bold text-xl tracking-tight">PrepPair.Me</span>
+                <span className="text-white/60 text-[10px] -mt-1">Your AI Interview Partner</span>
+              </div>
             </Link>
           </div>
 
@@ -56,7 +56,7 @@ const Header = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20">
+                  <Button variant="outline" className="border-primary bg-primary/10 text-white hover:bg-primary/20">
                     <UserCircle className="mr-2 h-4 w-4" />
                     Dashboard
                   </Button>
@@ -73,7 +73,7 @@ const Header = () => {
             ) : (
               <Button 
                 variant="outline" 
-                className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20"
+                className="border-primary bg-primary/10 text-white hover:bg-primary/20"
                 onClick={() => navigate('/auth')}
               >
                 <UserCircle className="mr-2 h-4 w-4" />
@@ -83,7 +83,7 @@ const Header = () => {
 
             {/* Mobile Menu Button */}
             <button 
-              className="md:hidden ml-4 p-2 text-white hover:text-[#F97316]"
+              className="md:hidden ml-4 p-2 text-white hover:text-primary"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label="Toggle menu"
             >
@@ -121,7 +121,7 @@ const Header = () => {
                 <>
                   <Button 
                     variant="outline"
-                    className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20 w-full"
+                    className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full"
                     onClick={() => {
                       navigate('/dashboard');
                       setIsMenuOpen(false);
@@ -143,7 +143,7 @@ const Header = () => {
               ) : (
                 <Button 
                   variant="outline"
-                  className="border-[#F97316] bg-[#F97316]/10 text-white hover:bg-[#F97316]/20 w-full"
+                  className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full"
                   onClick={() => {
                     navigate('/auth');
                     setIsMenuOpen(false);

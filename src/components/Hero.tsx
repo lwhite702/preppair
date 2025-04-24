@@ -11,19 +11,19 @@ const Hero = () => {
   return (
     <section className="relative pt-24 pb-16 md:pt-32 md:pb-24 overflow-hidden">
       {/* Complex gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#141B40] via-[#1A237E] to-[#283593] opacity-90" />
+      <div className="absolute inset-0 bg-gradient-to-br from-brand-navy via-[#303F9F] to-[#3949AB] opacity-90" />
       
       {/* Animated floating elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-[#4FC3F7] to-[#00B0FF] rounded-full blur-xl opacity-20 animate-float" />
-        <div className="absolute bottom-1/4 left-1/3 w-40 h-40 bg-gradient-to-r from-[#7C4DFF] to-[#651FFF] rounded-full blur-xl opacity-20 animate-float" style={{ animationDelay: '2s' }} />
-        <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-gradient-to-r from-[#448AFF] to-[#2979FF] rounded-full blur-xl opacity-20 animate-float" style={{ animationDelay: '4s' }} />
+        <div className="absolute top-1/4 right-1/4 w-32 h-32 bg-gradient-to-r from-[#D6BCFA] to-[#B794F4] rounded-full blur-xl opacity-20 animate-float" />
+        <div className="absolute bottom-1/4 left-1/3 w-40 h-40 bg-gradient-to-r from-[#7E69AB] to-[#5E4A9D] rounded-full blur-xl opacity-20 animate-float" style={{ animationDelay: '2s' }} />
+        <div className="absolute top-1/3 right-1/3 w-24 h-24 bg-gradient-to-r from-[#F97316] to-[#FB923C] rounded-full blur-xl opacity-20 animate-float" style={{ animationDelay: '4s' }} />
       </div>
 
       <div className="container relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           {/* Main Title with glow effect */}
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight [text-shadow:_0_0_40px_rgba(33,150,243,0.3)] animate-fade-in">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 text-white tracking-tight [text-shadow:_0_0_40px_rgba(214,188,250,0.3)] animate-fade-in font-display">
             Your AI Interview Partner
           </h1>
           
@@ -34,7 +34,7 @@ const Hero = () => {
           {/* CTA Buttons with improved styling */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in [animation-delay:400ms]">
             <RouterLink to="/create-guide">
-              <Button size="lg" className="bg-gradient-to-r from-[#F97316] to-[#FF8C42] hover:opacity-90 text-white px-8 py-6 text-lg shadow-[0_0_30px_rgba(249,115,22,0.4)]">
+              <Button size="lg" className="bg-gradient-to-r from-[#F97316] to-[#FDBA74] hover:opacity-90 text-white px-8 py-6 text-lg shadow-[0_0_30px_rgba(249,115,22,0.4)]">
                 Create Free Guide
                 <Sparkle className="ml-2 h-5 w-5" />
               </Button>
