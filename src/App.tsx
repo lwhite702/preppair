@@ -17,6 +17,11 @@ import GuideDetails from "./pages/GuideDetails";
 import CreateGuide from "./pages/CreateGuide";
 import Legal from "./pages/Legal";
 import PricingPage from "./pages/Pricing";
+import LegalPages, { 
+  TermsOfService, 
+  PrivacyPolicy, 
+  CookiePolicy 
+} from "./components/LegalPages";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +39,13 @@ function App() {
             <Route path="/legal" element={<Legal />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/create-guide" element={<CreateGuide />} />
+            
+            {/* Legal Routes */}
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/cookies" element={<CookiePolicy />} />
+            <Route path="/legal/all" element={<LegalPages />} />
+            
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
