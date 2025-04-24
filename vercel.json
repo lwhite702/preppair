@@ -10,5 +10,6 @@
   "github": {
     "silent": true,
     "autoAlias": true
-  }
+  },
+  "installCommand": "npm install --legacy-peer-deps"
 }
