@@ -22,8 +22,10 @@ const NextStepsSection = ({
   isUpdating
 }: NextStepsSectionProps) => {
   const today = new Date();
-  const isInterviewToday = interviewDate && 
-    isBefore(parseISO(interviewDate), new Date(today.setHours(23, 59, 59)));
+  const isInterviewToday = interviewDate && (
+    // Check if interview is today (same day)
+    format(parseISO(interviewDate), 'yyyy-MM-dd') === format(today, 'yyyy-MM-dd')
+  );
 
   switch (status) {
     case "applied":
