@@ -1,5 +1,4 @@
-
-import { GraduationCap, UserCheck, HandShake, RocketIcon } from 'lucide-react';
+import { GraduationCap, UserCheck, Handshake, RocketIcon } from 'lucide-react';
 
 const Jobs = () => {
   const stats = [
@@ -16,7 +15,7 @@ const Jobs = () => {
       description: "Successful career moves supported"
     },
     {
-      icon: <HandShake className="h-8 w-8 text-white" />,
+      icon: <Handshake className="h-8 w-8 text-white" />,
       title: "Top Companies",
       value: "500+",
       description: "Including Fortune 500 companies"
