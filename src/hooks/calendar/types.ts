@@ -1,6 +1,8 @@
 
 import { CalendarEvent } from "@/lib/types";
 
+export { CalendarEvent };
+
 export interface FormattedCalendarEvent {
   id: string;
   title: string;

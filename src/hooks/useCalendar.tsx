@@ -32,7 +32,7 @@ export const useCalendar = (userId: string | undefined): UseCalendarReturn => {
       if (error) throw error;
       
       if (data) {
-        setEvents(data.map(event => ({
+        const formattedEvents: CalendarEvent[] = data.map(event => ({
           id: event.id,
           userId: event.user_id,
           title: event.title,
@@ -40,9 +40,14 @@ export const useCalendar = (userId: string | undefined): UseCalendarReturn => {
           startTime: event.start_time,
           endTime: event.end_time,
           guideId: event.guide_id,
-          type: event.type === "follow_up" ? "follow-up" : event.type,
+          // Explicitly cast the type to the expected union type
+          type: (event.type === "follow_up" ? "follow-up" : 
+                event.type === "interview" ? "interview" : 
+                event.type === "reminder" ? "reminder" : "other") as CalendarEvent["type"],
           completed: event.completed || false
-        })));
+        }));
+        
+        setEvents(formattedEvents);
       }
     } catch (error) {
       console.error("Error fetching calendar events:", error);
