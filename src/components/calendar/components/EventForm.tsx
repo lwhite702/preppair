@@ -98,7 +98,17 @@ const EventForm = ({ isOpen, onClose, onSubmit, isUpdating }: EventFormProps) =>
               id="eventType"
               className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               value={newEvent.type}
-              onChange={e => setNewEvent(prev => ({ ...prev, type: e.target.value as any }))}
+              onChange={e => {
+                const value = e.target.value;
+                if (
+                  value === "interview" ||
+                  value === "follow-up" ||
+                  value === "reminder" ||
+                  value === "other"
+                ) {
+                  setNewEvent(prev => ({ ...prev, type: value }));
+                }
+              }}
             >
               <option value="reminder">Reminder</option>
               <option value="interview">Interview</option>
