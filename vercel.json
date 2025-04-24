@@ -5,15 +5,10 @@
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ],
-  "env": {
-    "VITE_OPENAI_API_KEY": "@openai_api_key",
-    "VITE_SUPABASE_URL": "@supabase_url",
-    "VITE_SUPABASE_ANON_KEY": "@supabase_anon_key"
-  },
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
   "github": {
     "silent": true,
     "autoAlias": true
-  },
-  "buildCommand": "npm run build",
-  "outputDirectory": "dist"
+  }
 }
