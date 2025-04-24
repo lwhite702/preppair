@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Check, X, Sparkles } from "lucide-react";
+import { Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface PremiumComparisonProps {
@@ -53,39 +53,36 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
   ];
 
   return (
-    <div className="rounded-lg border border-primary/20 bg-gradient-to-b from-card to-card/95 p-8 shadow-lg mb-12">
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 mb-2">
-          <Sparkles className="h-5 w-5 text-primary" />
-          <h2 className="text-2xl font-bold text-primary">
-            Unlock Your Full Interview Potential
-          </h2>
-        </div>
-        <p className="text-muted-foreground mt-2 text-lg">
+    <div className="rounded-lg border bg-gradient-to-b from-card to-card/95 p-6 shadow-md">
+      <div className="text-center mb-6">
+        <h2 className="text-2xl font-semibold bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
+          Unlock Your Full Interview Potential
+        </h2>
+        <p className="text-muted-foreground mt-2">
           Get comprehensive interview preparation with Premium
         </p>
       </div>
 
       <Table>
         <TableHeader>
-          <TableRow className="border-b-2 border-muted/50">
-            <TableHead className="w-[40%] font-bold text-foreground">Feature</TableHead>
-            <TableHead className="font-bold text-foreground">Free</TableHead>
-            <TableHead className="font-bold text-foreground">Premium</TableHead>
+          <TableRow>
+            <TableHead className="w-[40%]">Feature</TableHead>
+            <TableHead>Free</TableHead>
+            <TableHead>Premium</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {features.map((feature) => (
-            <TableRow key={feature.name} className="border-b border-muted/30">
-              <TableCell className="font-medium py-4">{feature.name}</TableCell>
-              <TableCell className="py-4">
+            <TableRow key={feature.name}>
+              <TableCell className="font-medium">{feature.name}</TableCell>
+              <TableCell>
                 {typeof feature.free === 'string' ? (
                   <span className="text-sm text-muted-foreground">{feature.free}</span>
                 ) : (
-                  feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-red-400 h-5 w-5" />
+                  feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-red-500 h-5 w-5" />
                 )}
               </TableCell>
-              <TableCell className="py-4">
+              <TableCell>
                 {typeof feature.premium === 'string' ? (
                   <span className="text-sm font-medium text-primary">{feature.premium}</span>
                 ) : (
@@ -105,7 +102,7 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
         <div>
           <Button 
             onClick={onUpgradeClick} 
-            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-medium"
+            className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white"
             size="lg"
           >
             Upgrade to Premium

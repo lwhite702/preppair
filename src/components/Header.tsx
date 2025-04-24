@@ -25,7 +25,7 @@ const Header = () => {
     <header className="fixed w-full z-50 bg-gradient-to-r from-brand-navy/95 to-brand-navy/85 backdrop-blur-md border-b border-white/10 shadow-md">
       <div className="container py-4">
         <nav className="flex items-center justify-between">
-          {/* Logo */}
+          {/* Logo - Left aligned but visually balanced */}
           <div className="flex-1">
             <Link to="/" className="flex items-center">
               <div className="bg-gradient-to-br from-primary to-yellow-500 p-2 rounded-lg shadow-md">
@@ -33,23 +33,20 @@ const Header = () => {
               </div>
               <div className="ml-2 flex flex-col">
                 <span className="text-white font-display font-bold text-xl tracking-tight">PrepPair.Me</span>
-                <span className="text-white/70 text-[10px] -mt-1 font-medium">Your AI Interview Partner</span>
+                <span className="text-white/60 text-[10px] -mt-1">Your AI Interview Partner</span>
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation - Centered */}
-          <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
-            <Link to="/about" className="text-white/90 hover:text-white transition-colors font-medium">
+          <div className="hidden md:flex items-center justify-center flex-1 space-x-6">
+            <Link to="/about" className="text-white/80 hover:text-white transition-colors">
               About
             </Link>
-            <Link to="/faq" className="text-white/90 hover:text-white transition-colors font-medium">
+            <Link to="/faq" className="text-white/80 hover:text-white transition-colors">
               FAQ
             </Link>
-            <Link to="/pricing" className="text-white/90 hover:text-white transition-colors font-medium">
-              Pricing
-            </Link>
-            <Link to="/contact" className="text-white/90 hover:text-white transition-colors font-medium">
+            <Link to="/contact" className="text-white/80 hover:text-white transition-colors">
               Contact
             </Link>
           </div>
@@ -59,7 +56,7 @@ const Header = () => {
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="border-primary bg-primary/10 text-white hover:bg-primary/20 font-medium">
+                  <Button variant="outline" className="border-primary bg-primary/10 text-white hover:bg-primary/20">
                     <UserCircle className="mr-2 h-4 w-4" />
                     Dashboard
                   </Button>
@@ -76,7 +73,7 @@ const Header = () => {
             ) : (
               <Button 
                 variant="outline" 
-                className="border-primary bg-primary/10 text-white hover:bg-primary/20 font-medium"
+                className="border-primary bg-primary/10 text-white hover:bg-primary/20"
                 onClick={() => navigate('/auth')}
               >
                 <UserCircle className="mr-2 h-4 w-4" />
@@ -101,28 +98,21 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               <Link 
                 to="/about" 
-                className="text-white/90 hover:text-white transition-colors font-medium"
+                className="text-white/80 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 About
               </Link>
               <Link 
                 to="/faq"
-                className="text-white/90 hover:text-white transition-colors font-medium"
+                className="text-white/80 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 FAQ
               </Link>
               <Link 
-                to="/pricing"
-                className="text-white/90 hover:text-white transition-colors font-medium"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Pricing
-              </Link>
-              <Link 
                 to="/contact"
-                className="text-white/90 hover:text-white transition-colors font-medium"
+                className="text-white/80 hover:text-white transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
                 Contact
@@ -131,7 +121,7 @@ const Header = () => {
                 <>
                   <Button 
                     variant="outline"
-                    className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full font-medium"
+                    className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full"
                     onClick={() => {
                       navigate('/dashboard');
                       setIsMenuOpen(false);
@@ -141,7 +131,7 @@ const Header = () => {
                   </Button>
                   <Button 
                     variant="ghost"
-                    className="w-full text-white/80 hover:text-white font-medium"
+                    className="w-full text-white/80 hover:text-white"
                     onClick={() => {
                       handleSignOut();
                       setIsMenuOpen(false);
@@ -153,7 +143,7 @@ const Header = () => {
               ) : (
                 <Button 
                   variant="outline"
-                  className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full font-medium"
+                  className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full"
                   onClick={() => {
                     navigate('/auth');
                     setIsMenuOpen(false);
