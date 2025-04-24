@@ -1,7 +1,7 @@
 
 import { InterviewFeedback } from "@/lib/types";
 
-export const parseFeedback = (feedbackJson: any): InterviewFeedback | undefined => {
+export const parseFeedback = (feedbackJson: unknown): InterviewFeedback | undefined => {
   if (!feedbackJson) return undefined;
   
   return {
