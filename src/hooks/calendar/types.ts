@@ -1,7 +1,8 @@
 
 import { CalendarEvent } from "@/lib/types";
 
-export { CalendarEvent };
+// Use 'export type' instead of just 'export' for type re-exports
+export type { CalendarEvent };
 
 export interface FormattedCalendarEvent {
   id: string;
