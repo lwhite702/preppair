@@ -1,33 +1,9 @@
-
 import { BookOpen, Clock, User } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { blogPosts } from '@/config/blogPosts';
 
 const Blog = () => {
-  const posts = [
-    {
-      title: "Top 10 Behavioral Interview Questions and How to Answer Them",
-      excerpt: "Master the most common behavioral questions with our comprehensive guide...",
-      author: "Career Coach Sarah",
-      readTime: "5 min read",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
-    },
-    {
-      title: "Technical Interview Preparation: A Complete Guide",
-      excerpt: "Everything you need to know about preparing for technical interviews...",
-      author: "Tech Lead Michael",
-      readTime: "8 min read",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
-    },
-    {
-      title: "How to Write the Perfect Follow-up Email",
-      excerpt: "Learn the art of writing effective post-interview follow-up emails...",
-      author: "HR Expert Emily",
-      readTime: "4 min read",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
-    }
-  ];
-
   return (
     <section className="py-20 bg-gradient-to-b from-brand-navy/30 to-background">
       <div className="container">
@@ -42,7 +18,7 @@ const Blog = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
+          {blogPosts.map((post, index) => (
             <Card 
               key={index} 
               className="border border-gray-200 bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
