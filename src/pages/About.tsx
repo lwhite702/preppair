@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Sparkle, Users, Code, Rocket, Leaf, Shield } from 'lucide-react';
 import Header from '@/components/Header';
@@ -17,36 +16,29 @@ const About = () => {
           <div className="text-center mb-16">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">About PrepPair.me</h1>
             <p className="text-xl text-muted-foreground">
-              Your AI interview partner that turns resumes and job descriptions into personalized prep guides.
+              Your AI-powered interview sidekick — built by job seekers, for job seekers.
             </p>
           </div>
 
-          {/* Our Story */}
+          {/* Main Content */}
           <section className="mb-16">
-            <h2 className="text-3xl font-semibold mb-8">Our Story</h2>
             <div className="prose prose-lg max-w-none">
-              <p>
-                PrepPair.me was born from a simple observation: interview preparation is too generic, 
-                time-consuming, and often misses the mark. Our founders, after years in tech recruiting 
-                and career coaching, saw candidates struggling to prepare effectively for interviews despite 
-                having incredible skills and experience.
+              <p className="text-lg mb-6">
+                We believe everyone deserves to walk into an interview feeling prepared, confident, and in control. 
+                But let's be honest — interview prep is usually stressful, scattered, and wildly inconsistent.
               </p>
-              <p>
-                We built PrepPair.me to solve this problem by creating personalized, 
-                company-specific interview guides that feel like they're written by a mentor who knows 
-                you personally. By combining the power of AI with expert interview knowledge, we're making 
-                interview preparation more accessible, effective, and confidence-boosting for job seekers everywhere.
+              <p className="text-lg mb-6">
+                That's why we created PrepPair.me: a platform that takes your resume, the job description, 
+                and your unique tone — and turns it into a tailored, motivational, step-by-step interview 
+                guide in minutes. We go beyond just "questions" and give you coaching-style insights, 
+                follow-up support, and smart tools for every round.
               </p>
-            </div>
-          </section>
-
-          {/* Our Mission */}
-          <section className="mb-16">
-            <div className="bg-primary/5 rounded-lg p-8 border border-primary/10">
-              <h2 className="text-3xl font-semibold mb-4">Our Mission</h2>
-              <p className="text-xl">
-                To help job seekers present their best selves through personalized, 
-                AI-powered interview guidance that feels human, mentor-like, and empowering.
+              <p className="text-lg mb-6">
+                Whether you're applying to a startup, a Fortune 500, or switching careers entirely, 
+                we're here to make sure you prep better, stress less, and get hired.
+              </p>
+              <p className="text-xl font-medium text-primary mb-12">
+                Prep smarter. Show up stronger. Land it.
               </p>
             </div>
           </section>
@@ -154,6 +146,13 @@ const About = () => {
                 </div>
               </div>
             </div>
+          </section>
+
+          {/* Trademark Notice */}
+          <section className="text-center text-sm text-muted-foreground mt-16 pt-8 border-t">
+            <p>
+              PrepPair.me™ is a service and trademark of Wrelike Brands LLC. All rights reserved.
+            </p>
           </section>
 
           {/* CTA */}
