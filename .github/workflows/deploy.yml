@@ -38,5 +38,6 @@ jobs:
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
           working-directory: ./
-        retry: 3
-        retry-delay: 10
+        retry:
+          attempts: 3
+          delay: 10s
