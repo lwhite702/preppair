@@ -25,8 +25,11 @@ jobs:
         run: npm install --legacy-peer-deps
 
       - name: 🛠️ Lint + Build
-        run: |
-          npm run build
+        run: npm run build
+        env:
+          VITE_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       - name: 🚀 Deploy to Vercel
         uses: amondnet/vercel-action@v25
@@ -35,3 +38,4 @@ jobs:
           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
           vercel-args: '--prod'
+          working-directory: ./
