@@ -1,3 +1,4 @@
+
 name: Deploy to GitHub Pages
 
 on:
@@ -15,17 +16,15 @@ jobs:
 
       - run: npm install --legacy-peer-deps
 
-      - run: npm run build
+      - name: Build
+        run: npm run build
+        env:
+          VITE_OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          VITE_SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
 
       - name: Copy index.html to 404.html
         run: cp dist/index.html dist/404.html
-
-      - name: Debug build output
-        run: |
-          echo "Listing contents of the root directory..."
-          ls -la
-          echo "Listing contents of the dist directory..."
-          ls -R dist
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
@@ -34,21 +33,3 @@ jobs:
           publish_dir: ./dist
           cname: preppair.me
           force_orphan: true
-            - name: Auto-Deploy to GitHub Pages
-  # You may pin to the exact commit or the version.
-  # uses: ajbarga/deploy-gh-pages@f9fc09aa1b18d7fc9dad520041063286ddc28680
-  uses: ajbarga/deploy-gh-pages@v1
-  with:
-    # PAT with admin access to repo
-    token: # optional, default is ${{ github.token }}
-    # Build Folder
-    buildFolder: # optional, default is dist
-    # Branch with page deployment
-    deploy: # optional, default is gh-pages
-    # Branch with raw code
-    main: # optional, default is ${{ github.ref_name }}
-    # Title for deployment PR
-    prTitle: # optional, default is Deploy PR for commit
-    # Repository name with owner
-    repository: # optional, default is ${{ github.repository }}
-          
