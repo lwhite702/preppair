@@ -35,7 +35,7 @@ const Blog = () => {
           <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">
             Blog
           </span>
-          <h2 className="heading-lg mb-4">Latest Interview Tips</h2>
+          <h2 className="heading-lg mb-4 text-foreground">Latest Interview Tips</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Expert advice and insights to help you ace your next interview.
           </p>
@@ -43,7 +43,10 @@ const Blog = () => {
 
         <div className="grid md:grid-cols-3 gap-8">
           {posts.map((post, index) => (
-            <Card key={index} className="border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden">
+            <Card 
+              key={index} 
+              className="border border-gray-200 bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
+            >
               <div className="aspect-video overflow-hidden">
                 <img 
                   src={post.image} 
@@ -52,11 +55,11 @@ const Blog = () => {
                 />
               </div>
               <CardHeader>
-                <CardTitle className="text-xl line-clamp-2">{post.title}</CardTitle>
+                <CardTitle className="text-xl text-gray-800 line-clamp-2">{post.title}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
+                <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
+                <div className="flex items-center justify-between text-sm text-gray-500">
                   <div className="flex items-center gap-2">
                     <User className="h-4 w-4" />
                     <span>{post.author}</span>
