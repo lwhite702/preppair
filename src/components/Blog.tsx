@@ -1,9 +1,12 @@
-import { BookOpen, Clock, User } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+
+import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { blogPosts } from '@/config/blogPosts';
+import { BlogPost } from './blog/BlogPost';
+import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 const Blog = () => {
+  const { data: posts, isLoading } = useBlogPosts();
+
   return (
     <section className="py-20 bg-gradient-to-b from-brand-navy/30 to-background">
       <div className="container">
@@ -17,38 +20,26 @@ const Blog = () => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {blogPosts.map((post, index) => (
-            <Card 
-              key={index} 
-              className="border border-gray-200 bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden"
-            >
-              <div className="aspect-video overflow-hidden">
-                <img 
-                  src={post.image} 
-                  alt={post.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl text-gray-800 line-clamp-2">{post.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 mb-4 line-clamp-2">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span>{post.author}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-[400px] bg-gray-100 animate-pulse rounded-lg" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-8">
+            {posts?.map((post) => (
+              <BlogPost
+                key={post.id}
+                title={post.title}
+                excerpt={post.excerpt}
+                author={post.author}
+                readTime={post.read_time}
+                featuredImage={post.featured_image_url}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <Button variant="outline" size="lg" className="gap-2">
