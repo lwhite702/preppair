@@ -29,7 +29,7 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(
       e.preventDefault();
       navigate(href);
       
-      // Scroll to the top of the page
+      // Always scroll to the top of the page for regular navigation
       window.scrollTo(0, 0);
     };
 
