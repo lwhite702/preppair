@@ -2,11 +2,12 @@
 import React from "react";
 import { Link } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 export const LegalSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <div className="min-h-screen bg-background">
-    <section className="max-w-4xl mx-auto px-4 py-12 md:py-16">
-      <h1 className="text-4xl md:text-5xl font-bold mb-6 font-display">{title}</h1>
+  <div className="bg-background pt-20 pb-12">
+    <section className="max-w-4xl mx-auto px-4">
+      <h1 className="text-4xl md:text-5xl font-bold mb-6 font-display pt-8" id="top">{title}</h1>
       <p className="text-lg text-muted-foreground mb-8">Last updated: April 24, 2025</p>
       <div className="prose prose-neutral dark:prose-invert max-w-none">
         {children}
@@ -16,7 +17,7 @@ export const LegalSection = ({ title, children }: { title: string; children: Rea
 );
 
 export const LegalHeader = () => (
-  <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+  <div className="max-w-4xl mx-auto px-4 pt-24 pb-8 text-center">
     <p className="text-lg text-muted-foreground mb-6">
       All services provided under PrepPair.me and MDResume.pro are operated by Wrelik Brands, LLC, 
       a registered company in Atlanta, Georgia, USA. For all inquiries, please contact: {' '}
@@ -42,7 +43,7 @@ export const LegalNavigation = () => (
 );
 
 export const ContactInfo = () => (
-  <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+  <div className="max-w-4xl mx-auto px-4 py-8 text-center mb-12">
     <Separator className="mb-8" />
     <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
     <p className="text-muted-foreground">
@@ -51,5 +52,11 @@ export const ContactInfo = () => (
       Email: <a href="mailto:support@wrelik.com" className="text-primary hover:underline">support@wrelik.com</a>
     </p>
     <p className="mt-6 text-sm text-muted-foreground">Effective Date: April 24, 2025</p>
+  </div>
+);
+
+export const PolicySeparator = () => (
+  <div className="my-8 flex justify-center">
+    <div className="text-muted-foreground text-center">⸻</div>
   </div>
 );
