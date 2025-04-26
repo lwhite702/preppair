@@ -17,11 +17,12 @@ import GuideDetails from "./pages/GuideDetails";
 import CreateGuide from "./pages/CreateGuide";
 import Legal from "./pages/Legal";
 import PricingPage from "./pages/Pricing";
-import LegalPages, { 
+import { 
   TermsOfService, 
   PrivacyPolicy, 
   CookiePolicy 
 } from "./components/LegalPages";
+import LegalPages from "./components/LegalPages";
 
 const queryClient = new QueryClient();
 
