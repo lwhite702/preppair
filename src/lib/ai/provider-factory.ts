@@ -26,6 +26,14 @@ export class AIProviderFactory {
 
 // Export a function to get the default AI provider
 export const getAIProvider = (type: ProviderType = 'openai'): AIProvider => {
+  // Use environment variable or fallback to empty string
   const apiKey = import.meta.env.VITE_OPENAI_API_KEY || '';
-  return AIProviderFactory.getProvider(type, { apiKey });
+  
+  console.log("API Key status:", apiKey ? "Available" : "Not available");
+  
+  return AIProviderFactory.getProvider(type, { 
+    apiKey,
+    modelName: 'gpt-4o-mini',
+    temperature: 0.7
+  });
 };
