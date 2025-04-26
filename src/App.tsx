@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "sonner";
@@ -17,12 +16,11 @@ import GuideDetails from "./pages/GuideDetails";
 import CreateGuide from "./pages/CreateGuide";
 import Legal from "./pages/Legal";
 import PricingPage from "./pages/Pricing";
-import { 
+import LegalPagesIndex, { 
   TermsOfService, 
   PrivacyPolicy, 
   CookiePolicy 
 } from "./components/LegalPages";
-import LegalPages from "./components/LegalPages";
 
 const queryClient = new QueryClient();
 
@@ -37,7 +35,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/faq" element={<FAQ />} />
-            <Route path="/legal" element={<Legal />} />
+            <Route path="/legal" element={<LegalPagesIndex />} />
             <Route path="/pricing" element={<PricingPage />} />
             <Route path="/create-guide" element={<CreateGuide />} />
             
@@ -45,7 +43,6 @@ function App() {
             <Route path="/terms" element={<TermsOfService />} />
             <Route path="/privacy" element={<PrivacyPolicy />} />
             <Route path="/cookies" element={<CookiePolicy />} />
-            <Route path="/legal/all" element={<LegalPages />} />
             
             <Route path="/dashboard" element={
               <ProtectedRoute>
