@@ -3,6 +3,7 @@ import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { Link } from "./ui/link";
+import { Separator } from "./ui/separator";
 
 const LegalSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
   <section className="max-w-4xl mx-auto px-4 py-10">
@@ -18,12 +19,34 @@ export const TermsOfService = () => (
     <Header />
     <main className="flex-grow bg-background">
       <LegalSection title="Terms of Service">
-        <p>These Terms of Service ("Terms") govern your access to and use of the services provided by <strong>PrepPair.me</strong> and <strong>MDResume.pro</strong>, collectively referred to as the "Software" or "Services". Both are owned and operated by <strong>Wrelik Brands, LLC</strong>, based in <strong>Atlanta, GA, USA</strong>.</p>
-        <p>By accessing or using our Software, you agree to be bound by these Terms. If you do not agree, do not use the Software. These Terms apply to both free and paid usage, including trial access.</p>
-        <h2 className="text-xl font-semibold mt-6 mb-3">1. Acceptance of Terms</h2>
-        <p>By creating an account, using our services, or continuing to use our Software after any updates to these terms, you acknowledge that you have read, understood, and agree to be bound by these Terms.</p>
-        <h2 className="text-xl font-semibold mt-6 mb-3">2. User Accounts</h2>
-        <p>To access certain features, you may need to create an account. You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+        <p className="text-lg mb-4">Last updated: April 24, 2025</p>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-4">1. Introduction and Acceptance</h2>
+        <p>Welcome to PrepPair.me and MDResume.pro ("the Services"), owned and operated by Wrelik Brands, LLC. By accessing or using our Services, you agree to these Terms of Service ("Terms"). If you do not agree to these Terms, please do not use the Services.</p>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">2. Services Description</h2>
+        <p>Our Services provide interview preparation and resume enhancement tools, including but not limited to:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>AI-powered interview guides</li>
+          <li>Resume analysis and optimization</li>
+          <li>Job description matching</li>
+          <li>Interview feedback tools</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">3. User Accounts and Responsibilities</h2>
+        <p>To access certain features, you must create an account. You are responsible for:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Maintaining account confidentiality</li>
+          <li>All activities under your account</li>
+          <li>Providing accurate information</li>
+          <li>Notifying us of unauthorized access</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">4. Privacy and Data Protection</h2>
+        <p>Your privacy is important to us. Our Privacy Policy explains how we collect, use, and protect your data. By using our Services, you also agree to our Privacy Policy.</p>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">5. Intellectual Property</h2>
+        <p>All content, features, and functionality of the Services are owned by Wrelik Brands, LLC and protected by international copyright, trademark, and other intellectual property laws.</p>
       </LegalSection>
       <LegalNavigation />
     </main>
@@ -36,12 +59,37 @@ export const PrivacyPolicy = () => (
     <Header />
     <main className="flex-grow bg-background">
       <LegalSection title="Privacy Policy">
-        <p><strong>Last updated:</strong> April 24, 2025</p>
-        <p><strong>PrepPair.me</strong> and <strong>MDResume.pro</strong> are services operated by <strong>Wrelik Brands, LLC</strong>. We value your privacy and are committed to protecting your data. This policy outlines how we collect, use, and protect your personal information.</p>
-        <h2 className="text-xl font-semibold mt-6 mb-3">1. Information We Collect</h2>
-        <p>We collect information you provide directly, such as your name, email, resume content, and job descriptions. We also collect usage data and information from third-party services with your consent.</p>
-        <h2 className="text-xl font-semibold mt-6 mb-3">2. How We Use Your Information</h2>
-        <p>We use your information to provide, maintain, and improve our services, process payments, send notifications, and for research and analytics purposes.</p>
+        <p className="text-lg mb-4">Last updated: April 24, 2025</p>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-4">1. Information Collection</h2>
+        <p>We collect information you provide directly, including:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Name and email address</li>
+          <li>Resume content and job descriptions</li>
+          <li>Interview feedback and responses</li>
+          <li>Account preferences and settings</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">2. How We Use Your Information</h2>
+        <p>We use your information to:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Provide and improve our services</li>
+          <li>Generate personalized interview guides</li>
+          <li>Analyze and optimize resume content</li>
+          <li>Send important notifications and updates</li>
+        </ul>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">3. Data Security</h2>
+        <p>We implement appropriate security measures to protect your personal information from unauthorized access, alteration, or disclosure.</p>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">4. Your Rights</h2>
+        <p>You have the right to:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Access your personal data</li>
+          <li>Request data correction or deletion</li>
+          <li>Opt-out of marketing communications</li>
+          <li>Export your data in a portable format</li>
+        </ul>
       </LegalSection>
       <LegalNavigation />
     </main>
@@ -54,12 +102,31 @@ export const CookiePolicy = () => (
     <Header />
     <main className="flex-grow bg-background">
       <LegalSection title="Cookie Policy">
-        <p><strong>Last updated:</strong> April 24, 2025</p>
-        <p>This Cookie Policy explains how <strong>PrepPair.me</strong> and <strong>MDResume.pro</strong> use cookies and similar technologies to recognize you when you visit our sites. It explains what these technologies are and why we use them, as well as your rights to control our use of them.</p>
-        <h2 className="text-xl font-semibold mt-6 mb-3">1. What Are Cookies</h2>
-        <p>Cookies are small data files that are placed on your computer or mobile device when you visit a website. They are widely used to make websites work more efficiently and provide information to the website owners.</p>
-        <h2 className="text-xl font-semibold mt-6 mb-3">2. How We Use Cookies</h2>
-        <p>We use cookies for several purposes, including to remember your preferences, analyze site traffic, and personalize content.</p>
+        <p className="text-lg mb-4">Last updated: April 24, 2025</p>
+        
+        <h2 className="text-xl font-semibold mt-8 mb-4">1. What Are Cookies?</h2>
+        <p>Cookies are small text files stored on your device when you visit our websites. They help us remember your preferences and improve your experience.</p>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">2. Types of Cookies We Use</h2>
+        <h3 className="text-lg font-medium mt-6 mb-3">Essential Cookies</h3>
+        <p>Required for basic website functionality. These cannot be disabled.</p>
+        
+        <h3 className="text-lg font-medium mt-6 mb-3">Performance Cookies</h3>
+        <p>Help us understand how visitors interact with our website by collecting anonymous information.</p>
+        
+        <h3 className="text-lg font-medium mt-6 mb-3">Functionality Cookies</h3>
+        <p>Remember your preferences and settings to enhance your experience.</p>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">3. Managing Cookies</h2>
+        <p>You can control cookies through your browser settings. However, disabling certain cookies may limit your access to some features.</p>
+
+        <h2 className="text-xl font-semibold mt-8 mb-4">4. Third-Party Cookies</h2>
+        <p>We use trusted third-party services that may also set cookies:</p>
+        <ul className="list-disc pl-6 mt-2">
+          <li>Google Analytics for website analytics</li>
+          <li>Stripe for payment processing</li>
+          <li>Intercom for customer support</li>
+        </ul>
       </LegalSection>
       <LegalNavigation />
     </main>
@@ -68,41 +135,47 @@ export const CookiePolicy = () => (
 );
 
 export const LegalNavigation = () => (
-  <nav className="max-w-4xl mx-auto py-8 text-center text-sm border-t border-gray-200 mt-8">
-    <Link href="/terms" className="text-primary hover:underline mx-4">Terms of Service</Link>
-    <Link href="/privacy" className="text-primary hover:underline mx-4">Privacy Policy</Link>
-    <Link href="/cookies" className="text-primary hover:underline mx-4">Cookie Policy</Link>
+  <nav className="max-w-4xl mx-auto py-8 px-4">
+    <Separator className="mb-8" />
+    <div className="flex flex-col sm:flex-row justify-center items-center gap-4 text-sm">
+      <Link href="/terms" className="text-primary hover:underline">Terms of Service</Link>
+      <span className="hidden sm:inline text-muted-foreground">•</span>
+      <Link href="/privacy" className="text-primary hover:underline">Privacy Policy</Link>
+      <span className="hidden sm:inline text-muted-foreground">•</span>
+      <Link href="/cookies" className="text-primary hover:underline">Cookie Policy</Link>
+    </div>
   </nav>
 );
 
-const LegalPages = () => {
-  return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow bg-background py-16">
-        <div className="container">
-          <h1 className="text-4xl font-bold mb-12 text-center">Legal Documents</h1>
-          <div className="space-y-12">
-            <LegalSection title="Terms of Service">
-              <p>These Terms of Service ("Terms") govern your access to and use of the services provided by <strong>PrepPair.me</strong> and <strong>MDResume.pro</strong>, collectively referred to as the "Software" or "Services".</p>
-              <p><Link href="/terms" className="font-medium">Read full Terms of Service →</Link></p>
-            </LegalSection>
-            
-            <LegalSection title="Privacy Policy">
-              <p><strong>PrepPair.me</strong> and <strong>MDResume.pro</strong> are services operated by <strong>Wrelik Brands, LLC</strong>. We value your privacy and are committed to protecting your data.</p>
-              <p><Link href="/privacy" className="font-medium">Read full Privacy Policy →</Link></p>
-            </LegalSection>
-            
-            <LegalSection title="Cookie Policy">
-              <p>This Cookie Policy explains how <strong>PrepPair.me</strong> and <strong>MDResume.pro</strong> use cookies and similar technologies to recognize you when you visit our sites.</p>
-              <p><Link href="/cookies" className="font-medium">Read full Cookie Policy →</Link></p>
-            </LegalSection>
+const LegalPages = () => (
+  <div className="min-h-screen flex flex-col">
+    <Header />
+    <main className="flex-grow bg-background py-16">
+      <div className="container">
+        <h1 className="text-4xl font-bold mb-12 text-center">Legal Documents</h1>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="bg-card rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-semibold mb-4">Terms of Service</h2>
+            <p className="text-muted-foreground mb-6">Our terms outline your rights and responsibilities when using PrepPair's services.</p>
+            <Link href="/terms" className="text-primary hover:underline font-medium">Read Terms →</Link>
+          </div>
+          
+          <div className="bg-card rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-semibold mb-4">Privacy Policy</h2>
+            <p className="text-muted-foreground mb-6">Learn how we collect, use, and protect your personal information.</p>
+            <Link href="/privacy" className="text-primary hover:underline font-medium">Read Privacy Policy →</Link>
+          </div>
+          
+          <div className="bg-card rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+            <h2 className="text-2xl font-semibold mb-4">Cookie Policy</h2>
+            <p className="text-muted-foreground mb-6">Information about how we use cookies and similar tracking technologies.</p>
+            <Link href="/cookies" className="text-primary hover:underline font-medium">Read Cookie Policy →</Link>
           </div>
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
-};
+      </div>
+    </main>
+    <Footer />
+  </div>
+);
 
 export default LegalPages;
