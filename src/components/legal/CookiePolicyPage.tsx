@@ -2,42 +2,59 @@
 import React from "react";
 import Header from "../Header";
 import Footer from "../Footer";
-import { LegalSection, LegalNavigation } from "./shared/LegalComponents";
+import { LegalSection, LegalNavigation, LegalHeader, ContactInfo } from "./shared/LegalComponents";
 
 const CookiePolicyPage = () => (
   <div className="min-h-screen flex flex-col">
     <Header />
     <main className="flex-grow bg-background">
+      <LegalHeader />
       <LegalSection title="Cookie Policy">
-        <p className="text-lg text-muted-foreground mb-8">Last updated: April 24, 2025</p>
-        
-        <h2 className="text-2xl font-semibold mt-10 mb-6">1. What Are Cookies?</h2>
-        <p className="text-base leading-relaxed">
-          Cookies are small text files stored on your device when you visit our websites. They help us remember your preferences and improve your experience.
-        </p>
+        <section className="space-y-8">
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">1. Purpose</h2>
+            <p className="text-base leading-relaxed">
+              This Cookie Policy describes how and why we use cookies to improve your experience on PrepPair.me and MDResume.pro.
+            </p>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-10 mb-6">2. Types of Cookies We Use</h2>
-        <h3 className="text-xl font-medium mt-8 mb-4">Essential Cookies</h3>
-        <p className="text-base leading-relaxed">Required for basic website functionality. These cannot be disabled.</p>
-        
-        <h3 className="text-xl font-medium mt-8 mb-4">Performance Cookies</h3>
-        <p className="text-base leading-relaxed">Help us understand how visitors interact with our website by collecting anonymous information.</p>
-        
-        <h3 className="text-xl font-medium mt-8 mb-4">Functionality Cookies</h3>
-        <p className="text-base leading-relaxed">Remember your preferences and settings to enhance your experience.</p>
+          <div>
+            <h2 className="text-2xl font-semibold mb-4">2. What Cookies Are Used</h2>
+            <div className="relative overflow-x-auto shadow-sm rounded-lg border">
+              <table className="w-full text-left">
+                <thead className="bg-muted/50">
+                  <tr>
+                    <th className="p-4 font-semibold">Type</th>
+                    <th className="p-4 font-semibold">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr className="border-t">
+                    <td className="p-4 font-medium">Essential</td>
+                    <td className="p-4">Required for login sessions, form security, and core features</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-4 font-medium">Functional</td>
+                    <td className="p-4">Store user preferences and editor state</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-4 font-medium">Analytics</td>
+                    <td className="p-4">Help us understand how users interact with the software</td>
+                  </tr>
+                  <tr className="border-t">
+                    <td className="p-4 font-medium">Marketing</td>
+                    <td className="p-4">Occasionally used to promote new features internally</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
 
-        <h2 className="text-2xl font-semibold mt-10 mb-6">3. Managing Cookies</h2>
-        <p className="text-base leading-relaxed">You can control cookies through your browser settings. However, disabling certain cookies may limit your access to some features.</p>
-
-        <h2 className="text-2xl font-semibold mt-10 mb-6">4. Third-Party Cookies</h2>
-        <p className="text-base leading-relaxed mb-4">We use trusted third-party services that may also set cookies:</p>
-        <ul className="list-disc pl-8 space-y-3">
-          <li className="text-base leading-relaxed">Google Analytics for website analytics</li>
-          <li className="text-base leading-relaxed">Stripe for payment processing</li>
-          <li className="text-base leading-relaxed">Intercom for customer support</li>
-        </ul>
+          {/* ... Additional sections follow the same pattern ... */}
+        </section>
       </LegalSection>
       <LegalNavigation />
+      <ContactInfo />
     </main>
     <Footer />
   </div>

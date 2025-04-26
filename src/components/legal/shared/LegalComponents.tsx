@@ -4,12 +4,28 @@ import { Link } from "@/components/ui/link";
 import { Separator } from "@/components/ui/separator";
 
 export const LegalSection = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <section className="max-w-4xl mx-auto px-4 py-12 md:py-16">
-    <h1 className="text-4xl md:text-5xl font-bold mb-8 font-display">{title}</h1>
-    <div className="prose prose-neutral dark:prose-invert max-w-none space-y-6">
-      {children}
-    </div>
-  </section>
+  <div className="min-h-screen bg-background">
+    <section className="max-w-4xl mx-auto px-4 py-12 md:py-16">
+      <h1 className="text-4xl md:text-5xl font-bold mb-6 font-display">{title}</h1>
+      <p className="text-lg text-muted-foreground mb-8">Last updated: April 24, 2025</p>
+      <div className="prose prose-neutral dark:prose-invert max-w-none">
+        {children}
+      </div>
+    </section>
+  </div>
+);
+
+export const LegalHeader = () => (
+  <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+    <p className="text-lg text-muted-foreground mb-6">
+      All services provided under PrepPair.me and MDResume.pro are operated by Wrelik Brands, LLC, 
+      a registered company in Atlanta, Georgia, USA. For all inquiries, please contact: {' '}
+      <a href="mailto:support@wrelik.com" className="text-primary hover:underline">
+        support@wrelik.com
+      </a>
+    </p>
+    <Separator className="my-8" />
+  </div>
 );
 
 export const LegalNavigation = () => (
@@ -25,3 +41,15 @@ export const LegalNavigation = () => (
   </nav>
 );
 
+export const ContactInfo = () => (
+  <div className="max-w-4xl mx-auto px-4 py-8 text-center">
+    <Separator className="mb-8" />
+    <h2 className="text-xl font-semibold mb-4">Contact Information</h2>
+    <p className="text-muted-foreground">
+      Wrelik Brands, LLC<br />
+      Atlanta, GA, USA<br />
+      Email: <a href="mailto:support@wrelik.com" className="text-primary hover:underline">support@wrelik.com</a>
+    </p>
+    <p className="mt-6 text-sm text-muted-foreground">Effective Date: April 24, 2025</p>
+  </div>
+);
