@@ -236,6 +236,131 @@ export type Database = {
         }
         Relationships: []
       }
+      wp_blog_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          parent_id: string | null
+          slug: string
+          wp_id: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          parent_id?: string | null
+          slug: string
+          wp_id: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          parent_id?: string | null
+          slug?: string
+          wp_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wp_blog_categories_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "wp_blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wp_blog_posts: {
+        Row: {
+          author: string
+          categories: string[] | null
+          content: string
+          created_at: string
+          excerpt: string | null
+          featured_image_url: string | null
+          id: string
+          published_at: string
+          read_time: string | null
+          slug: string
+          status: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          wp_id: number
+        }
+        Insert: {
+          author: string
+          categories?: string[] | null
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image_url?: string | null
+          id?: string
+          published_at: string
+          read_time?: string | null
+          slug: string
+          status?: string
+          tags?: string[] | null
+          title: string
+          updated_at: string
+          wp_id: number
+        }
+        Update: {
+          author?: string
+          categories?: string[] | null
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          featured_image_url?: string | null
+          id?: string
+          published_at?: string
+          read_time?: string | null
+          slug?: string
+          status?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          wp_id?: number
+        }
+        Relationships: []
+      }
+      wp_blog_settings: {
+        Row: {
+          api_key: string | null
+          auto_sync: boolean | null
+          created_at: string
+          id: string
+          last_synced: string | null
+          sync_frequency: string | null
+          updated_at: string
+          wordpress_url: string
+        }
+        Insert: {
+          api_key?: string | null
+          auto_sync?: boolean | null
+          created_at?: string
+          id?: string
+          last_synced?: string | null
+          sync_frequency?: string | null
+          updated_at?: string
+          wordpress_url: string
+        }
+        Update: {
+          api_key?: string | null
+          auto_sync?: boolean | null
+          created_at?: string
+          id?: string
+          last_synced?: string | null
+          sync_frequency?: string | null
+          updated_at?: string
+          wordpress_url?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

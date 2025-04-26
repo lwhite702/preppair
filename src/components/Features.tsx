@@ -1,5 +1,5 @@
 
-import { BookOpen, FilePlus, Calendar, Mail, Users, Target, RefreshCcw, Zap, BrainCircuit, Smile, Sparkles, Upload, Send, MessageSquare, CheckCircle } from 'lucide-react';
+import { Zap, BrainCircuit, Users, MessageSquare, Calendar, Target, Star, Trophy, CheckCheck } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -9,26 +9,23 @@ const Features = () => {
     {
       icon: <Target className="h-8 w-8 text-primary" />,
       title: "Personalized Prep Guides",
-      description: "Your experience + the job description = a custom-tailored prep plan. We highlight your strengths and suggest real responses.",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
+      description: "Your experience + the job description = a custom-tailored prep plan. We highlight your strengths and suggest real responses."
     },
     {
       icon: <BrainCircuit className="h-8 w-8 text-primary" />,
       title: "Behavioral & Technical Questions",
-      description: "Based on industry-standard interview frameworks. Practice with purpose and stay sharp.",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
+      description: "Based on industry-standard interview frameworks. Practice with purpose and stay sharp."
     },
     {
       icon: <Users className="h-8 w-8 text-primary" />,
       title: "Your Interview Partner",
-      description: "We pair you with AI guidance that feels like having a mentor in your corner. Never interview alone again.",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
+      description: "We pair you with AI guidance that feels like having a mentor in your corner. Never interview alone again."
     }
   ];
 
   const additionalFeatures = [
     {
-      icon: <Send className="h-6 w-6 text-primary" />,
+      icon: <MessageSquare className="h-6 w-6 text-primary" />,
       title: "Smart Follow-ups",
       description: "AI-powered follow-up email suggestions based on your interview feedback and outcomes."
     },
@@ -38,22 +35,22 @@ const Features = () => {
       description: "Keep track of all your interviews, their status, and upcoming dates in one place."
     },
     {
-      icon: <MessageSquare className="h-6 w-6 text-primary" />,
+      icon: <Star className="h-6 w-6 text-primary" />,
       title: "Practice Sessions",
       description: "Interactive Q&A sessions to boost your confidence before the big day."
     },
     {
-      icon: <Upload className="h-6 w-6 text-primary" />,
-      title: "Quick Resume Upload",
-      description: "Seamlessly upload your resume and job description to get started in minutes."
+      icon: <Trophy className="h-6 w-6 text-primary" />,
+      title: "Success Tracking",
+      description: "Monitor your progress and celebrate your wins along the journey."
     },
     {
-      icon: <Sparkles className="h-6 w-6 text-primary" />,
+      icon: <Zap className="h-6 w-6 text-primary" />,
       title: "Instant Guide Generation",
       description: "Get your personalized interview prep guide instantly after uploading your information."
     },
     {
-      icon: <CheckCircle className="h-6 w-6 text-primary" />,
+      icon: <CheckCheck className="h-6 w-6 text-primary" />,
       title: "Post-Interview Insights",
       description: "Capture what worked, what didn't, and get recommendations for improvement."
     }
@@ -68,28 +65,21 @@ const Features = () => {
           </span>
           <h2 className="heading-lg mb-4 gradient-text">Tools for Interview Success</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
-            Our AI-powered platform gives you everything you need to prepare for your next interview with a partner by your side.
+            PrepPair.Me gives you everything you need to prepare for your next interview with a partner by your side.
           </p>
         </div>
         
         {/* Main Features */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {mainFeatures.map((feature, index) => (
-            <Card key={index} className="border border-gray-100 bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden group">
-              <div className="aspect-video overflow-hidden mb-4">
-                <img 
-                  src={feature.image} 
-                  alt={feature.title}
-                  className="w-full h-full object-cover transition-transform group-hover:scale-105"
-                />
-              </div>
-              <CardHeader className="pb-2 relative">
+            <Card key={index} className="border border-gray-100 bg-white shadow-md hover:shadow-xl transition-all hover:-translate-y-1">
+              <CardHeader className="pb-2">
                 <div className="mb-4 bg-primary/10 p-4 rounded-xl inline-block transform group-hover:scale-110 transition-transform">
                   {feature.icon}
                 </div>
                 <CardTitle className="text-xl">{feature.title}</CardTitle>
               </CardHeader>
-              <CardContent className="relative">
+              <CardContent>
                 <p className="text-muted-foreground">{feature.description}</p>
               </CardContent>
             </Card>

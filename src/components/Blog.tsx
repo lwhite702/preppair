@@ -1,32 +1,11 @@
 
-import { BookOpen, Clock, User } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { BookOpen } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { BlogPost } from './blog/BlogPost';
+import { useBlogPosts } from '@/hooks/useBlogPosts';
 
 const Blog = () => {
-  const posts = [
-    {
-      title: "Top 10 Behavioral Interview Questions and How to Answer Them",
-      excerpt: "Master the most common behavioral questions with our comprehensive guide...",
-      author: "Career Coach Sarah",
-      readTime: "5 min read",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
-    },
-    {
-      title: "Technical Interview Preparation: A Complete Guide",
-      excerpt: "Everything you need to know about preparing for technical interviews...",
-      author: "Tech Lead Michael",
-      readTime: "8 min read",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
-    },
-    {
-      title: "How to Write the Perfect Follow-up Email",
-      excerpt: "Learn the art of writing effective post-interview follow-up emails...",
-      author: "HR Expert Emily",
-      readTime: "4 min read",
-      image: "/lovable-uploads/44b0c31d-e74b-4dd2-b3b3-35b68584b8a3.png"
-    }
-  ];
+  const { data: posts, isLoading } = useBlogPosts();
 
   return (
     <section className="py-20 bg-gradient-to-b from-brand-navy/30 to-background">
@@ -35,41 +14,32 @@ const Blog = () => {
           <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">
             Blog
           </span>
-          <h2 className="heading-lg mb-4">Latest Interview Tips</h2>
+          <h2 className="heading-lg mb-4 text-foreground">Latest Interview Tips</h2>
           <p className="text-muted-foreground max-w-2xl mx-auto">
             Expert advice and insights to help you ace your next interview.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {posts.map((post, index) => (
-            <Card key={index} className="border border-white/10 bg-white/5 backdrop-blur-sm hover:shadow-xl transition-all hover:-translate-y-1 overflow-hidden">
-              <div className="aspect-video overflow-hidden">
-                <img 
-                  src={post.image} 
-                  alt={post.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-              <CardHeader>
-                <CardTitle className="text-xl line-clamp-2">{post.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 line-clamp-2">{post.excerpt}</p>
-                <div className="flex items-center justify-between text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span>{post.author}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Clock className="h-4 w-4" />
-                    <span>{post.readTime}</span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="grid md:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-[400px] bg-gray-100 animate-pulse rounded-lg" />
+            ))}
+          </div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-8">
+            {posts?.map((post) => (
+              <BlogPost
+                key={post.id}
+                title={post.title}
+                excerpt={post.excerpt}
+                author={post.author}
+                readTime={post.read_time}
+                featuredImage={post.featured_image_url}
+              />
+            ))}
+          </div>
+        )}
 
         <div className="text-center mt-12">
           <Button variant="outline" size="lg" className="gap-2">
