@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, UserCircle, Sparkle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,24 +9,14 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
+import { Link } from '@/components/ui/link';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-
+  
   const handleSignOut = async () => {
     await signOut();
-    navigate('/');
-  };
-
-  const handleNavigation = (path: string) => {
-    // Only scroll to top if navigating to a new path
-    if (path !== location.pathname) {
-      navigate(path);
-      window.scrollTo(0, 0);
-    }
   };
 
   return (
@@ -36,14 +25,7 @@ const Header = () => {
         <nav className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex-1">
-            <a 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/');
-              }}
-              href="/"
-              className="flex items-center cursor-pointer"
-            >
+            <Link href="/" className="flex items-center">
               <div className="bg-gradient-to-br from-primary to-yellow-500 p-2 rounded-lg shadow-md">
                 <Sparkle className="h-6 w-6 text-white" />
               </div>
@@ -51,51 +33,23 @@ const Header = () => {
                 <span className="text-white font-display font-bold text-xl tracking-tight">PrepPair.Me</span>
                 <span className="text-white/70 text-[10px] -mt-1 font-medium">Your AI Interview Partner</span>
               </div>
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation - Centered */}
           <div className="hidden md:flex items-center justify-center flex-1 space-x-8">
-            <a 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/about');
-              }}
-              href="/about" 
-              className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
-            >
+            <Link href="/about" className="text-white/90 hover:text-white transition-colors font-medium">
               About
-            </a>
-            <a 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/faq');
-              }}
-              href="/faq" 
-              className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
-            >
+            </Link>
+            <Link href="/faq" className="text-white/90 hover:text-white transition-colors font-medium">
               FAQ
-            </a>
-            <a 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/pricing');
-              }}
-              href="/pricing" 
-              className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
-            >
+            </Link>
+            <Link href="/pricing" className="text-white/90 hover:text-white transition-colors font-medium">
               Pricing
-            </a>
-            <a 
-              onClick={(e) => {
-                e.preventDefault();
-                handleNavigation('/contact');
-              }}
-              href="/contact" 
-              className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
-            >
+            </Link>
+            <Link href="/contact" className="text-white/90 hover:text-white transition-colors font-medium">
               Contact
-            </a>
+            </Link>
           </div>
           
           {/* User Menu - Right aligned */}
@@ -109,10 +63,8 @@ const Header = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuItem onClick={() => {
-                    handleNavigation('/dashboard');
-                  }}>
-                    My Guides
+                  <DropdownMenuItem onClick={() => {}}>
+                    <Link href="/dashboard" className="w-full">My Guides</Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut}>
                     Sign Out
@@ -120,14 +72,25 @@ const Header = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <Button 
-                variant="outline" 
-                className="border-primary bg-primary/10 text-white hover:bg-primary/20 font-medium"
-                onClick={() => handleNavigation('/auth')}
-              >
-                <UserCircle className="mr-2 h-4 w-4" />
-                Sign In
-              </Button>
+              <div className="flex gap-3">
+                <Link href="/create-guide">
+                  <Button 
+                    variant="default"
+                    className="bg-primary text-white hover:bg-primary/90 font-medium"
+                  >
+                    Get Started
+                  </Button>
+                </Link>
+                <Link href="/auth">
+                  <Button 
+                    variant="outline" 
+                    className="border-primary bg-primary/10 text-white hover:bg-primary/20 font-medium"
+                  >
+                    <UserCircle className="mr-2 h-4 w-4" />
+                    Sign In
+                  </Button>
+                </Link>
+              </div>
             )}
 
             {/* Mobile Menu Button */}
@@ -145,62 +108,48 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-white/10">
             <nav className="flex flex-col space-y-4">
-              <a 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/about');
-                  setIsMenuOpen(false);
-                }}
+              <Link
                 href="/about"
-                className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
+                className="text-white/90 hover:text-white transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
               >
                 About
-              </a>
-              <a 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/faq');
-                  setIsMenuOpen(false);
-                }}
+              </Link>
+              <Link
                 href="/faq"
-                className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
+                className="text-white/90 hover:text-white transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
               >
                 FAQ
-              </a>
-              <a 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/pricing');
-                  setIsMenuOpen(false);
-                }}
+              </Link>
+              <Link
                 href="/pricing"
-                className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
+                className="text-white/90 hover:text-white transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Pricing
-              </a>
-              <a 
-                onClick={(e) => {
-                  e.preventDefault();
-                  handleNavigation('/contact');
-                  setIsMenuOpen(false);
-                }}
+              </Link>
+              <Link
                 href="/contact"
-                className="text-white/90 hover:text-white transition-colors font-medium cursor-pointer"
+                className="text-white/90 hover:text-white transition-colors font-medium"
+                onClick={() => setIsMenuOpen(false)}
               >
                 Contact
-              </a>
+              </Link>
               {user ? (
                 <>
-                  <Button 
-                    variant="outline"
-                    className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full font-medium"
-                    onClick={() => {
-                      handleNavigation('/dashboard');
-                      setIsMenuOpen(false);
-                    }}
+                  <Link
+                    href="/dashboard"
+                    className="w-full"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    Dashboard
-                  </Button>
+                    <Button 
+                      variant="outline"
+                      className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full font-medium"
+                    >
+                      Dashboard
+                    </Button>
+                  </Link>
                   <Button 
                     variant="ghost"
                     className="w-full text-white/80 hover:text-white font-medium"
@@ -213,16 +162,30 @@ const Header = () => {
                   </Button>
                 </>
               ) : (
-                <Button 
-                  variant="outline"
-                  className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full font-medium"
-                  onClick={() => {
-                    handleNavigation('/auth');
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  Sign In
-                </Button>
+                <>
+                  <Link
+                    href="/create-guide"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Button 
+                      variant="default"
+                      className="bg-primary text-white hover:bg-primary/90 w-full font-medium"
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                  <Link
+                    href="/auth"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <Button 
+                      variant="outline"
+                      className="border-primary bg-primary/10 text-white hover:bg-primary/20 w-full font-medium"
+                    >
+                      Sign In
+                    </Button>
+                  </Link>
+                </>
               )}
             </nav>
           </div>

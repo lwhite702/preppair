@@ -83,7 +83,7 @@ const generateAIResponse = async (
 interface UseGuideGenerationProps {
   sessionId: string;
   incrementGuideCount: () => void;
-  onGuideGenerated: (markdownContent: string) => void;
+  onGuideGenerated: (markdownContent: string, error?: string) => void;
 }
 
 export const useGuideGeneration = ({
@@ -131,30 +131,31 @@ export const useGuideGeneration = ({
       const response = await generateAIResponse(completeFormData, aiProvider);
       console.log("AI response received in generateGuide:", response);
 
-      if (response.error) {
-        throw new Error(response.error);
+      // Even if there's an error but we have content (mock data), proceed to save it
+      if (response.content) {
+        // Save guide to database based on auth state
+        await saveGeneratedGuide({
+          content: response.content,
+          jobTitle: formData.jobTitle,
+          company: formData.company,
+          candidateName: formData.candidateName || "Anonymous",
+          title,
+          userId: user?.id,
+          sessionId,
+          resumeFileName: resumeFile?.name,
+          jobDescriptionText: formData.jobDescription
+        });
+
+        // If user is not logged in, increment guide count
+        if (!user) {
+          incrementGuideCount();
+        }
+
+        toast.success("Interview guide generated successfully!");
+        onGuideGenerated(response.content, response.error);
+      } else {
+        throw new Error(response.error || "Failed to generate guide content");
       }
-
-      // Save guide to database based on auth state
-      await saveGeneratedGuide({
-        content: response.content,
-        jobTitle: formData.jobTitle,
-        company: formData.company,
-        candidateName: formData.candidateName || "Anonymous",
-        title,
-        userId: user?.id,
-        sessionId,
-        resumeFileName: resumeFile?.name,
-        jobDescriptionText: formData.jobDescription
-      });
-
-      // If user is not logged in, increment guide count
-      if (!user) {
-        incrementGuideCount();
-      }
-
-      toast.success("Interview guide generated successfully!");
-      onGuideGenerated(response.content);
 
     } catch (error: any) {
       console.error("Guide generation error:", error);

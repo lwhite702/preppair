@@ -2,7 +2,7 @@
 import React from 'react';
 import { Sparkle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from '@/components/ui/link';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Hero = () => {
@@ -33,25 +33,25 @@ const Hero = () => {
           
           {/* CTA Buttons with improved styling */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in [animation-delay:400ms]">
-            <RouterLink to="/create-guide">
+            <Link href="/create-guide">
               <Button size="lg" className="bg-gradient-to-r from-[#F97316] to-[#FDBA74] hover:opacity-90 text-white px-8 py-6 text-lg shadow-[0_0_30px_rgba(249,115,22,0.4)]">
                 Create Free Guide
                 <Sparkle className="ml-2 h-5 w-5" />
               </Button>
-            </RouterLink>
+            </Link>
             {!user && (
-              <RouterLink to="/auth">
+              <Link href="/auth">
                 <Button size="lg" className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 px-8 py-6 text-lg">
                   Sign In
                 </Button>
-              </RouterLink>
+              </Link>
             )}
             {user && (
-              <RouterLink to="/dashboard">
+              <Link href="/dashboard">
                 <Button size="lg" className="bg-white/10 backdrop-blur-sm border border-white/20 text-white hover:bg-white/20 px-8 py-6 text-lg">
                   Dashboard
                 </Button>
-              </RouterLink>
+              </Link>
             )}
           </div>
           
