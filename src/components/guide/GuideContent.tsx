@@ -1,95 +1,67 @@
-
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { transformContentWithPremiumLimits, markdownToHtml } from "@/utils/premiumContent";
-import { PremiumLock } from "./PremiumLock";
-import { Button } from "@/components/ui/button";
-import { UserPlus, Lock } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
+import React, { useState, useEffect } from 'react';
+import MarkdownPreview from './MarkdownPreview';
+import { Textarea } from '@/components/ui/textarea';
+import PreviewToggle from './PreviewToggle';
 
 interface GuideContentProps {
   markdownContent: string;
   isPremium: boolean;
   isRegistered: boolean;
-  onUpgrade?: () => void;
+  isEditable?: boolean;
+  onContentChange?: (content: string) => void;
+  previewText?: string;
+  editText?: string;
 }
 
-export const GuideContent = ({ 
-  markdownContent, 
-  isPremium, 
+export const GuideContent: React.FC<GuideContentProps> = ({
+  markdownContent,
+  isPremium,
   isRegistered,
-  onUpgrade 
-}: GuideContentProps) => {
-  const navigate = useNavigate();
-  const { user } = useAuth();
+  isEditable = false,
+  onContentChange,
+  previewText = 'Viewing rendered guide',
+  editText = 'Editing guide content',
+}) => {
+  const [isPreview, setIsPreview] = useState(true);
+  const [editableContent, setEditableContent] = useState(markdownContent);
 
-  // Determine what level of content to show based on user status
-  const getTransformedContent = (content: string, forHtml = false) => {
-    if (isPremium) {
-      return content; // Premium users see everything
-    }
-    
-    if (!isRegistered) {
-      // Unregistered users see very limited preview
-      return transformContentWithPremiumLimits(content, false, forHtml, 'preview');
-    }
-    
-    // Registered but not premium users see standard free content
-    return transformContentWithPremiumLimits(content, false, forHtml);
-  };
+  useEffect(() => {
+    setEditableContent(markdownContent);
+  }, [markdownContent]);
 
-  const handleSignUp = () => {
-    navigate('/auth');
+  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setEditableContent(e.target.value);
+    onContentChange?.(e.target.value);
   };
 
   return (
-    <>
-      <Tabs defaultValue="preview">
-        <TabsList className="mb-4">
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-          {isRegistered && <TabsTrigger value="markdown">Markdown</TabsTrigger>}
-        </TabsList>
-        <TabsContent value="preview">
-          <div 
-            className="prose max-w-none markdown-content"
-            dangerouslySetInnerHTML={{ 
-              __html: getTransformedContent(markdownContent, true)
-            }}
+    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+      {isEditable && (
+        <div className="flex justify-between items-center mb-4">
+          <PreviewToggle 
+            isPreview={isPreview} 
+            onToggle={() => setIsPreview(!isPreview)} 
           />
-          
-          {!isRegistered && (
-            <div className="mt-8 p-4 border border-blue-200 bg-blue-50 rounded-md">
-              <div className="flex items-center gap-2 mb-2">
-                <UserPlus className="h-5 w-5 text-blue-600" />
-                <h3 className="font-medium text-blue-800">Create an Account to Access More</h3>
-              </div>
-              <p className="text-sm text-blue-700 mb-4">
-                Sign up for free to unlock additional interview questions, download your guide, and save it for future reference.
-              </p>
-              <Button 
-                className="bg-blue-500 hover:bg-blue-600 text-white"
-                onClick={handleSignUp}
-              >
-                Create Free Account
-              </Button>
-            </div>
-          )}
-          
-          {isRegistered && !isPremium && <PremiumLock onUpgrade={onUpgrade} />}
-        </TabsContent>
-        
-        <TabsContent value="markdown">
-          <pre className="bg-muted p-4 rounded-md overflow-auto whitespace-pre-wrap">
-            {getTransformedContent(markdownContent, false)}
-          </pre>
-        </TabsContent>
-      </Tabs>
-      
-      {!isRegistered && (
-        <div className="mt-4 border-t pt-4 text-sm text-muted-foreground">
-          <p>Already have an account? <Button variant="link" className="p-0 h-auto" onClick={handleSignUp}>Sign in</Button></p>
+          <div className="text-sm text-muted-foreground">
+            {isPreview ? previewText : editText}
+          </div>
         </div>
       )}
-    </>
+      
+      {isEditable && !isPreview ? (
+        <Textarea
+          value={editableContent}
+          onChange={handleContentChange}
+          className="min-h-[400px] font-mono text-sm"
+          aria-label="Edit markdown content"
+        />
+      ) : (
+        <MarkdownPreview 
+          content={isEditable ? editableContent : markdownContent} 
+          isPremium={isPremium}
+          isRegistered={isRegistered}
+        />
+      )}
+    </div>
   );
 };

@@ -1,3 +1,5 @@
+import PasswordStrengthMeter from '@/components/auth/PasswordStrengthMeter';
+
 
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -49,7 +51,21 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
-
+<div className="space-y-2">
+  <Label htmlFor="signup-password">Password</Label>
+  <Input
+    id="signup-password"
+    type="password"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+    required
+    minLength={8} // Enforce stronger password policy
+  />
+  <PasswordStrengthMeter password={password} />
+  <p className="text-xs text-muted-foreground">
+    Password should be at least 8 characters with upper and lowercase letters, numbers, and special characters.
+  </p>
+</div>
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -242,7 +258,7 @@ const Auth = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        minLength={6}
+                        minLength={8} // Enforce stronger password policy
                       />
                     </div>
 
