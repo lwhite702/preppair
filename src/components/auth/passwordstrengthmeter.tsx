@@ -39,7 +39,8 @@ const PasswordStrengthMeter: React.FC<PasswordStrengthMeterProps> = ({ password 
   };
 
   const getLabel = () => {
-    if (strength === 0) return '';
+    if (strength === 0 && password.length === 0) return 'Enter a password';
+    if (strength === 0) return 'Too weak';
     if (strength <= 2) return 'Weak';
     if (strength <= 3) return 'Medium';
     return 'Strong';

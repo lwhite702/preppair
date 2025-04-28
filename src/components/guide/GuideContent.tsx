@@ -1,17 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import MarkdownPreview from './MarkdownPreview';
+import MarkdownPreview from './MarkdownPreview'; // Renders the provided markdown content as HTML.
 import { Textarea } from '@/components/ui/textarea';
 import PreviewToggle from './PreviewToggle';
-
-interface GuideContentProps {
-  markdownContent: string;
-  isPremium: boolean;
-  isRegistered: boolean;
-  isEditable?: boolean;
-  onContentChange?: (content: string) => void;
-  previewText?: string;
-  editText?: string;
-}
 
 export const GuideContent: React.FC<GuideContentProps> = ({
   markdownContent,
