@@ -5,7 +5,7 @@ import { Toaster } from "sonner";
 import { AuthProvider } from "./contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import Loading from "@/components/Loading"; // Create this simple loading component
+import Loading from "@/components/Loading";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AdminRoute from "./components/AdminRoute";
 import LegalPagesIndex, { TermsOfService, PrivacyPolicy, CookiePolicy } from "./components/LegalPages";
