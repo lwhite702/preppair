@@ -1,49 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import MarkdownPreview from './MarkdownPreview';
+import MarkdownPreview from './MarkdownPreview'; // Renders the provided markdown content as HTML.
 import { Textarea } from '@/components/ui/textarea';
 import PreviewToggle from './PreviewToggle';
-
-interface GuideContentProps {
-  /**
-   * The markdown content to render or edit.
-   */
-  markdownContent: string;
-
-  /**
-   * Indicates if the user has premium access.
-   * This may control the visibility of certain content.
-   */
-  isPremium: boolean;
-
-  /**
-   * Indicates if the user is registered.
-   * This may control access to certain features.
-   */
-  isRegistered: boolean;
-
-  /**
-   * Enables edit mode for the content.
-   * Default: false
-   */
-  isEditable?: boolean;
-
-  /**
-   * Callback function triggered when the content changes.
-   */
-  onContentChange?: (content: string) => void;
-
-  /**
-   * Custom text for the preview mode label.
-   * Default: 'Viewing rendered guide'
-   */
-  previewText?: string;
-
-  /**
-   * Custom text for the edit mode label.
-   * Default: 'Editing guide content'
-   */
-  editText?: string;
-}
 
 export const GuideContent: React.FC<GuideContentProps> = ({
   markdownContent,
