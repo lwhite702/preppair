@@ -1,14 +1,15 @@
-// src/components/ErrorBoundary.tsx
+
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { AlertTriangle } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface Props {
   children: ReactNode;
-  errorMessage?: string;
+  fallback?: ReactNode;
 }
 
 interface State {
   hasError: boolean;
+  error?: Error;
 }
 
 class ErrorBoundary extends Component<Props, State> {
@@ -17,44 +18,39 @@ class ErrorBoundary extends Component<Props, State> {
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(_: Error): State {
-    return { hasError: true };
+  static getDerivedStateFromError(error: Error): State {
+    return { hasError: true, error };
   }
 
   componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Component error:", error, errorInfo);
-    // Example: Send error to a logging service
-    // logErrorToService(error, errorInfo);
+    console.error("Error caught by ErrorBoundary:", error, errorInfo);
+  }
+
+  resetErrorBoundary = () => {
+    this.setState({ hasError: false, error: undefined });
   }
 
   render() {
     if (this.state.hasError) {
+      if (this.props.fallback) {
+        return this.props.fallback;
+      }
       return (
-        <div className="flex-grow flex items-center justify-center" role="alert">
-          <div className="text-center p-8 bg-white rounded-lg shadow-lg border border-gray-200 max-w-md">
-            <div className="bg-red-100 rounded-full p-3 inline-block mb-4">
-              <AlertTriangle className="text-red-600 h-6 w-6" />
-            </div>
-            <h1 className="text-xl font-bold mb-4">Something went wrong</h1>
-            <p className="text-muted-foreground mb-6">
-              {this.props.errorMessage || "We're sorry, but there was an error loading this component."}
-            </p>
-            <button 
-              onClick={() => this.setState({ hasError: false })}
-              className="px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90"
-            >
-              Try again
-            </button>
-          </div>
+        <div className="flex flex-col items-center justify-center p-8 bg-red-50 border border-red-200 rounded-lg my-4 text-center">
+          <h2 className="text-xl font-semibold text-red-700 mb-2">Something went wrong</h2>
+          <p className="text-gray-600 mb-4">We apologize for the inconvenience. Please try again later.</p>
+          <Button 
+            onClick={this.resetErrorBoundary}
+            variant="outline" 
+            className="border-red-300 text-red-700 hover:bg-red-100"
+          >
+            Try Again
+          </Button>
         </div>
       );
     }
 
-    return (
-      <React.Fragment key={this.state.hasError ? "error" : "normal"}>
-        {this.props.children}
-      </React.Fragment>
-    );
+    return this.props.children;
   }
 }
 
