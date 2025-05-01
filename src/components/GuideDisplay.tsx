@@ -16,6 +16,7 @@ interface GuideDisplayProps {
   jobTitle?: string;
   candidateName?: string;
   requireAuth?: boolean;
+  onUpgrade?: () => void;
 }
 
 const GuideDisplay = ({ 
@@ -24,7 +25,8 @@ const GuideDisplay = ({
   company,
   jobTitle,
   candidateName,
-  requireAuth = true
+  requireAuth = true,
+  onUpgrade
 }: GuideDisplayProps) => {
   const { user } = useAuth();
   const { 
@@ -44,8 +46,12 @@ const GuideDisplay = ({
   const displayTitle = title || (company && jobTitle ? `${jobTitle} at ${company}` : "Your Interview Guide");
 
   const handleUpgrade = () => {
-    // Replace this with your actual upgrade flow
-    window.location.href = "/pricing";
+    if (onUpgrade) {
+      onUpgrade();
+    } else {
+      // Default fallback if no onUpgrade provided
+      window.location.href = "/pricing";
+    }
   };
 
   return (

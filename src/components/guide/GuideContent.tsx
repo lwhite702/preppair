@@ -1,85 +1,40 @@
 
-import React, { useState, useEffect } from 'react';
-import MarkdownPreview from './MarkdownPreview'; // Renders the provided markdown content as HTML.
-import { Textarea } from '@/components/ui/textarea';
-import PreviewToggle from './PreviewToggle';
+import React from 'react';
 import { PremiumLock } from './PremiumLock';
-import { useNavigate } from 'react-router-dom';
+import MarkdownPreview from './MarkdownPreview';
 
 interface GuideContentProps {
   markdownContent: string;
   isPremium: boolean;
   isRegistered: boolean;
-  isEditable?: boolean;
-  onContentChange?: (content: string) => void;
-  previewText?: string;
-  editText?: string;
-  onUpgrade?: () => void;
+  onUpgrade: () => void;
 }
 
-export const GuideContent: React.FC<GuideContentProps> = ({
-  markdownContent,
+export const GuideContent: React.FC<GuideContentProps> = ({ 
+  markdownContent, 
   isPremium,
   isRegistered,
-  isEditable = false,
-  onContentChange,
-  previewText = 'Viewing rendered guide',
-  editText = 'Editing guide content',
   onUpgrade
 }) => {
-  const [isPreview, setIsPreview] = useState(true);
-  const [editableContent, setEditableContent] = useState(markdownContent);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    setEditableContent(markdownContent);
-  }, [markdownContent]);
-
-  const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setEditableContent(e.target.value);
-    onContentChange?.(e.target.value);
-  };
-
-  const handleUpgrade = () => {
-    if (onUpgrade) {
-      onUpgrade();
-    } else {
-      navigate('/pricing');
-    }
-  };
-
+  // Premium users or unregistered users see the full content
+  const shouldShowFullContent = isPremium || !isRegistered;
+  
   return (
-    <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-      {isEditable && (
-        <div className="flex justify-between items-center mb-4">
-          <PreviewToggle 
-            isPreview={isPreview} 
-            onToggle={() => setIsPreview(!isPreview)} 
-          />
-          <div className="text-sm text-muted-foreground">
-            {isPreview ? previewText : editText}
-          </div>
-        </div>
-      )}
-      
-      {isEditable && !isPreview ? (
-        <Textarea
-          value={editableContent}
-          onChange={handleContentChange}
-          className="min-h-[400px] font-mono text-sm"
-          aria-label="Edit markdown content"
-        />
+    <div className="relative">
+      {shouldShowFullContent ? (
+        <MarkdownPreview content={markdownContent} className="prose prose-slate max-w-none" />
       ) : (
         <>
-          <MarkdownPreview 
-            content={isEditable ? editableContent : markdownContent} 
-            isPremium={isPremium}
-            isRegistered={isRegistered}
-          />
+          {/* Show preview - first part of the content before premium lock */}
+          <div className="mb-8">
+            <MarkdownPreview 
+              content={markdownContent.substring(0, Math.min(1000, markdownContent.length / 3))} 
+              className="prose prose-slate max-w-none" 
+            />
+          </div>
           
-          {!isPremium && isRegistered && (
-            <PremiumLock onUpgrade={handleUpgrade} />
-          )}
+          {/* Premium lock overlay */}
+          <PremiumLock onUpgrade={onUpgrade} />
         </>
       )}
     </div>
