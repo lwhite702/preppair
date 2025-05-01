@@ -1,19 +1,21 @@
 
 import { Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface UpgradeButtonProps {
   onClick?: () => void;
 }
 
 export const UpgradeButton = ({ onClick }: UpgradeButtonProps) => {
+  const navigate = useNavigate();
+  
   const handleUpgrade = () => {
     if (onClick) {
       onClick();
     } else {
-      // Default behavior
-      toast.info("Upgrade feature coming soon!");
+      // Navigate to pricing page as default action
+      navigate('/pricing');
     }
   };
 

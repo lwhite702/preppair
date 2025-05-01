@@ -36,24 +36,53 @@ export const getFreeTierContent = (content: string, level: 'preview' | 'free' = 
     return previewContent;
   }
   
-  // Free tier shows more content
+  // Free tier shows more content - increasing from 2 to 3 sections
   let freeTierContent = sections[0]; // This is content before the first ## heading
   
-  // Add the first 2 proper sections (if they exist)
-  for (let i = 1; i <= 2 && i < sections.length; i++) {
+  // Add the first 3 proper sections (increased from 2)
+  for (let i = 1; i <= 3 && i < sections.length; i++) {
     freeTierContent += `## ${sections[i]}`;
   }
   
-  // Add premium teaser
-  freeTierContent += `\n\n## 🔒 Premium Content\nUpgrade to Premium for full access to:\n\n`;
-  
-  // Add list of locked sections
-  for (let i = 3; i < sections.length; i++) {
-    const sectionTitle = sections[i].split('\n')[0];
-    freeTierContent += `- 🔒 ${sectionTitle}\n`;
+  // Show previews of the next 2 sections with truncated content
+  if (sections.length > 4) {
+    for (let i = 4; i <= 5 && i < sections.length; i++) {
+      const sectionLines = sections[i].split('\n');
+      const sectionTitle = sectionLines[0];
+      
+      // Add section title and a preview of the content (first paragraph)
+      freeTierContent += `## ${sectionTitle}\n`;
+      
+      // Add one or two paragraphs as a teaser
+      let previewText = '';
+      let paragraphCount = 0;
+      for (let j = 1; j < sectionLines.length && paragraphCount < 1; j++) {
+        if (sectionLines[j].trim() !== '') {
+          previewText += sectionLines[j] + '\n';
+          if (sectionLines[j+1]?.trim() === '') {
+            paragraphCount++;
+          }
+        }
+      }
+      
+      freeTierContent += previewText + '\n...\n\n';
+    }
   }
   
-  freeTierContent += `\nUnlock all content for $24.99/month.`;
+  // Add more enticing premium teaser with clear value proposition
+  freeTierContent += `\n\n## 🌟 Unlock the Complete Interview Guide\n\n`;
+  freeTierContent += `You've seen a preview of what PrepPair.me can do. Upgrade to Premium to access:\n\n`;
+  
+  // Add list of premium features with emojis for visual appeal
+  freeTierContent += `- ✅ Complete interview guide with all ${sections.length - 1} sections\n`;
+  freeTierContent += `- 💼 STAR story templates customized to your experience\n`;
+  freeTierContent += `- 📝 AI-generated follow-up emails for after your interview\n`;
+  freeTierContent += `- 📅 Interview tracking and calendar integration\n`;
+  freeTierContent += `- 📊 Performance analytics and improvement suggestions\n\n`;
+  
+  // Add pricing with value proposition
+  freeTierContent += `### Land your dream job faster with Premium - just $24.99/month\n`;
+  freeTierContent += `*Cancel anytime. One successful interview pays for itself many times over.*`;
   
   return freeTierContent;
 };

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import GuideDisplay from "@/components/GuideDisplay";
 import { InterviewGuide, JobStatus } from "@/lib/types";
+import { useNavigate } from "react-router-dom";
 
 export interface GuideViewProps {
   selectedGuide: InterviewGuide | null;
@@ -21,6 +22,7 @@ const GuideView = ({
   onReset,
   onGuideSelect
 }: GuideViewProps) => {
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (selectedGuide && onGuideSelect) {
@@ -49,6 +51,10 @@ const GuideView = ({
         return { label: "View Details", action: () => {} };
     }
   };
+
+  const handleUpgrade = () => {
+    navigate('/pricing');
+  };
   
   if (isLoading) {
     return <div className="flex justify-center items-center h-64">Loading guide...</div>;
@@ -66,6 +72,7 @@ const GuideView = ({
         company={selectedGuide?.company}
         jobTitle={selectedGuide?.jobTitle}
         candidateName={selectedGuide?.candidateName}
+        onUpgrade={handleUpgrade}
       />
       <div className="mt-8 flex justify-center space-x-4">
         {selectedGuide && (
