@@ -1,4 +1,4 @@
-// src/pages/CreateGuide.tsx
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Header from '@/components/Header';
@@ -10,6 +10,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangle, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ErrorBoundary from '@/components/ErrorBoundary';
+
+interface UploadFormProps {
+  onGuideGenerated: (markdownContent: string, error?: string) => void;
+  onGenerationStart: () => void;
+}
 
 const CreateGuide = () => {
   const { user } = useAuth();
@@ -34,6 +39,10 @@ const CreateGuide = () => {
     setError(null);
     setGeneratedGuide(null);
     setIsGenerating(false);
+  };
+
+  const handleUpgrade = () => {
+    navigate('/pricing');
   };
 
   return (
@@ -83,7 +92,8 @@ const CreateGuide = () => {
               <GuideContent 
                 markdownContent={generatedGuide} 
                 isPremium={false} 
-                isRegistered={!!user} 
+                isRegistered={!!user}
+                onUpgrade={handleUpgrade}
               />
               {!user && (
                 <div className="bg-primary/5 p-4 rounded-lg mt-8 border border-primary/20">

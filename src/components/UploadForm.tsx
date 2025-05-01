@@ -1,157 +1,189 @@
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { UploadFormData } from "@/lib/types";
-import { useAuth } from "@/contexts/AuthContext";
-import { ResumeUploadStep } from "./upload/ResumeUploadStep";
-import { JobDetailsStep } from "./upload/JobDetailsStep";
-import { CustomizeGuideStep } from "./upload/CustomizeGuideStep";
-import { FinalizeGuideStep } from "./upload/FinalizeGuideStep";
-import { ProgressIndicator } from "./upload/ProgressIndicator";
-import AnonymousLimit from "./upload/AnonymousLimit";
-import { useAnonymousGuides } from "@/hooks/useAnonymousGuides";
-import { useGuideGeneration } from "@/hooks/useGuideGeneration";
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
 
 interface UploadFormProps {
-  onGuideGenerated: (markdownContent: string) => void;
+  onGuideGenerated: (markdownContent: string, error?: string) => void;
+  onGenerationStart: () => void;
 }
 
-const UploadForm = ({ onGuideGenerated }: UploadFormProps) => {
-  const { user } = useAuth();
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [resumeFile, setResumeFile] = useState<File | null>(null);
-  const [formData, setFormData] = useState<UploadFormData>({
-    candidateName: "",
-    jobDescription: "",
-    jobTitle: "",
-    company: "",
-  });
-  const [tone, setTone] = useState<string>("professional");
-  const [interviewFormat, setInterviewFormat] = useState<"virtual" | "phone" | "in-person">("virtual");
+interface FormValues {
+  resume: string;
+  jobDescription: string;
+  candidateName: string;
+  company: string;
+  jobTitle: string;
+}
 
-  // Custom hooks
-  const { 
-    anonymousGuideCount, 
-    sessionId, 
-    incrementGuideCount,
-    isAnonymousLimitReached 
-  } = useAnonymousGuides(!!user);
+const UploadForm: React.FC<UploadFormProps> = ({ onGuideGenerated, onGenerationStart }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
-  const { 
-    isGenerating, 
-    generateGuide 
-  } = useGuideGeneration({
-    sessionId,
-    incrementGuideCount,
-    onGuideGenerated
+  const form = useForm<FormValues>({
+    defaultValues: {
+      resume: '',
+      jobDescription: '',
+      candidateName: '',
+      company: '',
+      jobTitle: ''
+    }
   });
 
-  // Handle form input changes
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  // Resume upload handler
-  const handleResumeUpload = (file: File) => {
-    setResumeFile(file);
-    setCurrentStep(2);
-  };
-
-  // Interview format change handler with type safety
-  const handleInterviewFormatChange = (value: string) => {
-    if (value === "virtual" || value === "phone" || value === "in-person") {
-      setInterviewFormat(value);
+  const onSubmit = async (data: FormValues) => {
+    setIsSubmitting(true);
+    onGenerationStart();
+    
+    try {
+      // Mock API call - in a real app, this would call your backend
+      setTimeout(() => {
+        const mockGuide = generateMockGuide(data);
+        onGuideGenerated(mockGuide);
+        setIsSubmitting(false);
+      }, 2000);
+    } catch (error) {
+      onGuideGenerated('', 'Error generating guide. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
-  // Navigation between steps
-  const nextStep = () => {
-    setCurrentStep(currentStep + 1);
-  };
+  const generateMockGuide = (data: FormValues) => {
+    return `# Interview Guide for ${data.candidateName || 'You'} - ${data.jobTitle || 'Role'} at ${data.company || 'Company'}
 
-  const prevStep = () => {
-    setCurrentStep(currentStep - 1);
-  };
+## Job Overview
+Based on the job description, this position requires expertise in [key skills]. Your resume shows relevant experience in these areas.
 
-  // Submit form and generate guide
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await generateGuide(formData, resumeFile, tone, interviewFormat);
-  };
+## Interview Preparation
+Here are some key questions to prepare for:
 
-  // Render the current step
-  const renderStep = () => {
-    switch (currentStep) {
-      case 1:
-        return (
-          <ResumeUploadStep 
-            resumeFile={resumeFile} 
-            onResumeUpload={handleResumeUpload} 
-            onNextStep={nextStep} 
-          />
-        );
-      case 2:
-        return (
-          <JobDetailsStep 
-            formData={formData} 
-            onInputChange={handleInputChange}
-            onPrevStep={prevStep}
-            onNextStep={nextStep}
-          />
-        );
-      case 3:
-        return (
-          <CustomizeGuideStep 
-            tone={tone}
-            interviewFormat={interviewFormat}
-            onToneChange={setTone}
-            onInterviewFormatChange={handleInterviewFormatChange}
-            onPrevStep={prevStep}
-            onNextStep={nextStep}
-          />
-        );
-      case 4:
-        return (
-          <FinalizeGuideStep 
-            formData={formData}
-            resumeFile={resumeFile}
-            tone={tone}
-            interviewFormat={interviewFormat}
-            isGenerating={isGenerating}
-            isAnonymousLimitReached={isAnonymousLimitReached}
-            onInputChange={handleInputChange}
-            onPrevStep={prevStep}
-            onGenerateGuide={handleSubmit}
-          />
-        );
-      default:
-        return null;
-    }
+### Technical Questions
+1. How would you approach [technical problem]?
+2. Can you explain your experience with [technology]?
+3. What methodology do you use for [process]?
+
+### Behavioral Questions
+1. Tell me about a time you faced a challenge in your previous role.
+2. How do you prioritize tasks when facing tight deadlines?
+3. Describe your ideal team environment.
+
+## Your Strengths
+Based on your resume, highlight these strengths during the interview:
+- [Strength 1]
+- [Strength 2]
+- [Strength 3]
+
+## Follow-up Email Template
+Subject: Thank You for the [Job Title] Interview
+
+Dear [Interviewer's Name],
+
+Thank you for taking the time to speak with me today about the [Job Title] position. I enjoyed learning more about [company culture/projects/team].
+
+I'm excited about the opportunity to bring my skills in [relevant skills] to your team.
+
+Best regards,
+[Your Name]
+`;
   };
 
   return (
-    <Card className="w-full max-w-3xl mx-auto">
-      <CardHeader>
-        <CardTitle>Create Your Interview Guide</CardTitle>
-        <CardDescription>
-          Upload your resume and provide job details to generate a personalized interview guide.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        {!user && anonymousGuideCount >= 1 && <AnonymousLimit />}
-        
-        <form onSubmit={(e) => e.preventDefault()} className="space-y-6">
-          <ProgressIndicator currentStep={currentStep} totalSteps={4} />
-          {renderStep()}
+    <div className="max-w-2xl mx-auto">
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="candidateName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Your Name (Optional)</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter your name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="company"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Company (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter company name" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="jobTitle"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Job Title (Optional)</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter job title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          
+          <FormField
+            control={form.control}
+            name="resume"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Resume*</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    placeholder="Paste your resume content here..." 
+                    className="min-h-[150px]" 
+                    {...field} 
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <FormField
+            control={form.control}
+            name="jobDescription"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Job Description*</FormLabel>
+                <FormControl>
+                  <Textarea 
+                    placeholder="Paste the job description here..." 
+                    className="min-h-[150px]" 
+                    {...field}
+                    required
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Creating Guide...' : 'Create Interview Guide'}
+          </Button>
         </form>
-      </CardContent>
-    </Card>
+      </Form>
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ interface MarkdownPreviewProps {
   className?: string;
 }
 
-export const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content, className }) => {
+const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content, className }) => {
   return (
     <div className={`markdown-content ${className || ''}`}>
       <ReactMarkdown>{content}</ReactMarkdown>
