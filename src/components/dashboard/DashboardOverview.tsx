@@ -1,10 +1,12 @@
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import { Card, CardDescription, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { InterviewGuide } from "@/lib/types";
 import RecentGuides from "./RecentGuides";
 import SubscriptionStatus from "./SubscriptionStatus";
 import PremiumComparison from "./PremiumComparison";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSubscription } from "@/hooks/useSubscription";
+import { useScreenSize } from "@/hooks/use-mobile";
 
 export interface DashboardOverviewProps {
   guides: InterviewGuide[];
@@ -14,6 +16,8 @@ export interface DashboardOverviewProps {
 
 const DashboardOverview = ({ guides, isLoading, onGuideSelect }: DashboardOverviewProps) => {
   const { profile } = useAuth();
+  const { isMobile } = useScreenSize();
+  
   const { 
     isSubscribed,
     subscriptionTier,
@@ -27,11 +31,13 @@ const DashboardOverview = ({ guides, isLoading, onGuideSelect }: DashboardOvervi
   const pendingFeedback = guides.filter(guide => guide.status === "interview_completed" && !guide.feedback);
   
   return (
-    <div className="space-y-8">
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Guides</CardTitle>
-          <CardDescription>Your most recently created interview guides</CardDescription>
+    <div className="space-y-6 md:space-y-8">
+      <Card className="shadow-sm">
+        <CardHeader className={isMobile ? 'px-4 py-3' : ''}>
+          <CardTitle className={isMobile ? 'text-lg' : ''}>Recent Guides</CardTitle>
+          <CardDescription className={isMobile ? 'text-xs' : ''}>
+            Your most recently created interview guides
+          </CardDescription>
         </CardHeader>
         <RecentGuides 
           guides={guides.slice(0, 5)} 
@@ -50,33 +56,37 @@ const DashboardOverview = ({ guides, isLoading, onGuideSelect }: DashboardOvervi
           onCreateSubscription={handleCreateSubscription}
         />
         
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Stats</CardTitle>
-            <CardDescription>Your interview preparation at a glance</CardDescription>
+        <Card className="shadow-sm">
+          <CardHeader className={isMobile ? 'px-4 py-3' : ''}>
+            <CardTitle className={isMobile ? 'text-lg' : ''}>Quick Stats</CardTitle>
+            <CardDescription className={isMobile ? 'text-xs' : ''}>
+              Your interview preparation at a glance
+            </CardDescription>
           </CardHeader>
-          <div className="p-6 grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">Guides Created</p>
-              <p className="text-3xl font-bold">{guides.length}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">Upcoming Interviews</p>
-              <p className="text-3xl font-bold">{upcomingInterviews.length}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">Pending Feedback</p>
-              <p className="text-3xl font-bold">{pendingFeedback.length}</p>
-            </div>
-            <div className="text-center">
-              <p className="text-sm font-medium text-muted-foreground">Account Age</p>
-              <p className="text-3xl font-bold">
-                {profile?.createdAt ? 
-                  `${Math.floor((new Date().getTime() - new Date(profile.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days` : 
-                  "-"}
-              </p>
-            </div>
-          </div>
+          <CardContent className={`${isMobile ? 'p-3' : 'p-6'} grid grid-cols-2 gap-2 md:gap-4`}>
+            <StatCard 
+              label="Guides Created" 
+              value={guides.length.toString()} 
+              isMobile={isMobile} 
+            />
+            <StatCard 
+              label="Upcoming Interviews" 
+              value={upcomingInterviews.length.toString()} 
+              isMobile={isMobile} 
+            />
+            <StatCard 
+              label="Pending Feedback" 
+              value={pendingFeedback.length.toString()} 
+              isMobile={isMobile} 
+            />
+            <StatCard 
+              label="Account Age" 
+              value={profile?.createdAt ? 
+                `${Math.floor((new Date().getTime() - new Date(profile.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days` : 
+                "-"} 
+              isMobile={isMobile} 
+            />
+          </CardContent>
         </Card>
       </div>
       
@@ -86,5 +96,13 @@ const DashboardOverview = ({ guides, isLoading, onGuideSelect }: DashboardOvervi
     </div>
   );
 };
+
+// Extract stat card into its own component for cleaner code
+const StatCard = ({ label, value, isMobile }: { label: string; value: string; isMobile: boolean }) => (
+  <div className={`text-center p-2 md:p-4 bg-background rounded-lg border ${isMobile ? 'shadow-none' : 'shadow-sm'}`}>
+    <p className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium text-muted-foreground mb-1`}>{label}</p>
+    <p className={`${isMobile ? 'text-xl md:text-2xl' : 'text-3xl'} font-bold`}>{value}</p>
+  </div>
+);
 
 export default DashboardOverview;

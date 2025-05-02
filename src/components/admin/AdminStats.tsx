@@ -1,9 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Users, FileText, Calendar } from "lucide-react";
 import { toast } from "sonner";
+import { useScreenSize } from "@/hooks/use-mobile";
 
 interface StatsData {
   totalUsers: number;
@@ -16,6 +16,7 @@ interface StatsData {
 const AdminStats = () => {
   const [stats, setStats] = useState<StatsData | null>(null);
   const [loading, setLoading] = useState(true);
+  const { isMobile } = useScreenSize();
 
   const fetchStats = async () => {
     try {
@@ -84,91 +85,69 @@ const AdminStats = () => {
 
   if (loading) {
     return (
-      <div className="py-8 flex justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="py-4 md:py-8 flex justify-center">
+        <Loader2 className="h-6 w-6 md:h-8 md:w-8 animate-spin text-primary" />
       </div>
     );
   }
 
   return (
-    <div className="space-y-8">
-      <h2 className="text-xl font-semibold">Platform Overview</h2>
+    <div className="space-y-4 md:space-y-8">
+      <h2 className={`${isMobile ? 'text-lg' : 'text-xl'} font-semibold`}>Platform Overview</h2>
       
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalUsers}</div>
-            <p className="text-xs text-muted-foreground">
-              Registered accounts
-            </p>
-          </CardContent>
-        </Card>
+      <div className="grid gap-2 md:gap-4 grid-cols-2 md:grid-cols-4">
+        <StatCard
+          title="Total Users"
+          value={stats?.totalUsers || 0}
+          description="Registered accounts"
+          icon={<Users className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'} text-muted-foreground`} />}
+          isMobile={isMobile}
+        />
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Guides</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.totalGuides}</div>
-            <p className="text-xs text-muted-foreground">
-              Interview guides created
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Total Guides"
+          value={stats?.totalGuides || 0}
+          description="Interview guides created"
+          icon={<FileText className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'} text-muted-foreground`} />}
+          isMobile={isMobile}
+        />
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Guides This Month</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.guidesThisMonth}</div>
-            <p className="text-xs text-muted-foreground">
-              {stats && stats.guidesLastMonth > 0 ? (
-                <>
-                  {stats.guidesThisMonth > stats.guidesLastMonth ? (
-                    <span className="text-green-500">
-                      ↑ {Math.round((stats.guidesThisMonth / stats.guidesLastMonth - 1) * 100)}%
-                    </span>
-                  ) : (
-                    <span className="text-red-500">
-                      ↓ {Math.round((1 - stats.guidesThisMonth / stats.guidesLastMonth) * 100)}%
-                    </span>
-                  )} from last month
-                </>
+        <StatCard
+          title="Guides This Month"
+          value={stats?.guidesThisMonth || 0}
+          description={stats && stats.guidesLastMonth > 0 ? (
+            <>
+              {stats.guidesThisMonth > stats.guidesLastMonth ? (
+                <span className="text-green-500">
+                  ↑ {Math.round((stats.guidesThisMonth / stats.guidesLastMonth - 1) * 100)}%
+                </span>
               ) : (
-                "No comparison data"
+                <span className="text-red-500">
+                  ↓ {Math.round((1 - stats.guidesThisMonth / stats.guidesLastMonth) * 100)}%
+                </span>
               )}
-            </p>
-          </CardContent>
-        </Card>
+            </>
+          ) : "No comparison data"}
+          icon={<Calendar className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'} text-muted-foreground`} />}
+          isMobile={isMobile}
+        />
         
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Guides Per User</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats?.averageGuidesPerUser}</div>
-            <p className="text-xs text-muted-foreground">
-              Average per registered user
-            </p>
-          </CardContent>
-        </Card>
+        <StatCard
+          title="Guides Per User"
+          value={stats?.averageGuidesPerUser || 0}
+          description="Average per registered user"
+          icon={<Users className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'} text-muted-foreground`} />}
+          isMobile={isMobile}
+        />
       </div>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Monthly Usage</CardTitle>
+        <CardHeader className={isMobile ? 'px-4 py-3' : ''}>
+          <CardTitle className={isMobile ? 'text-lg' : ''}>Monthly Usage</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="h-[200px] flex items-center justify-center">
-            <p className="text-muted-foreground">
+        <CardContent className={isMobile ? 'px-3 pb-3 pt-0' : ''}>
+          <div className={`${isMobile ? 'h-[150px]' : 'h-[200px]'} flex items-center justify-center`}>
+            <p className="text-muted-foreground text-sm">
               Charts component can be added here using rechart library
             </p>
           </div>
@@ -177,5 +156,33 @@ const AdminStats = () => {
     </div>
   );
 };
+
+// Extract stat card into its own component for cleaner code
+const StatCard = ({ 
+  title, 
+  value, 
+  description, 
+  icon,
+  isMobile 
+}: { 
+  title: string; 
+  value: number | string; 
+  description: string | React.ReactNode;
+  icon: React.ReactNode;
+  isMobile: boolean;
+}) => (
+  <Card className="shadow-sm">
+    <CardHeader className={`flex flex-row items-center justify-between space-y-0 pb-1 ${isMobile ? 'pt-2 px-2' : 'pb-2'}`}>
+      <CardTitle className={`${isMobile ? 'text-xs' : 'text-sm'} font-medium`}>{title}</CardTitle>
+      {icon}
+    </CardHeader>
+    <CardContent className={isMobile ? 'pt-0 px-2 pb-2' : ''}>
+      <div className={`${isMobile ? 'text-xl' : 'text-2xl'} font-bold`}>{value}</div>
+      <p className={`${isMobile ? 'text-[10px]' : 'text-xs'} text-muted-foreground`}>
+        {description}
+      </p>
+    </CardContent>
+  </Card>
+);
 
 export default AdminStats;

@@ -12,9 +12,11 @@ import EventForm from "./components/EventForm";
 import EventList from "./components/EventList";
 import NoEvents from "./components/NoEvents";
 import { getEventTypeBadgeClass, getEventTypeLabel } from "./utils/eventStyles";
+import { useScreenSize } from "@/hooks/use-mobile";
 
 const InterviewCalendar = () => {
   const { user } = useAuth();
+  const { isMobile } = useScreenSize();
   const { 
     events, 
     isLoading, 
@@ -53,29 +55,35 @@ const InterviewCalendar = () => {
   };
   
   return (
-    <Card className="w-full">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+    <Card className="w-full shadow-sm">
+      <CardHeader className={`flex flex-row items-center justify-between ${isMobile ? 'px-3 py-3' : 'pb-2'}`}>
         <div>
-          <CardTitle className="text-2xl font-bold">Interview Calendar</CardTitle>
-          <CardDescription>
-            Track your interviews, follow-ups, and reminders
+          <CardTitle className={isMobile ? 'text-lg' : 'text-2xl font-bold'}>Interview Calendar</CardTitle>
+          <CardDescription className={isMobile ? 'text-xs' : ''}>
+            Track your interviews and follow-ups
           </CardDescription>
         </div>
-        <Button size="sm" className="gap-2" onClick={() => setIsAddEventOpen(true)}>
-          <CalendarIcon className="h-4 w-4" />
-          Add Event
+        <Button 
+          size={isMobile ? "sm" : "default"} 
+          className="gap-1 md:gap-2" 
+          onClick={() => setIsAddEventOpen(true)}
+        >
+          <CalendarIcon className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'}`} />
+          {isMobile ? "Add" : "Add Event"}
         </Button>
       </CardHeader>
       
-      <CardContent>
+      <CardContent className={isMobile ? 'px-3 pb-3' : ''}>
         <Tabs defaultValue="calendar">
           <TabsList className="mb-4">
-            <TabsTrigger value="calendar">Calendar</TabsTrigger>
-            <TabsTrigger value="upcoming">Upcoming ({upcomingEvents.length})</TabsTrigger>
+            <TabsTrigger value="calendar" className={isMobile ? 'text-xs' : ''}>Calendar</TabsTrigger>
+            <TabsTrigger value="upcoming" className={isMobile ? 'text-xs' : ''}>
+              Upcoming ({upcomingEvents.length})
+            </TabsTrigger>
           </TabsList>
           
           <TabsContent value="calendar">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-6">
               <div className="md:col-span-1">
                 <Calendar
                   mode="single"
@@ -86,14 +94,14 @@ const InterviewCalendar = () => {
               </div>
               
               <div className="md:col-span-2">
-                <div className="rounded-md border p-4">
-                  <h3 className="font-medium mb-4">
+                <div className="rounded-md border p-2 md:p-4">
+                  <h3 className={`font-medium mb-2 md:mb-4 ${isMobile ? 'text-sm' : ''}`}>
                     Events for {format(selectedDate, "MMMM d, yyyy")}
                   </h3>
                   
                   {isLoading ? (
-                    <div className="flex items-center justify-center h-40">
-                      <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                    <div className="flex items-center justify-center h-32 md:h-40">
+                      <Loader2 className="h-5 w-5 md:h-6 md:w-6 animate-spin text-primary" />
                     </div>
                   ) : eventsForSelectedDate.length > 0 ? (
                     <EventList
@@ -112,40 +120,41 @@ const InterviewCalendar = () => {
           </TabsContent>
           
           <TabsContent value="upcoming">
-            <div className="space-y-4">
+            <div className="space-y-2 md:space-y-4">
               {isLoading ? (
-                <div className="flex items-center justify-center h-40">
-                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <div className="flex items-center justify-center h-32 md:h-40">
+                  <Loader2 className="h-5 w-5 md:h-6 md:w-6 animate-spin text-primary" />
                 </div>
               ) : upcomingEvents.length > 0 ? (
                 upcomingEvents.map(event => (
                   <div 
                     key={event.id}
-                    className="p-4 rounded-lg border hover:border-primary/50 transition-colors"
+                    className="p-2 md:p-4 rounded-lg border hover:border-primary/50 transition-colors shadow-sm"
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="font-medium">{event.title}</h4>
-                        <div className="text-sm text-muted-foreground mt-1">
+                        <h4 className={`font-medium ${isMobile ? 'text-sm' : ''}`}>{event.title}</h4>
+                        <div className={`${isMobile ? 'text-xs' : 'text-sm'} text-muted-foreground mt-1`}>
                           {renderEventTime(event.startTime)}
                         </div>
                         {event.description && (
-                          <p className="mt-2 text-sm">{event.description}</p>
+                          <p className={`mt-2 ${isMobile ? 'text-xs' : 'text-sm'}`}>{event.description}</p>
                         )}
                       </div>
-                      <span className={`text-xs px-2 py-1 rounded-full ${getEventTypeBadgeClass(event.type)}`}>
+                      <span className={`text-xs px-2 py-0.5 md:py-1 rounded-full ${getEventTypeBadgeClass(event.type)}`}>
                         {getEventTypeLabel(event.type)}
                       </span>
                     </div>
-                    <div className="mt-3 flex justify-end gap-2">
+                    <div className="mt-2 md:mt-3 flex justify-end gap-2">
                       {!event.completed && (
                         <Button 
                           variant="outline" 
-                          size="sm"
+                          size={isMobile ? "sm" : "default"}
+                          className={isMobile ? "text-xs h-7 px-2" : ""}
                           onClick={() => markEventCompleted(event.id)}
                           disabled={isUpdating}
                         >
-                          Mark as Completed
+                          Mark Completed
                         </Button>
                       )}
                     </div>
