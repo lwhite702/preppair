@@ -19,7 +19,7 @@ export const LegalSection = ({ title, children }: { title: string; children: Rea
 export const LegalHeader = () => (
   <div className="max-w-4xl mx-auto px-4 pt-24 pb-8 text-center">
     <p className="text-lg text-muted-foreground mb-6">
-      All services provided under PrepPair.me and MDResume.pro are operated by Wrelik Brands, LLC, 
+      All services provided under PrepPair.me and ResumeFormatter.io are operated by Wrelik Brands, LLC, 
       a registered company in Atlanta, Georgia, USA. For all inquiries, please contact: {' '}
       <a href="mailto:support@wrelik.com" className="text-primary hover:underline">
         support@wrelik.com

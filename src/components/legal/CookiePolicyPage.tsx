@@ -26,7 +26,7 @@ const CookiePolicyPage = () => {
             <div>
               <h2 className="text-2xl font-semibold mb-4">1. Purpose</h2>
               <p className="text-base leading-relaxed">
-                This Cookie Policy describes how and why we use cookies to improve your experience on PrepPair.me and MDResume.pro.
+                This Cookie Policy describes how and why we use cookies to improve your experience on PrepPair.me and ResumeFormatter.io.
               </p>
             </div>
 
