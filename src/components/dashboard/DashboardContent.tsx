@@ -29,6 +29,7 @@ const DashboardContent = ({
   const [showFollowUpGenerator, setShowFollowUpGenerator] = useState(false);
   const [feedbackData, setFeedbackData] = useState<InterviewFeedback | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   
   const { updateJobStatus, markFollowUpSent } = useJobTracker(user?.id);
 
@@ -56,6 +57,7 @@ const DashboardContent = ({
   const handleGuideGenerated = (markdownContent: string) => {
     setGeneratedGuide(markdownContent);
     onGuideGenerated(markdownContent);
+    setIsGenerating(false);
     
     setTimeout(() => {
       window.scrollTo({
@@ -63,6 +65,10 @@ const DashboardContent = ({
         behavior: "smooth",
       });
     }, 100);
+  };
+
+  const handleGenerationStart = () => {
+    setIsGenerating(true);
   };
 
   const handleViewGuide = (guide: InterviewGuide) => {
@@ -171,7 +177,10 @@ const DashboardContent = ({
   return (
     <div className="max-w-3xl mx-auto">
       <h2 className="text-xl font-semibold mb-4 text-center">Create New Guide</h2>
-      <UploadForm onGuideGenerated={handleGuideGenerated} />
+      <UploadForm 
+        onGuideGenerated={handleGuideGenerated} 
+        onGenerationStart={handleGenerationStart} 
+      />
     </div>
   );
 };

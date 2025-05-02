@@ -8,7 +8,7 @@ import { useForm } from 'react-hook-form';
 
 interface UploadFormProps {
   onGuideGenerated: (markdownContent: string, error?: string) => void;
-  onGenerationStart: () => void;
+  onGenerationStart?: () => void;
 }
 
 interface FormValues {
@@ -34,7 +34,9 @@ const UploadForm: React.FC<UploadFormProps> = ({ onGuideGenerated, onGenerationS
 
   const onSubmit = async (data: FormValues) => {
     setIsSubmitting(true);
-    onGenerationStart();
+    if (onGenerationStart) {
+      onGenerationStart();
+    }
     
     try {
       // Mock API call - in a real app, this would call your backend

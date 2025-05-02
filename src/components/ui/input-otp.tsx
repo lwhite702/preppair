@@ -5,6 +5,17 @@ import { Dot } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
+// Define the OTPInputContextValue type that matches what's expected
+interface OTPInputContextValue {
+  slots?: {
+    [key: number]: {
+      char: string;
+      hasFakeCaret: boolean;
+      isActive: boolean;
+    }
+  };
+}
+
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
@@ -33,7 +44,7 @@ const InputOTPSlot = React.forwardRef<
   React.ElementRef<"div">,
   React.ComponentPropsWithoutRef<"div"> & { index: number }
 >(({ index, className, ...props }, ref) => {
-  const inputOTPContext = React.useContext(OTPInputContext)
+  const inputOTPContext = React.useContext(OTPInputContext) as OTPInputContextValue;
   const { char, hasFakeCaret, isActive } = React.useMemo(() => {
     return {
       char: inputOTPContext?.slots?.[index]?.char || "",
