@@ -1,11 +1,43 @@
 
-import { BookOpen } from 'lucide-react';
+import { BookOpen, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
+import { toast } from '@/components/ui/use-toast';
+import { supabase } from '@/integrations/supabase/client';
+import { useState } from 'react';
 
 const Blog = () => {
-  const { data: posts, isLoading } = useBlogPosts();
+  const { data: posts, isLoading, refetch } = useBlogPosts();
+  const [syncing, setSyncing] = useState(false);
+
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('sync-wordpress');
+      
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      toast({
+        title: "Blog Synced",
+        description: data.message || "Successfully synced posts from WordPress",
+      });
+      
+      // Refetch posts after syncing
+      refetch();
+    } catch (error) {
+      console.error("Failed to sync blog:", error);
+      toast({
+        title: "Sync Failed",
+        description: error.message || "Could not sync posts from WordPress",
+        variant: "destructive",
+      });
+    } finally {
+      setSyncing(false);
+    }
+  };
 
   return (
     <section className="py-20 bg-gradient-to-b from-brand-navy/30 to-background">
@@ -15,9 +47,19 @@ const Blog = () => {
             Blog
           </span>
           <h2 className="heading-lg mb-4 text-foreground">Latest Interview Tips</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
             Expert advice and insights to help you ace your next interview.
           </p>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="gap-2 mb-8"
+            onClick={handleSync}
+            disabled={syncing}
+          >
+            <RefreshCcw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+            {syncing ? "Syncing..." : "Sync with WordPress"}
+          </Button>
         </div>
 
         {isLoading ? (
@@ -26,9 +68,9 @@ const Blog = () => {
               <div key={i} className="h-[400px] bg-gray-100 animate-pulse rounded-lg" />
             ))}
           </div>
-        ) : (
+        ) : posts && posts.length > 0 ? (
           <div className="grid md:grid-cols-3 gap-8">
-            {posts?.map((post) => (
+            {posts.map((post) => (
               <BlogPost
                 key={post.id}
                 title={post.title}
@@ -39,14 +81,30 @@ const Blog = () => {
               />
             ))}
           </div>
+        ) : (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">No blog posts available yet.</p>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="gap-2"
+              onClick={handleSync}
+              disabled={syncing}
+            >
+              <RefreshCcw className="h-4 w-4" />
+              Sync now
+            </Button>
+          </div>
         )}
 
-        <div className="text-center mt-12">
-          <Button variant="outline" size="lg" className="gap-2">
-            <BookOpen className="h-5 w-5" />
-            Read More Articles
-          </Button>
-        </div>
+        {posts && posts.length > 0 && (
+          <div className="text-center mt-12">
+            <Button variant="outline" size="lg" className="gap-2">
+              <BookOpen className="h-5 w-5" />
+              Read More Articles
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   );

@@ -8,18 +8,23 @@ export const useBlogPosts = (category?: string) => {
     queryFn: async () => {
       let query = supabase
         .from("wp_blog_posts")
-        .select("*, wp_blog_categories!inner(*)")
+        .select("*")
         .eq("status", "published")
         .order("published_at", { ascending: false });
 
       if (category) {
+        // Filter by category if provided
         query = query.contains("categories", [category]);
       }
 
       const { data, error } = await query;
 
-      if (error) throw error;
-      return data;
+      if (error) {
+        console.error("Error fetching blog posts:", error);
+        throw error;
+      }
+      
+      return data || [];
     },
   });
 };

@@ -18,24 +18,44 @@ Deno.serve(async (req) => {
     );
 
     // Get WordPress settings
-    const { data: settings } = await supabaseClient
+    const { data: settings, error: settingsError } = await supabaseClient
       .from('wp_blog_settings')
       .select('*')
       .single();
+
+    if (settingsError) {
+      throw new Error(`Failed to retrieve WordPress settings: ${settingsError.message}`);
+    }
 
     if (!settings?.wordpress_url) {
       throw new Error('WordPress URL not configured');
     }
 
+    console.log(`Starting sync with WordPress at ${settings.wordpress_url}`);
+
     // Fetch posts from WordPress
-    const wpResponse = await fetch(`${settings.wordpress_url}/wp-json/wp/v2/posts?_embed`);
+    const wpResponse = await fetch(`${settings.wordpress_url}/wp-json/wp/v2/posts?_embed&per_page=10`);
+    
+    if (!wpResponse.ok) {
+      throw new Error(`WordPress API returned ${wpResponse.status}: ${await wpResponse.text()}`);
+    }
+    
     const posts = await wpResponse.json();
+    console.log(`Retrieved ${posts.length} posts from WordPress`);
 
     // Process and insert posts
     for (const post of posts) {
-      const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url;
+      const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url || null;
       
-      await supabaseClient.from('wp_blog_posts').upsert({
+      // Calculate read time - rough estimate based on word count
+      const wordCount = post.content.rendered.replace(/<[^>]*>/g, '').split(/\s+/).length;
+      const readTime = `${Math.ceil(wordCount / 200)} min read`;
+      
+      // Extract categories as an array of strings
+      const categories = post._embedded?.['wp:term']?.[0]?.map(cat => cat.slug) || [];
+      
+      // Insert or update post in database
+      const { error: upsertError } = await supabaseClient.from('wp_blog_posts').upsert({
         wp_id: post.id,
         title: post.title.rendered,
         slug: post.slug,
@@ -43,10 +63,16 @@ Deno.serve(async (req) => {
         content: post.content.rendered,
         featured_image_url: featuredImage,
         author: post._embedded?.author?.[0]?.name || 'Unknown',
+        read_time: readTime,
+        categories: categories,
         published_at: post.date,
         updated_at: post.modified,
         status: post.status
       });
+
+      if (upsertError) {
+        console.error(`Error upserting post ${post.id}: ${upsertError.message}`);
+      }
     }
 
     // Update last synced timestamp
@@ -55,11 +81,18 @@ Deno.serve(async (req) => {
       .update({ last_synced: new Date().toISOString() })
       .eq('id', settings.id);
 
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({ 
+      success: true, 
+      message: `Successfully synced ${posts.length} posts from ${settings.wordpress_url}`
+    }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    return new Response(JSON.stringify({ error: error.message }), {
+    console.error(`Sync error: ${error.message}`);
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      stack: error.stack 
+    }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
