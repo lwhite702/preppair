@@ -5,15 +5,15 @@ import { Dot } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
-// Define the OTPInputContextValue type that matches what's expected
+// Define a proper interface that matches what's expected from input-otp
 interface OTPInputContextValue {
-  slots: {
+  slots?: {
     [key: number]: {
       char: string;
       hasFakeCaret: boolean;
       isActive: boolean;
     }
-  } | undefined;
+  };
 }
 
 const InputOTP = React.forwardRef<
