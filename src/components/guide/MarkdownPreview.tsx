@@ -37,11 +37,19 @@ const MarkdownPreview: React.FC<MarkdownPreviewProps> = ({ content, className })
           blockquote: ({ node, ...props }) => (
             <blockquote className="border-l-4 border-muted pl-4 italic my-4" {...props} />
           ),
-          code: ({ node, inline, ...props }) => (
-            inline ? 
-            <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props} /> : 
-            <code className="block bg-muted p-2 rounded text-sm overflow-x-auto my-4" {...props} />
-          ),
+          // Fix for the 'inline' property error
+          code: ({ node, className, children, ...props }) => {
+            const match = /language-(\w+)/.exec(className || '');
+            return !match ? (
+              <code className="bg-muted px-1 py-0.5 rounded text-sm" {...props}>
+                {children}
+              </code>
+            ) : (
+              <code className="block bg-muted p-2 rounded text-sm overflow-x-auto my-4" {...props}>
+                {children}
+              </code>
+            );
+          },
         }}
       >
         {content}
