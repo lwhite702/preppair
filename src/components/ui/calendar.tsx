@@ -53,10 +53,11 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        // Fix: Use lowercase property names for the icons
-        // The DayPicker expects 'iconLeft' and 'iconRight', not 'IconLeft' and 'IconRight'
-        iconLeft: () => <ChevronLeft className="h-4 w-4" />,
-        iconRight: () => <ChevronRight className="h-4 w-4" />
+        // Using the correct property names as expected by DayPicker
+        icons: {
+          chevronLeft: () => <ChevronLeft className="h-4 w-4" />,
+          chevronRight: () => <ChevronRight className="h-4 w-4" />
+        }
       }}
       {...props}
     />

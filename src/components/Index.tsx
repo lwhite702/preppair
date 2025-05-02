@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,11 @@ import Jobs from "@/components/Jobs";
 import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Index = () => {
   const { user } = useAuth();
+  const isMobile = useIsMobile();
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
@@ -24,7 +27,7 @@ const Index = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#1A1F2C]">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow pt-16"> {/* Add padding-top to account for fixed header */}
         <Hero />
         <HowItWorks />
         <div id="features">
