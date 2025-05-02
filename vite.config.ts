@@ -32,5 +32,21 @@ export default defineConfig(({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+    optimizeDeps: {
+      include: [
+        '@radix-ui/react-tabs',
+        '@radix-ui/react-label',
+        '@radix-ui/react-hover-card',
+        '@radix-ui/react-menubar',
+        '@radix-ui/react-progress',
+        '@radix-ui/react-radio-group',
+        '@radix-ui/react-slider',
+        '@radix-ui/react-switch',
+        '@radix-ui/react-toggle-group',
+        'cmdk',
+        'input-otp',
+        'react-day-picker'
+      ]
+    }
   };
 });
