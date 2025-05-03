@@ -341,7 +341,7 @@ Deno.serve(async (req) => {
       .update({ 
         last_synced: new Date().toISOString(), 
         sync_source: source,
-        last_url: wordpressUrl
+        wordpress_url: wordpressUrl // Store the successful URL in the wordpress_url field
       })
       .eq('id', '1') // Use string instead of number
       .select();

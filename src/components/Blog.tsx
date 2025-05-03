@@ -48,9 +48,9 @@ const Blog = ({ isStandalonePage = false }) => {
         if (error) throw error;
         setLastSyncInfo(data);
         
-        // If we have a last_url, use that as our default
-        if (data?.last_url) {
-          setWordpressUrl(data.last_url);
+        // If we have a wordpress_url, use that as our default
+        if (data?.wordpress_url) {
+          setWordpressUrl(data.wordpress_url);
         }
       } catch (error) {
         console.error("Failed to fetch sync info:", error);
@@ -100,8 +100,8 @@ const Blog = ({ isStandalonePage = false }) => {
       if (syncInfo) {
         setLastSyncInfo(syncInfo);
         // Update the WordPress URL if it changed due to fallback
-        if (data.usedFallback && syncInfo.last_url) {
-          setWordpressUrl(syncInfo.last_url);
+        if (data.usedFallback && syncInfo.wordpress_url) {
+          setWordpressUrl(syncInfo.wordpress_url);
         }
       }
       
