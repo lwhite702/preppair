@@ -1,5 +1,5 @@
 
-import { toast as sonnerToast, ToasterToast } from "sonner";
+import { toast as sonnerToast } from "sonner";
 
 // Export the toast function from sonner
 export const toast = sonnerToast;
@@ -9,9 +9,18 @@ export const useToast = () => {
   return {
     toast: sonnerToast,
     // Add any additional functionality needed
-    toasts: [] as ToasterToast[],
+    toasts: [] as any[],
   };
 };
 
-// Export a type for toast
-export type Toast = ToasterToast;
+// Define a type for toast
+export type Toast = {
+  id: string;
+  title?: string;
+  description?: React.ReactNode;
+  action?: React.ReactNode;
+  cancel?: React.ReactNode;
+  important?: boolean;
+  duration?: number;
+  variant?: "default" | "destructive" | "success";
+};
