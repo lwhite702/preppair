@@ -53,7 +53,7 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
   ];
 
   return (
-    <div className="rounded-lg border border-primary/20 bg-gradient-to-b from-card to-card/95 p-8 shadow-lg mb-12">
+    <div className="rounded-lg border border-primary/20 bg-white p-8 shadow-lg mb-12">
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 mb-2">
           <Sparkles className="h-5 w-5 text-primary" />
@@ -66,36 +66,38 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
         </p>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow className="border-b-2 border-muted/50">
-            <TableHead className="w-[40%] font-bold text-foreground">Feature</TableHead>
-            <TableHead className="font-bold text-foreground">Free</TableHead>
-            <TableHead className="font-bold text-foreground">Premium</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {features.map((feature) => (
-            <TableRow key={feature.name} className="border-b border-muted/30">
-              <TableCell className="font-medium py-4">{feature.name}</TableCell>
-              <TableCell className="py-4">
-                {typeof feature.free === 'string' ? (
-                  <span className="text-sm text-muted-foreground">{feature.free}</span>
-                ) : (
-                  feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-red-400 h-5 w-5" />
-                )}
-              </TableCell>
-              <TableCell className="py-4">
-                {typeof feature.premium === 'string' ? (
-                  <span className="text-sm font-medium text-primary">{feature.premium}</span>
-                ) : (
-                  <Check className="text-primary h-5 w-5" />
-                )}
-              </TableCell>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-b-2 border-muted/50">
+              <TableHead className="w-[40%] font-bold text-foreground bg-muted/30">Feature</TableHead>
+              <TableHead className="font-bold text-foreground bg-muted/30">Free</TableHead>
+              <TableHead className="font-bold text-primary bg-primary/10">Premium</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {features.map((feature) => (
+              <TableRow key={feature.name} className="border-b border-muted/30">
+                <TableCell className="font-medium py-4">{feature.name}</TableCell>
+                <TableCell className="py-4">
+                  {typeof feature.free === 'string' ? (
+                    <span className="text-sm text-muted-foreground">{feature.free}</span>
+                  ) : (
+                    feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-red-400 h-5 w-5" />
+                  )}
+                </TableCell>
+                <TableCell className="py-4 bg-primary/5">
+                  {typeof feature.premium === 'string' ? (
+                    <span className="text-sm font-medium text-primary">{feature.premium}</span>
+                  ) : (
+                    <Check className="text-primary h-5 w-5" />
+                  )}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <div className="mt-8 text-center space-y-4">
         <div className="inline-flex items-center justify-center gap-2 bg-primary/10 px-4 py-2 rounded-full">

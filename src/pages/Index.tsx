@@ -1,8 +1,6 @@
 
 import React from 'react';
 import { Link } from '@/components/ui/link';
-import { ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
@@ -12,14 +10,24 @@ import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
 import PremiumComparison from "@/components/dashboard/PremiumComparison";
 import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleUpgradeClick = () => {
+    if (user) {
+      navigate('/pricing');
+    } else {
+      navigate('/auth');
     }
   };
 
@@ -34,15 +42,16 @@ const Index = () => {
         <div id="jobs">
           <Jobs />
         </div>
-        <div id="pricing">
+        <div id="pricing" className="bg-white py-16">
           <Pricing />
-          <PremiumComparison onUpgradeClick={() => {}} />
+          <div className="container max-w-4xl mx-auto px-4">
+            <PremiumComparison onUpgradeClick={handleUpgradeClick} />
+          </div>
         </div>
         <div id="blog">
           <Blog />
         </div>
       </main>
-      {/* No Footer here - App.tsx already includes the footer */}
     </div>
   );
 };
