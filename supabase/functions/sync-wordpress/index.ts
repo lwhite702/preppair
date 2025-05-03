@@ -34,14 +34,24 @@ Deno.serve(async (req) => {
     console.log(`Starting sync with WordPress at ${settings.wordpress_url}`);
 
     // Fetch posts from WordPress
-    const wpResponse = await fetch(`${settings.wordpress_url}/wp-json/wp/v2/posts?_embed&per_page=10`);
+    const wpUrl = settings.wordpress_url.trim().replace(/\/$/, '');
+    const wpResponse = await fetch(`${wpUrl}/wp-json/wp/v2/posts?_embed&per_page=10`);
     
     if (!wpResponse.ok) {
-      throw new Error(`WordPress API returned ${wpResponse.status}: ${await wpResponse.text()}`);
+      const errorText = await wpResponse.text();
+      throw new Error(`WordPress API returned ${wpResponse.status}: ${errorText}`);
     }
     
-    const posts = await wpResponse.json();
-    console.log(`Retrieved ${posts.length} posts from WordPress`);
+    // Check if response is valid JSON
+    let posts;
+    try {
+      const responseText = await wpResponse.text();
+      posts = JSON.parse(responseText);
+      console.log(`Retrieved ${posts.length} posts from WordPress`);
+    } catch (error) {
+      console.error('Failed to parse WordPress response:', error);
+      throw new Error(`Invalid JSON response from WordPress: ${error.message}`);
+    }
 
     // Process and insert posts
     for (const post of posts) {
@@ -90,8 +100,7 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error(`Sync error: ${error.message}`);
     return new Response(JSON.stringify({ 
-      error: error.message,
-      stack: error.stack 
+      error: error.message
     }), {
       status: 400,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

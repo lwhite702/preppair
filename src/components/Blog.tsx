@@ -10,6 +10,7 @@ import { useState, useEffect } from 'react';
 const Blog = ({ isStandalonePage = false }) => {
   const { data: posts, isLoading, refetch } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Automatically sync posts when component mounts
   useEffect(() => {
@@ -21,6 +22,8 @@ const Blog = ({ isStandalonePage = false }) => {
 
   const handleSync = async () => {
     setSyncing(true);
+    setSyncError(null);
+    
     try {
       const { data, error } = await supabase.functions.invoke('sync-wordpress');
       
@@ -37,9 +40,12 @@ const Blog = ({ isStandalonePage = false }) => {
       refetch();
     } catch (error) {
       console.error("Failed to sync blog:", error);
+      const errorMessage = error instanceof Error ? error.message : "Could not sync posts from WordPress";
+      setSyncError(errorMessage);
+      
       toast({
         title: "Sync Failed",
-        description: error.message || "Could not sync posts from WordPress",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -58,7 +64,21 @@ const Blog = ({ isStandalonePage = false }) => {
           <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
             Expert advice and insights to help you ace your next interview.
           </p>
-          {/* Manual sync button removed from UI */}
+          {isStandalonePage && syncError && (
+            <div className="text-center mb-4">
+              <p className="text-red-500 mb-2">{syncError}</p>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={handleSync}
+                disabled={syncing}
+              >
+                <RefreshCcw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
+                {syncing ? "Syncing..." : "Try Again"}
+              </Button>
+            </div>
+          )}
         </div>
 
         {isLoading || syncing ? (
