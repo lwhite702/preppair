@@ -31,44 +31,48 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Router>
-          <Header />
-          <Suspense fallback={<Loading />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/legal" element={<LegalPagesIndex />} />
-              <Route path="/pricing" element={<PricingPage />} />
-              <Route path="/create-guide" element={<CreateGuide />} />
+          <div className="flex flex-col min-h-screen">
+            <Header />
+            <div className="flex-grow">
+              <Suspense fallback={<Loading />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/faq" element={<FAQ />} />
+                  <Route path="/legal" element={<LegalPagesIndex />} />
+                  <Route path="/pricing" element={<PricingPage />} />
+                  <Route path="/create-guide" element={<CreateGuide />} />
 
-              {/* Legal Routes */}
-              <Route path="/terms" element={<TermsOfService />} />
-              <Route path="/privacy" element={<PrivacyPolicy />} />
-              <Route path="/cookies" element={<CookiePolicy />} />
+                  {/* Legal Routes */}
+                  <Route path="/terms" element={<TermsOfService />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/cookies" element={<CookiePolicy />} />
 
-              <Route path="/dashboard" element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              } />
-              <Route path="/guides/:id" element={
-                <ProtectedRoute>
-                  <GuideDetails />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin" element={
-                <AdminRoute>
-                  <Admin />
-                </AdminRoute>
-              } />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-          <Footer />
+                  <Route path="/dashboard" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/guides/:id" element={
+                    <ProtectedRoute>
+                      <GuideDetails />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/admin" element={
+                    <AdminRoute>
+                      <Admin />
+                    </AdminRoute>
+                  } />
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+            </div>
+            <Footer />
+          </div>
+          <Toaster position="top-center" />
         </Router>
-        <Toaster position="top-center" />
       </AuthProvider>
     </QueryClientProvider>
   );

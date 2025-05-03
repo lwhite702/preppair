@@ -1,7 +1,5 @@
 
 import React from 'react';
-import Header from '@/components/Header';
-import Footer from '@/components/Footer';
 import {
   Accordion,
   AccordionContent,
@@ -34,28 +32,24 @@ const FAQ = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow container py-16">
-        <h1 className="text-4xl font-bold mb-8">Frequently Asked Questions</h1>
-        
-        <div className="max-w-3xl mx-auto">
-          <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
-              <AccordionItem key={index} value={`item-${index}`}>
-                <AccordionTrigger className="text-lg font-medium">
-                  {faq.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-gray-600">
-                  {faq.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </div>
-      </main>
-      <Footer />
-    </div>
+    <main className="container py-16">
+      <h1 className="text-4xl font-bold mb-8">Frequently Asked Questions</h1>
+      
+      <div className="max-w-3xl mx-auto">
+        <Accordion type="single" collapsible className="w-full">
+          {faqs.map((faq, index) => (
+            <AccordionItem key={index} value={`item-${index}`}>
+              <AccordionTrigger className="text-lg font-medium">
+                {faq.question}
+              </AccordionTrigger>
+              <AccordionContent className="text-gray-600">
+                {faq.answer}
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </Accordion>
+      </div>
+    </main>
   );
 };
 
