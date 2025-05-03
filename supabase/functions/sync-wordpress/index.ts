@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.3';
 import { parse as parseXML } from 'https://deno.land/x/xml@2.1.1/mod.ts';
 
@@ -374,16 +373,38 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Update last synced timestamp - using string '1' for ID
-    await supabaseClient
+    // Update last synced timestamp - using UUID format for ID, not string '1'
+    // First check if the settings record exists
+    const { data: existingSettings } = await supabaseClient
       .from('wp_blog_settings')
-      .update({ 
-        last_synced: new Date().toISOString(), 
-        sync_source: source,
-        wordpress_url: wordpressUrl // Store the successful URL in the wordpress_url field
-      })
-      .eq('id', '1') // Use string instead of number
-      .select();
+      .select('id')
+      .limit(1);
+
+    if (existingSettings && existingSettings.length > 0) {
+      // Update existing record
+      await supabaseClient
+        .from('wp_blog_settings')
+        .update({ 
+          last_synced: new Date().toISOString(), 
+          sync_source: source,
+          wordpress_url: wordpressUrl // Store the successful URL
+        })
+        .eq('id', existingSettings[0].id)
+        .select();
+    } else {
+      // Create new settings record with a proper UUID
+      await supabaseClient
+        .from('wp_blog_settings')
+        .insert({ 
+          id: crypto.randomUUID(),
+          last_synced: new Date().toISOString(), 
+          sync_source: source,
+          wordpress_url: wordpressUrl,
+          sync_frequency: 'manual',
+          auto_sync: false,
+          api_key: ''
+        });
+    }
 
     return new Response(JSON.stringify({ 
       success: true, 
