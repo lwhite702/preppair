@@ -1,17 +1,12 @@
+
 import * as React from "react"
-import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import { DayPicker } from "react-day-picker"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
-
-const components = {
-  // Using the correct property names as expected by the Calendar component
-  IconLeft: (props) => <ChevronLeftIcon className="h-4 w-4" />,
-  IconRight: (props) => <ChevronRightIcon className="h-4 w-4" />,
-};
 
 function Calendar({
   className,
@@ -49,7 +44,10 @@ function Calendar({
         day_outside: "text-muted-foreground opacity-50",
         ...classNames,
       }}
-      components={components}
+      components={{
+        iconLeft: () => <ChevronLeft className="h-4 w-4" />,
+        iconRight: () => <ChevronRight className="h-4 w-4" />,
+      }}
       {...props}
     />
   )
