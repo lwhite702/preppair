@@ -10,11 +10,11 @@ const Logo: React.FC = () => {
   return (
     <div className="flex-shrink-0">
       <Link href="/" className="flex items-center">
-        <div className={`bg-gradient-to-br from-primary to-yellow-500 ${isMobile ? 'p-1.5' : 'p-2'} rounded-lg shadow-md`}>
+        <div className={`bg-gradient-to-br from-primary to-yellow-500 ${isMobile ? 'p-1' : 'p-2'} rounded-lg shadow-md`}>
           <Sparkle className={`${isMobile ? 'h-4 w-4' : 'h-6 w-6'} text-white`} />
         </div>
         <div className="ml-2 flex flex-col">
-          <span className={`text-white font-display font-bold ${isMobile ? 'text-base' : 'text-xl'} tracking-tight`}>
+          <span className={`text-white font-display font-bold ${isMobile ? 'text-sm' : 'text-xl'} tracking-tight`}>
             PrepPair.Me
           </span>
           {!isMobile && (

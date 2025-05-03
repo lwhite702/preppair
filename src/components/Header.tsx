@@ -15,10 +15,6 @@ const Header = () => {
   const { user, signOut } = useAuth();
   const { isMobile } = useScreenSize();
   
-  const handleSignOut = async () => {
-    await signOut();
-  };
-
   const headerHeight = isMobile ? "h-14" : "h-16"; // Define explicit header height
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
@@ -28,31 +24,27 @@ const Header = () => {
       <div className={headerHeight}></div>
       
       <header className={`fixed top-0 w-full z-50 bg-gradient-to-r from-brand-navy/95 to-brand-navy/85 backdrop-blur-md border-b border-white/10 shadow-md ${headerHeight}`}>
-        <div className="container py-2 md:py-4 h-full flex items-center">
-          <nav className="flex items-center justify-between w-full">
-            {/* Logo Component */}
-            <Logo />
+        <div className="container mx-auto px-4 h-full flex items-center justify-between">
+          {/* Logo Component */}
+          <Logo />
 
-            {/* Desktop Navigation */}
-            <MainNavigation />
-            
-            {/* User Menu */}
-            <div className="flex-1 flex justify-end">
-              <UserMenu user={user} handleSignOut={handleSignOut} />
-
-              {/* Mobile Menu Button */}
-              <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-            </div>
-          </nav>
-
-          {/* Mobile Navigation */}
-          <MobileMenu 
-            isMenuOpen={isMenuOpen} 
-            setIsMenuOpen={setIsMenuOpen} 
-            user={user} 
-            handleSignOut={handleSignOut}
-          />
+          {/* Desktop Navigation - Hidden on mobile */}
+          <MainNavigation />
+          
+          {/* User Menu and Mobile Menu Button */}
+          <div className="flex items-center gap-2">
+            <UserMenu user={user} handleSignOut={signOut} />
+            <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
+          </div>
         </div>
+
+        {/* Mobile Navigation */}
+        <MobileMenu 
+          isMenuOpen={isMenuOpen} 
+          setIsMenuOpen={setIsMenuOpen} 
+          user={user} 
+          handleSignOut={signOut}
+        />
       </header>
     </>
   );

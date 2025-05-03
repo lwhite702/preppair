@@ -28,8 +28,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
             className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 font-medium"
             size={isMobile ? "sm" : "default"}
           >
-            <UserCircle className="h-4 w-4 mr-1" />
-            {isMobile ? "Menu" : "Dashboard"}
+            <UserCircle className="h-4 w-4" />
+            {!isMobile && <span className="ml-1">Dashboard</span>}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 bg-brand-navy/95 backdrop-blur-md border border-white/10 text-white">
@@ -45,7 +45,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
   }
   
   return (
-    <div className="flex gap-1 md:gap-2 items-center">
+    <div className="flex gap-1 items-center">
       <Link href="/create-guide">
         <Button 
           variant="default"
@@ -61,8 +61,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
           className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 font-medium"
           size={isMobile ? "sm" : "default"}
         >
-          <UserCircle className="h-4 w-4 mr-1" />
-          Sign In
+          <UserCircle className="h-4 w-4" />
+          {!isMobile && <span className="ml-1">Sign In</span>}
         </Button>
       </Link>
     </div>
