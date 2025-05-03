@@ -1,5 +1,5 @@
 
-import { BookOpen, RefreshCcw } from 'lucide-react';
+import { BookOpen, RefreshCcw, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
@@ -11,25 +11,29 @@ const Blog = ({ isStandalonePage = false }) => {
   const { data: posts, isLoading, refetch } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
+  const [syncAttempts, setSyncAttempts] = useState(0);
 
-  // Automatically sync posts when component mounts
+  // Automatically sync posts when component mounts, but only once
   useEffect(() => {
-    // Only sync if we're on the standalone blog page
-    if (isStandalonePage) {
+    // Only sync if we're on the standalone blog page and haven't tried too many times
+    if (isStandalonePage && syncAttempts === 0) {
       handleSync();
     }
-  }, [isStandalonePage]);
+  }, [isStandalonePage, syncAttempts]);
 
   const handleSync = async () => {
     setSyncing(true);
     setSyncError(null);
+    setSyncAttempts(prev => prev + 1);
     
     try {
-      const { data, error } = await supabase.functions.invoke('sync-wordpress');
+      const response = await supabase.functions.invoke('sync-wordpress');
       
-      if (error) {
-        throw new Error(error.message);
+      if (response.error) {
+        throw new Error(response.error.message || "Unknown error occurred");
       }
+      
+      const data = response.data || {};
       
       toast.success("Blog Synced", {
         description: data.message || "Successfully synced posts from WordPress",
@@ -62,8 +66,14 @@ const Blog = ({ isStandalonePage = false }) => {
             Expert advice and insights to help you ace your next interview.
           </p>
           {isStandalonePage && syncError && (
-            <div className="text-center mb-4">
-              <p className="text-red-500 mb-2">{syncError}</p>
+            <div className="text-center mb-4 max-w-2xl mx-auto">
+              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <AlertCircle className="h-5 w-5 text-red-500" />
+                  <p className="font-medium text-red-800">Sync Error</p>
+                </div>
+                <p className="text-red-700 text-sm">{syncError}</p>
+              </div>
               <Button 
                 variant="outline" 
                 size="sm" 
