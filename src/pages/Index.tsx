@@ -7,7 +7,6 @@ import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
-import Footer from "@/components/Footer";
 import Jobs from "@/components/Jobs";
 import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
@@ -26,7 +25,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#141B40]">
-      <Header />
       <main className="flex-grow">
         <Hero />
         <HowItWorks />
@@ -44,7 +42,7 @@ const Index = () => {
           <Blog />
         </div>
       </main>
-      <Footer />
+      {/* No Footer here - App.tsx already includes the footer */}
     </div>
   );
 };
