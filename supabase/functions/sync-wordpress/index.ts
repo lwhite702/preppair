@@ -17,24 +17,12 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Get WordPress settings
-    const { data: settings, error: settingsError } = await supabaseClient
-      .from('wp_blog_settings')
-      .select('*')
-      .single();
-
-    if (settingsError) {
-      throw new Error(`Failed to retrieve WordPress settings: ${settingsError.message}`);
-    }
-
-    if (!settings?.wordpress_url) {
-      throw new Error('WordPress URL not configured');
-    }
-
-    console.log(`Starting sync with WordPress at ${settings.wordpress_url}`);
+    // Hardcoded WordPress URL
+    const wordpressUrl = "https://wrelik.com";
+    console.log(`Starting sync with WordPress at ${wordpressUrl}`);
 
     // Fetch posts from WordPress
-    const wpUrl = settings.wordpress_url.trim().replace(/\/$/, '');
+    const wpUrl = wordpressUrl.trim().replace(/\/$/, '');
     const wpResponse = await fetch(`${wpUrl}/wp-json/wp/v2/posts?_embed&per_page=10`);
     
     if (!wpResponse.ok) {
@@ -89,11 +77,11 @@ Deno.serve(async (req) => {
     await supabaseClient
       .from('wp_blog_settings')
       .update({ last_synced: new Date().toISOString() })
-      .eq('id', settings.id);
+      .eq('id', 1); // Using id 1 as default since we're not fetching settings anymore
 
     return new Response(JSON.stringify({ 
       success: true, 
-      message: `Successfully synced ${posts.length} posts from ${settings.wordpress_url}`
+      message: `Successfully synced ${posts.length} posts from ${wordpressUrl}`
     }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
