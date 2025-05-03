@@ -1,17 +1,32 @@
 
-import { BookOpen, RefreshCcw, AlertCircle } from 'lucide-react';
+import { BookOpen, RefreshCcw, AlertCircle, Globe, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
 import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger
+} from "@/components/ui/dialog";
+import { useAdmin } from '@/hooks/useAdmin';
 
 const Blog = ({ isStandalonePage = false }) => {
   const { data: posts, isLoading, refetch } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [syncAttempts, setSyncAttempts] = useState(0);
+  const [wordpressUrl, setWordpressUrl] = useState('https://wrelik.com');
+  const [lastSyncInfo, setLastSyncInfo] = useState<any>(null);
+  const [showSettings, setShowSettings] = useState(false);
+  const { isAdmin } = useAdmin();
 
   // Automatically sync posts when component mounts, but only once
   useEffect(() => {
@@ -19,6 +34,24 @@ const Blog = ({ isStandalonePage = false }) => {
     if (isStandalonePage && syncAttempts === 0) {
       handleSync();
     }
+    
+    // Fetch last sync info
+    async function fetchLastSyncInfo() {
+      try {
+        const { data, error } = await supabase
+          .from('wp_blog_settings')
+          .select('*')
+          .eq('id', 1)
+          .single();
+          
+        if (error) throw error;
+        setLastSyncInfo(data);
+      } catch (error) {
+        console.error("Failed to fetch sync info:", error);
+      }
+    }
+    
+    fetchLastSyncInfo();
   }, [isStandalonePage, syncAttempts]);
 
   const handleSync = async () => {
@@ -27,7 +60,10 @@ const Blog = ({ isStandalonePage = false }) => {
     setSyncAttempts(prev => prev + 1);
     
     try {
-      const response = await supabase.functions.invoke('sync-wordpress');
+      // Pass the WordPress URL in the request body
+      const response = await supabase.functions.invoke('sync-wordpress', {
+        body: { wordpressUrl }
+      });
       
       if (response.error) {
         throw new Error(response.error.message || "Unknown error occurred");
@@ -38,6 +74,17 @@ const Blog = ({ isStandalonePage = false }) => {
       toast.success("Blog Synced", {
         description: data.message || "Successfully synced posts from WordPress",
       });
+      
+      // Refresh last sync info
+      const { data: syncInfo } = await supabase
+        .from('wp_blog_settings')
+        .select('*')
+        .eq('id', 1)
+        .single();
+      
+      if (syncInfo) {
+        setLastSyncInfo(syncInfo);
+      }
       
       // Refetch posts after syncing
       refetch();
@@ -62,9 +109,31 @@ const Blog = ({ isStandalonePage = false }) => {
             Blog
           </span>
           <h2 className="heading-lg mb-4 text-foreground">Latest Interview Tips</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-3">
             Expert advice and insights to help you ace your next interview.
           </p>
+          
+          {isStandalonePage && isAdmin && (
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="gap-2"
+                onClick={() => setShowSettings(true)}
+              >
+                <Settings className="h-4 w-4" />
+                Blog Settings
+              </Button>
+            </div>
+          )}
+          
+          {isStandalonePage && lastSyncInfo && (
+            <div className="text-xs text-muted-foreground max-w-2xl mx-auto mb-4">
+              Last synced: {new Date(lastSyncInfo.last_synced).toLocaleString()} 
+              {lastSyncInfo.sync_source && ` (${lastSyncInfo.sync_source})`}
+            </div>
+          )}
+          
           {isStandalonePage && syncError && (
             <div className="text-center mb-4 max-w-2xl mx-auto">
               <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
@@ -132,6 +201,61 @@ const Blog = ({ isStandalonePage = false }) => {
           </div>
         )}
       </div>
+      
+      {/* Blog Settings Dialog */}
+      {isAdmin && (
+        <Dialog open={showSettings} onOpenChange={setShowSettings}>
+          <DialogContent className="sm:max-w-[425px]">
+            <DialogHeader>
+              <DialogTitle>Blog Settings</DialogTitle>
+              <DialogDescription>
+                Configure WordPress sync settings. You can test different URLs to find what works.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <label htmlFor="wordpress-url" className="text-right text-sm font-medium col-span-1">
+                  WordPress URL
+                </label>
+                <div className="col-span-3 flex gap-2">
+                  <Input
+                    id="wordpress-url"
+                    value={wordpressUrl}
+                    onChange={(e) => setWordpressUrl(e.target.value)}
+                    className="flex-1"
+                    placeholder="https://yoursite.com"
+                  />
+                </div>
+              </div>
+              {lastSyncInfo && (
+                <div className="px-1 py-2 text-sm">
+                  <p className="font-medium mb-1">Last Sync Information</p>
+                  <div className="text-muted-foreground space-y-1">
+                    <p>Time: {new Date(lastSyncInfo.last_synced).toLocaleString()}</p>
+                    {lastSyncInfo.sync_source && <p>Source: {lastSyncInfo.sync_source}</p>}
+                  </div>
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button onClick={() => setShowSettings(false)} variant="outline">
+                Cancel
+              </Button>
+              <Button 
+                onClick={() => {
+                  setShowSettings(false);
+                  handleSync();
+                }}
+                className="gap-2"
+                disabled={syncing}
+              >
+                <Globe className="h-4 w-4" />
+                Test & Sync Now
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </section>
   );
 };
