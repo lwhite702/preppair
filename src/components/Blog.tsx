@@ -7,7 +7,7 @@ import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useState } from 'react';
 
-const Blog = () => {
+const Blog = ({ isStandalonePage = false }) => {
   const { data: posts, isLoading, refetch } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
 
@@ -40,7 +40,7 @@ const Blog = () => {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-brand-navy/30 to-background">
+    <section className={`py-20 ${isStandalonePage ? 'bg-background' : 'bg-gradient-to-b from-brand-navy/30 to-background'}`}>
       <div className="container">
         <div className="text-center mb-12">
           <span className="inline-block px-3 py-1 rounded-full bg-primary/20 text-primary text-sm font-medium mb-3">

@@ -23,6 +23,7 @@ const FAQ = lazy(() => import("./pages/FAQ"));
 const GuideDetails = lazy(() => import("./pages/GuideDetails"));
 const Admin = lazy(() => import("./pages/AdminDashboard"));
 const NotFound = lazy(() => import("./pages/NotFound"));
+const Blog = lazy(() => import("./pages/Blog"));
 
 const queryClient = new QueryClient();
 
@@ -44,6 +45,7 @@ function App() {
                   <Route path="/legal" element={<LegalPagesIndex />} />
                   <Route path="/pricing" element={<PricingPage />} />
                   <Route path="/create-guide" element={<CreateGuide />} />
+                  <Route path="/blog" element={<Blog />} />
 
                   {/* Legal Routes */}
                   <Route path="/terms" element={<TermsOfService />} />
