@@ -10,8 +10,10 @@ const corsHeaders = {
 
 // Define URL formats to try with fallbacks
 const urlFormats = [
-  "{baseUrl}/wp-json/wp/v2/posts",       // Standard WordPress REST API
+  "{baseUrl}/wp-json/wp/v2/posts",        // Standard WordPress REST API
   "{baseUrl}/index.php/wp-json/wp/v2/posts", // With index.php
+  "{baseUrl}/wp-json/acf/v3",             // Advanced Custom Fields API
+  "{baseUrl}/wp-json/acf/v3/posts",       // ACF Posts
   "{baseUrl}/feed",                       // RSS Feed fallback
   "{baseUrl}/?feed=rss2"                 // Alternative RSS feed URL
 ];
@@ -84,10 +86,25 @@ async function tryWordPressUrl(baseUrl: string, format: string) {
       // Handle RSS feed response
       return parseRssFeed(responseText);
     } else if (contentType.includes('application/json')) {
-      // Handle JSON API response
       try {
-        const posts = JSON.parse(responseText);
-        return { posts, source: 'REST API' };
+        const jsonData = JSON.parse(responseText);
+        
+        // Handle ACF format
+        if (format.includes('acf/v3')) {
+          if (Array.isArray(jsonData)) {
+            // If it's an array, assume it's a list of posts
+            return { posts: processAcfPosts(jsonData), source: 'ACF API' };
+          } else if (jsonData.posts) {
+            // If it has a posts property, use that
+            return { posts: processAcfPosts(jsonData.posts), source: 'ACF API' };
+          } else {
+            // If we can't identify posts, throw an error
+            throw new Error('Could not find posts in ACF response');
+          }
+        }
+        
+        // Standard WP API
+        return { posts: jsonData, source: 'REST API' };
       } catch (error) {
         console.error('Failed to parse JSON response:', error);
         throw new Error(`Invalid JSON response: ${error.message}`);
@@ -101,6 +118,28 @@ async function tryWordPressUrl(baseUrl: string, format: string) {
     console.error(`Error with URL ${url}:`, error.message);
     throw error;
   }
+}
+
+// Process ACF formatted posts
+function processAcfPosts(posts) {
+  return posts.map((post, index) => {
+    // Return post in a format similar to standard WP API
+    return {
+      id: post.id || index + 1,
+      title: { rendered: post.title || post.post_title || '' },
+      slug: post.slug || post.post_name || `post-${index + 1}`,
+      excerpt: { rendered: post.excerpt || post.post_excerpt || '' },
+      content: { rendered: post.content || post.post_content || '' },
+      featured_image_url: post.featured_image || post.thumbnail || null,
+      author: post.author || 'Unknown',
+      status: post.status || post.post_status || 'published',
+      date: post.date || post.post_date || new Date().toISOString(),
+      modified: post.modified || post.post_modified || new Date().toISOString(),
+      _embedded: {
+        'wp:term': [[{ slug: post.categories || []}]]
+      }
+    };
+  });
 }
 
 // Parse RSS feed XML into a format similar to the WP REST API
@@ -335,7 +374,7 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Update last synced timestamp
+    // Update last synced timestamp - using string '1' for ID
     await supabaseClient
       .from('wp_blog_settings')
       .update({ 

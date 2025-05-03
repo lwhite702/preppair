@@ -18,13 +18,26 @@ import {
 } from "@/components/ui/dialog";
 import { useAdmin } from '@/hooks/useAdmin';
 
+// Define a type for the blog settings
+type BlogSettings = {
+  id: string;
+  wordpress_url: string;
+  last_synced: string;
+  sync_source?: string;
+  sync_frequency: string;
+  auto_sync: boolean;
+  api_key: string;
+  created_at: string;
+  updated_at: string;
+};
+
 const Blog = ({ isStandalonePage = false }) => {
   const { data: posts, isLoading, refetch, error: postsError } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [syncAttempts, setSyncAttempts] = useState(0);
   const [wordpressUrl, setWordpressUrl] = useState('https://wrelik.com');
-  const [lastSyncInfo, setLastSyncInfo] = useState<any>(null);
+  const [lastSyncInfo, setLastSyncInfo] = useState<BlogSettings | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const { isAdmin } = useAdmin();
   const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -42,7 +55,7 @@ const Blog = ({ isStandalonePage = false }) => {
         const { data, error } = await supabase
           .from('wp_blog_settings')
           .select('*')
-          .eq('id', '1') // Use string instead of number
+          .eq('id', '1') // Using string ID '1' rather than number 1
           .single();
           
         if (error) throw error;
@@ -94,7 +107,7 @@ const Blog = ({ isStandalonePage = false }) => {
       const { data: syncInfo } = await supabase
         .from('wp_blog_settings')
         .select('*')
-        .eq('id', '1') // Use string instead of number
+        .eq('id', '1') // Using string ID instead of number
         .single();
       
       if (syncInfo) {
@@ -155,7 +168,7 @@ const Blog = ({ isStandalonePage = false }) => {
             <div className="text-xs text-muted-foreground max-w-2xl mx-auto mb-4">
               Last synced: {new Date(lastSyncInfo.last_synced).toLocaleString()} 
               {lastSyncInfo.sync_source && ` (${lastSyncInfo.sync_source})`}
-              {lastSyncInfo.last_url && ` from ${lastSyncInfo.last_url}`}
+              {lastSyncInfo.wordpress_url && ` from ${lastSyncInfo.wordpress_url}`}
             </div>
           )}
           
@@ -268,7 +281,7 @@ const Blog = ({ isStandalonePage = false }) => {
                   <div className="text-muted-foreground space-y-1">
                     <p>Time: {new Date(lastSyncInfo.last_synced).toLocaleString()}</p>
                     {lastSyncInfo.sync_source && <p>Source: {lastSyncInfo.sync_source}</p>}
-                    {lastSyncInfo.last_url && <p>URL: {lastSyncInfo.last_url}</p>}
+                    {lastSyncInfo.wordpress_url && <p>URL: {lastSyncInfo.wordpress_url}</p>}
                   </div>
                 </div>
               )}
