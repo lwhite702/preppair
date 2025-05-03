@@ -23,17 +23,37 @@ Deno.serve(async (req) => {
 
     // Fetch posts from WordPress
     const wpUrl = wordpressUrl.trim().replace(/\/$/, '');
-    const wpResponse = await fetch(`${wpUrl}/wp-json/wp/v2/posts?_embed&per_page=10`);
+    const fetchUrl = `${wpUrl}/wp-json/wp/v2/posts?_embed&per_page=10`;
+    console.log(`Fetching from: ${fetchUrl}`);
+    
+    // Add a user agent to avoid being blocked
+    const wpResponse = await fetch(fetchUrl, {
+      headers: {
+        'User-Agent': 'Mozilla/5.0 InterviewGuide/1.0'
+      }
+    });
     
     if (!wpResponse.ok) {
       const errorText = await wpResponse.text();
+      console.error(`WordPress API error: ${wpResponse.status} ${wpResponse.statusText}`);
+      console.error(`Response body: ${errorText}`);
       throw new Error(`WordPress API returned ${wpResponse.status}: ${errorText}`);
     }
     
-    // Check if response is valid JSON
+    // Get the raw response text first
+    const responseText = await wpResponse.text();
+    console.log(`Response length: ${responseText.length}`);
+    console.log(`Response preview: ${responseText.substring(0, 200)}`);
+    
+    // Check if response looks like HTML instead of JSON
+    if (responseText.trim().startsWith('<!DOCTYPE') || responseText.trim().startsWith('<html')) {
+      console.error('Received HTML instead of JSON');
+      throw new Error('WordPress API returned HTML instead of JSON. The site might be redirecting to a login page.');
+    }
+    
+    // Try parsing the JSON
     let posts;
     try {
-      const responseText = await wpResponse.text();
       posts = JSON.parse(responseText);
       console.log(`Retrieved ${posts.length} posts from WordPress`);
     } catch (error) {

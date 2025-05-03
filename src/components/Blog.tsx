@@ -3,7 +3,7 @@ import { BookOpen, RefreshCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
-import { toast } from '@/components/ui/use-toast';
+import { toast } from 'sonner';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect } from 'react';
 
@@ -31,8 +31,7 @@ const Blog = ({ isStandalonePage = false }) => {
         throw new Error(error.message);
       }
       
-      toast({
-        title: "Blog Synced",
+      toast.success("Blog Synced", {
         description: data.message || "Successfully synced posts from WordPress",
       });
       
@@ -43,10 +42,8 @@ const Blog = ({ isStandalonePage = false }) => {
       const errorMessage = error instanceof Error ? error.message : "Could not sync posts from WordPress";
       setSyncError(errorMessage);
       
-      toast({
-        title: "Sync Failed",
+      toast.error("Sync Failed", {
         description: errorMessage,
-        variant: "destructive",
       });
     } finally {
       setSyncing(false);
