@@ -5,11 +5,19 @@ import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
 import { toast } from '@/components/ui/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const Blog = ({ isStandalonePage = false }) => {
   const { data: posts, isLoading, refetch } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
+
+  // Automatically sync posts when component mounts
+  useEffect(() => {
+    // Only sync if we're on the standalone blog page
+    if (isStandalonePage) {
+      handleSync();
+    }
+  }, [isStandalonePage]);
 
   const handleSync = async () => {
     setSyncing(true);
@@ -47,22 +55,13 @@ const Blog = ({ isStandalonePage = false }) => {
             Blog
           </span>
           <h2 className="heading-lg mb-4 text-foreground">Latest Interview Tips</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto mb-4">
+          <p className="text-muted-foreground max-w-2xl mx-auto mb-8">
             Expert advice and insights to help you ace your next interview.
           </p>
-          <Button 
-            variant="outline" 
-            size="sm" 
-            className="gap-2 mb-8"
-            onClick={handleSync}
-            disabled={syncing}
-          >
-            <RefreshCcw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
-            {syncing ? "Syncing..." : "Sync with WordPress"}
-          </Button>
+          {/* Manual sync button removed from UI */}
         </div>
 
-        {isLoading ? (
+        {isLoading || syncing ? (
           <div className="grid md:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
               <div key={i} className="h-[400px] bg-gray-100 animate-pulse rounded-lg" />
