@@ -17,49 +17,52 @@ import Pricing from './pages/Pricing';
 import Blog from './pages/Blog';
 import BlogTest from './pages/BlogTest';
 import ErrorBoundary from './components/ErrorBoundary';
+import { AuthProvider } from './contexts/AuthContext';
 
 function App() {
   return (
     <ErrorBoundary>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/legal/*" element={<Legal />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/faq" element={<FAQ />} />
-          <Route path="/pricing" element={<Pricing />} />
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog-test" element={<BlogTest />} />
-          <Route 
-            path="/dashboard" 
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
-            path="/admin" 
-            element={
-              <AdminRoute>
-                <AdminDashboard />
-              </AdminRoute>
-            } 
-          />
-          <Route 
-            path="/guide/create" 
-            element={
-              <ProtectedRoute>
-                <CreateGuide />
-              </ProtectedRoute>
-            } 
-          />
-          <Route path="/guide/:id" element={<GuideDetails />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/legal/*" element={<Legal />} />
+            <Route path="/auth" element={<Auth />} />
+            <Route path="/faq" element={<FAQ />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/blog" element={<Blog />} />
+            <Route path="/blog-test" element={<BlogTest />} />
+            <Route 
+              path="/dashboard" 
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/admin" 
+              element={
+                <AdminRoute>
+                  <AdminDashboard />
+                </AdminRoute>
+              } 
+            />
+            <Route 
+              path="/guide/create" 
+              element={
+                <ProtectedRoute>
+                  <CreateGuide />
+                </ProtectedRoute>
+              } 
+            />
+            <Route path="/guide/:id" element={<GuideDetails />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </ErrorBoundary>
   );
 }
