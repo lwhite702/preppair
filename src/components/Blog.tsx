@@ -3,7 +3,7 @@ import { BookOpen, RefreshCcw, AlertCircle, Globe, Settings } from 'lucide-react
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
-import { toast } from 'sonner';
+import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
@@ -14,7 +14,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger
 } from "@/components/ui/dialog";
 import { useAdmin } from '@/hooks/useAdmin';
 
@@ -41,7 +40,7 @@ const Blog = ({ isStandalonePage = false }) => {
         const { data, error } = await supabase
           .from('wp_blog_settings')
           .select('*')
-          .eq('id', 1)
+          .eq('id', '1') // Convert 1 to string '1'
           .single();
           
         if (error) throw error;
@@ -71,7 +70,8 @@ const Blog = ({ isStandalonePage = false }) => {
       
       const data = response.data || {};
       
-      toast.success("Blog Synced", {
+      toast({
+        title: "Blog Synced",
         description: data.message || "Successfully synced posts from WordPress",
       });
       
@@ -79,7 +79,7 @@ const Blog = ({ isStandalonePage = false }) => {
       const { data: syncInfo } = await supabase
         .from('wp_blog_settings')
         .select('*')
-        .eq('id', 1)
+        .eq('id', '1') // Convert 1 to string '1'
         .single();
       
       if (syncInfo) {
@@ -93,8 +93,10 @@ const Blog = ({ isStandalonePage = false }) => {
       const errorMessage = error instanceof Error ? error.message : "Could not sync posts from WordPress";
       setSyncError(errorMessage);
       
-      toast.error("Sync Failed", {
+      toast({
+        title: "Sync Failed",
         description: errorMessage,
+        variant: "destructive",
       });
     } finally {
       setSyncing(false);
