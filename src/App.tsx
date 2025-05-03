@@ -6,6 +6,8 @@ import Dashboard from './pages/Dashboard';
 import GuideDetails from './pages/GuideDetails';
 import Auth from './pages/Auth';
 import CreateGuide from './pages/CreateGuide';
+import JobTracker from './pages/JobTracker';
+import CalendarView from './pages/CalendarView';
 import NotFound from './pages/NotFound';
 import Legal from './pages/Legal';
 import Contact from './pages/Contact';
@@ -51,6 +53,22 @@ function App() {
                 element={
                   <ProtectedRoute>
                     <Dashboard />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/job-tracker" 
+                element={
+                  <ProtectedRoute>
+                    <JobTracker />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="/calendar" 
+                element={
+                  <ProtectedRoute>
+                    <CalendarView />
                   </ProtectedRoute>
                 } 
               />

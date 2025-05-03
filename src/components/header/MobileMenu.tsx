@@ -1,106 +1,86 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from '@/components/ui/sheet';
 
 interface MobileMenuProps {
-  isMenuOpen: boolean;
-  setIsMenuOpen: (isOpen: boolean) => void;
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
   user: any;
   handleSignOut: () => Promise<void>;
 }
 
-const MobileMenu: React.FC<MobileMenuProps> = ({ 
-  isMenuOpen, 
-  setIsMenuOpen, 
-  user, 
-  handleSignOut 
-}) => {
-  if (!isMenuOpen) return null;
-
+const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, setIsOpen, user, handleSignOut }) => {
   return (
-    <div className="md:hidden py-2 border-t border-white/10 absolute top-full left-0 right-0 bg-brand-navy/95 backdrop-blur-md shadow-md z-50">
-      <nav className="flex flex-col space-y-2 container">
-        <Link
-          to="/about"
-          className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          About
-        </Link>
-        <Link
-          to="/faq"
-          className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          FAQ
-        </Link>
-        <Link
-          to="/pricing"
-          className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          Pricing
-        </Link>
-        <Link
-          to="/contact"
-          className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
-          onClick={() => setIsMenuOpen(false)}
-        >
-          Contact
-        </Link>
-        {user ? (
-          <>
-            <Link
-              to="/dashboard"
-              className="w-full"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Button 
-                variant="outline"
-                className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 w-full font-medium text-sm h-9"
-              >
-                Dashboard
+    <div className="md:hidden">
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" className="text-white">
+            <Menu className="h-6 w-6" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="right" className="w-[85%] bg-[#141B40] text-white border-white/10">
+          <SheetHeader>
+            <SheetTitle className="text-white">Menu</SheetTitle>
+          </SheetHeader>
+          <div className="flex flex-col space-y-6 mt-6">
+            <div className="flex flex-col space-y-3">
+              {user ? (
+                <>
+                  <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                    <Link to="/dashboard">Dashboard</Link>
+                  </Button>
+                  <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                    <Link to="/guide/create">Create Guide</Link>
+                  </Button>
+                  <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                    <Link to="/job-tracker">Job Tracker</Link>
+                  </Button>
+                  <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                    <Link to="/calendar">Calendar</Link>
+                  </Button>
+                </>
+              ) : null}
+              <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                <Link to="/about">About</Link>
               </Button>
-            </Link>
-            <Button 
-              variant="ghost"
-              className="w-full text-white/80 hover:text-white font-medium h-9 text-sm"
-              onClick={() => {
-                handleSignOut();
-                setIsMenuOpen(false);
-              }}
-            >
-              Sign Out
-            </Button>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/guide/create"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Button 
-                variant="default"
-                className="bg-primary text-white hover:bg-primary/90 w-full font-medium h-9 text-sm"
-              >
-                Get Started
+              <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                <Link to="/faq">FAQ</Link>
               </Button>
-            </Link>
-            <Link
-              to="/auth"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <Button 
-                variant="outline"
-                className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 w-full font-medium h-9 text-sm"
-              >
-                Sign In
+              <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                <Link to="/pricing">Pricing</Link>
               </Button>
-            </Link>
-          </>
-        )}
-      </nav>
+              <Button variant="ghost" asChild onClick={() => setIsOpen(false)}>
+                <Link to="/contact">Contact</Link>
+              </Button>
+            </div>
+            <div className="pt-2 border-t border-white/10">
+              {user ? (
+                <Button onClick={() => { handleSignOut(); setIsOpen(false); }} variant="destructive">
+                  Sign Out
+                </Button>
+              ) : (
+                <div className="flex flex-col space-y-2">
+                  <Button asChild onClick={() => setIsOpen(false)}>
+                    <Link to="/auth">Sign In</Link>
+                  </Button>
+                  <Button asChild variant="outline" onClick={() => setIsOpen(false)}>
+                    <Link to="/guide/create">Get Started</Link>
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </SheetContent>
+      </Sheet>
     </div>
   );
 };

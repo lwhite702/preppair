@@ -1,52 +1,88 @@
 
 import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import { useScreenSize } from '@/hooks/use-mobile';
+import Logo from '@/components/header/Logo';
+import UserMenu from '@/components/header/UserMenu';
+import MainNavigation from '@/components/header/MainNavigation';
+import MobileMenu from '@/components/header/MobileMenu';
+import { 
+  NavigationMenu,
+  NavigationMenuList,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  navigationMenuTriggerStyle
+} from '@/components/ui/navigation-menu';
 
-// Import the extracted components
-import Logo from './header/Logo';
-import MainNavigation from './header/MainNavigation';
-import UserMenu from './header/UserMenu';
-import MobileMenuButton from './header/MobileMenuButton';
-import MobileMenu from './header/MobileMenu';
-
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+const Header: React.FC = () => {
   const { user, signOut } = useAuth();
-  const { isMobile } = useScreenSize();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   
-  const headerHeight = isMobile ? "h-14" : "h-16"; // Define explicit header height
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      navigate('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
+  };
 
   return (
-    <>
-      {/* Add a spacer div that matches the header height */}
-      <div className={headerHeight}></div>
-      
-      <header className={`fixed top-0 w-full z-50 bg-gradient-to-r from-brand-navy/95 to-brand-navy/85 backdrop-blur-md border-b border-white/10 shadow-md ${headerHeight}`}>
-        <div className="container mx-auto px-4 h-full flex items-center justify-between">
-          {/* Logo Component */}
+    <header className="sticky top-0 z-40 w-full border-b border-white/10 bg-[#141B40] bg-opacity-90 backdrop-blur-md">
+      <div className="container flex h-16 items-center justify-between px-4">
+        <div className="flex items-center gap-4">
           <Logo />
 
-          {/* Desktop Navigation - Hidden on mobile */}
-          <MainNavigation />
-          
-          {/* User Menu and Mobile Menu Button */}
-          <div className="flex items-center gap-2">
-            <UserMenu user={user} handleSignOut={signOut} />
-            <MobileMenuButton isMenuOpen={isMenuOpen} toggleMenu={toggleMenu} />
-          </div>
+          {user && (
+            <NavigationMenu className="hidden md:flex ml-6">
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link to="/dashboard">
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${isActive('/dashboard') ? 'bg-primary/20' : ''}`}>
+                      Dashboard
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link to="/guide/create">
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${isActive('/guide/create') ? 'bg-primary/20' : ''}`}>
+                      Create Guide
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link to="/job-tracker">
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${isActive('/job-tracker') ? 'bg-primary/20' : ''}`}>
+                      Job Tracker
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                  <Link to="/calendar">
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} ${isActive('/calendar') ? 'bg-primary/20' : ''}`}>
+                      Calendar
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          )}
         </div>
-
-        {/* Mobile Navigation */}
-        <MobileMenu 
-          isMenuOpen={isMenuOpen} 
-          setIsMenuOpen={setIsMenuOpen} 
-          user={user} 
-          handleSignOut={signOut}
-        />
-      </header>
-    </>
+        
+        <div className="flex items-center gap-4">
+          <MainNavigation />
+          <UserMenu user={user} handleSignOut={handleSignOut} />
+          <MobileMenu isOpen={mobileMenuOpen} setIsOpen={setMobileMenuOpen} user={user} handleSignOut={handleSignOut} />
+        </div>
+      </div>
+    </header>
   );
 };
 
