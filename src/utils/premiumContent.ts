@@ -18,8 +18,8 @@ export const getFreeTierContent = (content: string, level: 'preview' | 'free' = 
       previewContent += `## ${sections[1]}`;
     }
     
-    // Add registration teaser
-    previewContent += `\n\n## 🔒 Create a Free Account\nSign up to see more content including:\n\n`;
+    // Add registration teaser with improved legibility
+    previewContent += `\n\n## 📝 Create a Free Account\nSign up to see more content including:\n\n`;
     
     // Add list of locked sections
     for (let i = 2; i < Math.min(5, sections.length); i++) {
@@ -69,7 +69,7 @@ export const getFreeTierContent = (content: string, level: 'preview' | 'free' = 
     }
   }
   
-  // Add more enticing premium teaser with clear value proposition
+  // Add more enticing premium teaser with improved legibility
   freeTierContent += `\n\n## 🌟 Unlock the Complete Interview Guide\n\n`;
   freeTierContent += `You've seen a preview of what PrepPair.me can do. Upgrade to Premium to access:\n\n`;
   

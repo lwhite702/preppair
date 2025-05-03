@@ -33,7 +33,7 @@ export const GuideContent: React.FC<GuideContentProps> = ({
             />
           </div>
           
-          {/* Premium lock overlay */}
+          {/* Premium lock overlay - using improved styling */}
           <PremiumLock onUpgrade={onUpgrade} />
         </>
       )}
