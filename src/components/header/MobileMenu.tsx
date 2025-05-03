@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from '@/components/ui/link';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 
 interface MobileMenuProps {
@@ -22,28 +22,28 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
     <div className="md:hidden py-2 border-t border-white/10 absolute top-full left-0 right-0 bg-brand-navy/95 backdrop-blur-md shadow-md z-50">
       <nav className="flex flex-col space-y-2 container">
         <Link
-          href="/about"
+          to="/about"
           className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
           onClick={() => setIsMenuOpen(false)}
         >
           About
         </Link>
         <Link
-          href="/faq"
+          to="/faq"
           className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
           onClick={() => setIsMenuOpen(false)}
         >
           FAQ
         </Link>
         <Link
-          href="/pricing"
+          to="/pricing"
           className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
           onClick={() => setIsMenuOpen(false)}
         >
           Pricing
         </Link>
         <Link
-          href="/contact"
+          to="/contact"
           className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"
           onClick={() => setIsMenuOpen(false)}
         >
@@ -52,7 +52,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         {user ? (
           <>
             <Link
-              href="/dashboard"
+              to="/dashboard"
               className="w-full"
               onClick={() => setIsMenuOpen(false)}
             >
@@ -77,7 +77,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         ) : (
           <>
             <Link
-              href="/create-guide"
+              to="/guide/create"
               onClick={() => setIsMenuOpen(false)}
             >
               <Button 
@@ -88,7 +88,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
               </Button>
             </Link>
             <Link
-              href="/auth"
+              to="/auth"
               onClick={() => setIsMenuOpen(false)}
             >
               <Button 

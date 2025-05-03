@@ -1,15 +1,15 @@
 
 import React from 'react';
 import { Sparkle } from 'lucide-react';
-import { Link } from '@/components/ui/link';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Link } from 'react-router-dom';
+import { useScreenSize } from '@/hooks/use-mobile';
 
 const Logo: React.FC = () => {
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   
   return (
     <div className="flex-shrink-0">
-      <Link href="/" className="flex items-center">
+      <Link to="/" className="flex items-center">
         <div className={`bg-gradient-to-br from-primary to-yellow-500 ${isMobile ? 'p-1' : 'p-2'} rounded-lg shadow-md`}>
           <Sparkle className={`${isMobile ? 'h-4 w-4' : 'h-6 w-6'} text-white`} />
         </div>

@@ -2,8 +2,8 @@
 import React from 'react';
 import { UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Link } from '@/components/ui/link';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Link } from 'react-router-dom';
+import { useScreenSize } from '@/hooks/use-mobile';
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -17,7 +17,7 @@ interface UserMenuProps {
 }
 
 const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
-  const isMobile = useIsMobile();
+  const { isMobile } = useScreenSize();
   
   if (user) {
     return (
@@ -33,8 +33,8 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56 bg-brand-navy/95 backdrop-blur-md border border-white/10 text-white">
-          <DropdownMenuItem onClick={() => {}} className="hover:bg-white/10 focus:bg-white/10">
-            <Link href="/dashboard" className="w-full">My Guides</Link>
+          <DropdownMenuItem className="hover:bg-white/10 focus:bg-white/10">
+            <Link to="/dashboard" className="w-full">My Guides</Link>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={handleSignOut} className="hover:bg-white/10 focus:bg-white/10">
             Sign Out
@@ -46,7 +46,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
   
   return (
     <div className="flex gap-1 items-center">
-      <Link href="/create-guide">
+      <Link to="/guide/create">
         <Button 
           variant="default"
           className="bg-primary text-white hover:bg-primary/90 font-medium"
@@ -55,7 +55,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
           {isMobile ? "Start" : "Get Started"}
         </Button>
       </Link>
-      <Link href="/auth">
+      <Link to="/auth">
         <Button 
           variant="outline" 
           className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 font-medium"

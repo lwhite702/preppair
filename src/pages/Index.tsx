@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Link } from '@/components/ui/link';
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
@@ -33,6 +33,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#141B40]">
+      <Header />
       <main className="flex-grow">
         <Hero />
         <HowItWorks />
@@ -52,6 +53,7 @@ const Index = () => {
           <Blog />
         </div>
       </main>
+      <Footer />
     </div>
   );
 };
