@@ -2,11 +2,9 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Features from "@/components/Features";
 import HowItWorks from "@/components/HowItWorks";
-import Footer from "@/components/Footer";
 import Jobs from "@/components/Jobs";
 import Pricing from "@/components/Pricing";
 import Blog from "@/components/Blog";
@@ -26,8 +24,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-[#1A1F2C]">
-      <Header />
-      <main className="flex-grow pt-16"> {/* Add padding-top to account for fixed header */}
+      <main className="flex-grow"> {/* Remove padding-top, header takes care of spacing */}
         <Hero />
         <HowItWorks />
         <div id="features">
@@ -43,7 +40,6 @@ const Index = () => {
           <Blog />
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

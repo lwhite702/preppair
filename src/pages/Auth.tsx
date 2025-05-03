@@ -1,7 +1,6 @@
+
 import PasswordStrengthMeter from '@/components/auth/PasswordStrengthMeter';
-
-
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -51,21 +50,7 @@ const Auth = () => {
       setIsLoading(false);
     }
   };
-<div className="space-y-2">
-  <Label htmlFor="signup-password">Password</Label>
-  <Input
-    id="signup-password"
-    type="password"
-    value={password}
-    onChange={(e) => setPassword(e.target.value)}
-    required
-    minLength={8} // Enforce stronger password policy
-  />
-  <PasswordStrengthMeter password={password} />
-  <p className="text-xs text-muted-foreground">
-    Password should be at least 8 characters with upper and lowercase letters, numbers, and special characters.
-  </p>
-</div>
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -115,8 +100,8 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-grow py-8 md:py-16">
+      {/* No need for Header here as it's included in App.tsx */}
+      <main className="flex-grow py-6 md:py-12">
         <div className="container grid md:grid-cols-2 gap-8 max-w-5xl">
           <div className="flex flex-col justify-center">
             <h2 className="text-3xl font-bold mb-6">Unlock the Full Power of PrepPair.me</h2>
@@ -260,6 +245,10 @@ const Auth = () => {
                         required
                         minLength={8} // Enforce stronger password policy
                       />
+                      <PasswordStrengthMeter password={password} />
+                      <p className="text-xs text-muted-foreground">
+                        Password should be at least 8 characters with upper and lowercase letters, numbers, and special characters.
+                      </p>
                     </div>
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
@@ -281,7 +270,7 @@ const Auth = () => {
           </Card>
         </div>
       </main>
-      <Footer />
+      {/* No need for Footer here as it's included in App.tsx */}
     </div>
   );
 };
