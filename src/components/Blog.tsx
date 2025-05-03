@@ -1,3 +1,4 @@
+
 import { BookOpen, RefreshCcw, AlertCircle, Globe, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
@@ -39,7 +40,7 @@ const Blog = ({ isStandalonePage = false }) => {
         const { data, error } = await supabase
           .from('wp_blog_settings')
           .select('*')
-          .eq('id', '1') // Convert 1 to string '1'
+          .eq('id', '1') // Use string instead of number
           .single();
           
         if (error) throw error;
@@ -69,14 +70,14 @@ const Blog = ({ isStandalonePage = false }) => {
       
       const data = response.data || {};
       
-      // Fix: Call toast properly according to sonner's API
+      // Call toast properly according to sonner's API
       toast(`Blog Synced - ${data.message || "Successfully synced posts from WordPress"}`);
       
       // Refresh last sync info
       const { data: syncInfo } = await supabase
         .from('wp_blog_settings')
         .select('*')
-        .eq('id', '1') // Convert 1 to string '1'
+        .eq('id', '1') // Use string instead of number
         .single();
       
       if (syncInfo) {
@@ -90,7 +91,7 @@ const Blog = ({ isStandalonePage = false }) => {
       const errorMessage = error instanceof Error ? error.message : "Could not sync posts from WordPress";
       setSyncError(errorMessage);
       
-      // Fix: Call toast properly for error states
+      // Call toast properly for error states
       toast(`Sync Failed - ${errorMessage}`, {
         duration: 5000,
       });
