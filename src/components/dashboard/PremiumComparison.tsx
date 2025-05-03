@@ -61,34 +61,35 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
             Unlock Your Full Interview Potential
           </h2>
         </div>
-        <p className="text-muted-foreground mt-2 text-lg">
+        <p className="text-gray-700 mt-2 text-lg">
           Get comprehensive interview preparation with Premium
         </p>
       </div>
 
       <div className="overflow-x-auto">
-        <Table>
+        <Table className="border-separate border-spacing-0">
           <TableHeader>
-            <TableRow className="border-b-2 border-muted/50">
-              <TableHead className="w-[40%] font-bold text-foreground bg-muted/30">Feature</TableHead>
-              <TableHead className="font-bold text-foreground bg-muted/30">Free</TableHead>
-              <TableHead className="font-bold text-primary bg-primary/10">Premium</TableHead>
+            <TableRow className="bg-gray-50">
+              <TableHead className="w-[40%] font-bold text-gray-800 border-b-2 border-gray-200 px-4 py-3">Feature</TableHead>
+              <TableHead className="font-bold text-gray-800 border-b-2 border-gray-200 px-4 py-3">Free</TableHead>
+              <TableHead className="font-bold text-primary bg-primary/10 border-b-2 border-primary/20 px-4 py-3">Premium</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {features.map((feature) => (
-              <TableRow key={feature.name} className="border-b border-muted/30">
-                <TableCell className="font-medium py-4">{feature.name}</TableCell>
-                <TableCell className="py-4">
+            {features.map((feature, index) => (
+              <TableRow key={feature.name} 
+                className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                <TableCell className="font-medium py-4 px-4 border-b border-gray-100 text-gray-800">{feature.name}</TableCell>
+                <TableCell className="py-4 px-4 border-b border-gray-100">
                   {typeof feature.free === 'string' ? (
-                    <span className="text-sm text-muted-foreground">{feature.free}</span>
+                    <span className="text-sm text-gray-700">{feature.free}</span>
                   ) : (
-                    feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-red-400 h-5 w-5" />
+                    feature.free ? <Check className="text-green-500 h-5 w-5" /> : <X className="text-gray-400 h-5 w-5" />
                   )}
                 </TableCell>
-                <TableCell className="py-4 bg-primary/5">
+                <TableCell className="py-4 px-4 border-b border-gray-100 bg-primary/5">
                   {typeof feature.premium === 'string' ? (
-                    <span className="text-sm font-medium text-primary">{feature.premium}</span>
+                    <span className="text-sm font-medium text-gray-900">{feature.premium}</span>
                   ) : (
                     <Check className="text-primary h-5 w-5" />
                   )}
@@ -102,7 +103,7 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
       <div className="mt-8 text-center space-y-4">
         <div className="inline-flex items-center justify-center gap-2 bg-primary/10 px-4 py-2 rounded-full">
           <span className="text-xl font-semibold text-primary">$24.99</span>
-          <span className="text-sm text-muted-foreground">/month</span>
+          <span className="text-sm text-gray-600">/month</span>
         </div>
         <div>
           <Button 
@@ -113,7 +114,7 @@ const PremiumComparison = ({ onUpgradeClick }: PremiumComparisonProps) => {
             Upgrade to Premium
           </Button>
         </div>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-sm text-gray-600">
           Cancel anytime • Instant access • No hidden fees
         </p>
       </div>

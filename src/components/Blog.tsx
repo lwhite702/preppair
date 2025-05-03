@@ -1,5 +1,5 @@
 
-import { BookOpen, RefreshCcw, AlertCircle, Globe, Settings } from 'lucide-react';
+import { BookOpen, RefreshCcw, AlertCircle, Globe, Settings, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { BlogPost } from './blog/BlogPost';
 import { useBlogPosts } from '@/hooks/useBlogPosts';
@@ -7,6 +7,7 @@ import { toast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { 
   Dialog,
   DialogContent,
@@ -18,7 +19,7 @@ import {
 import { useAdmin } from '@/hooks/useAdmin';
 
 const Blog = ({ isStandalonePage = false }) => {
-  const { data: posts, isLoading, refetch } = useBlogPosts();
+  const { data: posts, isLoading, refetch, error: postsError } = useBlogPosts();
   const [syncing, setSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
   const [syncAttempts, setSyncAttempts] = useState(0);
@@ -26,6 +27,7 @@ const Blog = ({ isStandalonePage = false }) => {
   const [lastSyncInfo, setLastSyncInfo] = useState<any>(null);
   const [showSettings, setShowSettings] = useState(false);
   const { isAdmin } = useAdmin();
+  const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle');
 
   // Automatically sync posts when component mounts, but only once
   useEffect(() => {
@@ -45,6 +47,11 @@ const Blog = ({ isStandalonePage = false }) => {
           
         if (error) throw error;
         setLastSyncInfo(data);
+        
+        // If we have a last_url, use that as our default
+        if (data?.last_url) {
+          setWordpressUrl(data.last_url);
+        }
       } catch (error) {
         console.error("Failed to fetch sync info:", error);
       }
@@ -57,6 +64,7 @@ const Blog = ({ isStandalonePage = false }) => {
     setSyncing(true);
     setSyncError(null);
     setSyncAttempts(prev => prev + 1);
+    setSyncStatus('idle');
     
     try {
       // Pass the WordPress URL in the request body
@@ -64,11 +72,20 @@ const Blog = ({ isStandalonePage = false }) => {
         body: { wordpressUrl }
       });
       
+      console.log("Sync response:", response);
+      
       if (response.error) {
-        throw new Error(response.error.message || "Unknown error occurred");
+        throw new Error(response.error || "Unknown error occurred");
       }
       
       const data = response.data || {};
+      
+      if (!data.success) {
+        throw new Error(data.error || "Sync was not successful");
+      }
+      
+      // Set success status
+      setSyncStatus('success');
       
       // Call toast properly according to sonner's API
       toast(`Blog Synced - ${data.message || "Successfully synced posts from WordPress"}`);
@@ -82,6 +99,10 @@ const Blog = ({ isStandalonePage = false }) => {
       
       if (syncInfo) {
         setLastSyncInfo(syncInfo);
+        // Update the WordPress URL if it changed due to fallback
+        if (data.usedFallback && syncInfo.last_url) {
+          setWordpressUrl(syncInfo.last_url);
+        }
       }
       
       // Refetch posts after syncing
@@ -90,6 +111,7 @@ const Blog = ({ isStandalonePage = false }) => {
       console.error("Failed to sync blog:", error);
       const errorMessage = error instanceof Error ? error.message : "Could not sync posts from WordPress";
       setSyncError(errorMessage);
+      setSyncStatus('error');
       
       // Call toast properly for error states
       toast(`Sync Failed - ${errorMessage}`, {
@@ -99,6 +121,9 @@ const Blog = ({ isStandalonePage = false }) => {
       setSyncing(false);
     }
   };
+
+  // Show sample posts if there's no data but we're not loading
+  const showSamplePosts = !isLoading && (!posts || posts.length === 0);
 
   return (
     <section className={`py-20 ${isStandalonePage ? 'bg-background' : 'bg-gradient-to-b from-brand-navy/30 to-background'}`}>
@@ -130,18 +155,29 @@ const Blog = ({ isStandalonePage = false }) => {
             <div className="text-xs text-muted-foreground max-w-2xl mx-auto mb-4">
               Last synced: {new Date(lastSyncInfo.last_synced).toLocaleString()} 
               {lastSyncInfo.sync_source && ` (${lastSyncInfo.sync_source})`}
+              {lastSyncInfo.last_url && ` from ${lastSyncInfo.last_url}`}
             </div>
           )}
           
-          {isStandalonePage && syncError && (
+          {isStandalonePage && syncStatus === 'success' && (
+            <Alert className="max-w-2xl mx-auto mb-4 bg-green-50 border-green-200">
+              <Info className="h-4 w-4 text-green-500" />
+              <AlertTitle className="text-green-800">Sync Completed</AlertTitle>
+              <AlertDescription className="text-green-700">
+                Blog posts have been successfully imported.
+              </AlertDescription>
+            </Alert>
+          )}
+          
+          {isStandalonePage && (syncStatus === 'error' || syncError) && (
             <div className="text-center mb-4 max-w-2xl mx-auto">
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <AlertCircle className="h-5 w-5 text-red-500" />
-                  <p className="font-medium text-red-800">Sync Error</p>
-                </div>
-                <p className="text-red-700 text-sm">{syncError}</p>
-              </div>
+              <Alert className="mb-4 bg-red-50 border-red-200">
+                <AlertCircle className="h-4 w-4 text-red-500" />
+                <AlertTitle className="text-red-800">Sync Error</AlertTitle>
+                <AlertDescription className="text-red-700">
+                  {syncError || "There was a problem syncing your blog posts"}
+                </AlertDescription>
+              </Alert>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -186,7 +222,7 @@ const Blog = ({ isStandalonePage = false }) => {
               disabled={syncing}
             >
               <RefreshCcw className="h-4 w-4" />
-              Sync now
+              Sync blog posts now
             </Button>
           </div>
         )}
@@ -232,6 +268,7 @@ const Blog = ({ isStandalonePage = false }) => {
                   <div className="text-muted-foreground space-y-1">
                     <p>Time: {new Date(lastSyncInfo.last_synced).toLocaleString()}</p>
                     {lastSyncInfo.sync_source && <p>Source: {lastSyncInfo.sync_source}</p>}
+                    {lastSyncInfo.last_url && <p>URL: {lastSyncInfo.last_url}</p>}
                   </div>
                 </div>
               )}

@@ -44,7 +44,7 @@ const Index = () => {
         </div>
         <div id="pricing" className="bg-white py-16">
           <Pricing />
-          <div className="container max-w-4xl mx-auto px-4">
+          <div className="container max-w-4xl mx-auto px-4 bg-white">
             <PremiumComparison onUpgradeClick={handleUpgradeClick} />
           </div>
         </div>
