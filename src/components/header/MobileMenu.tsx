@@ -19,8 +19,8 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   if (!isMenuOpen) return null;
 
   return (
-    <div className="md:hidden py-3 border-t border-white/10 absolute top-full left-0 right-0 bg-brand-navy/95 backdrop-blur-md shadow-md">
-      <nav className="flex flex-col space-y-3 container">
+    <div className="md:hidden py-2 border-t border-white/10 absolute top-full left-0 right-0 bg-brand-navy/95 backdrop-blur-md shadow-md z-50">
+      <nav className="flex flex-col space-y-2 container">
         <Link
           href="/about"
           className="text-white/90 hover:text-white transition-colors font-medium px-1 py-1.5"

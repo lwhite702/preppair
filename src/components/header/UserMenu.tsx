@@ -25,10 +25,10 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="border-primary bg-primary/10 text-white hover:bg-primary/20 font-medium"
+            className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 font-medium"
             size={isMobile ? "sm" : "default"}
           >
-            <UserCircle className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'} mr-1`} />
+            <UserCircle className="h-4 w-4 mr-1" />
             {isMobile ? "Menu" : "Dashboard"}
           </Button>
         </DropdownMenuTrigger>
@@ -45,7 +45,7 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
   }
   
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1 md:gap-2 items-center">
       <Link href="/create-guide">
         <Button 
           variant="default"
@@ -58,11 +58,11 @@ const UserMenu: React.FC<UserMenuProps> = ({ user, handleSignOut }) => {
       <Link href="/auth">
         <Button 
           variant="outline" 
-          className="border-primary bg-primary/10 text-white hover:bg-primary/20 font-medium"
+          className="border-primary/50 bg-primary/10 text-white hover:bg-primary/20 font-medium"
           size={isMobile ? "sm" : "default"}
         >
-          <UserCircle className={`${isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4'} mr-1`} />
-          {isMobile ? "Sign In" : "Sign In"}
+          <UserCircle className="h-4 w-4 mr-1" />
+          Sign In
         </Button>
       </Link>
     </div>
